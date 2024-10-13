@@ -1,3 +1,6 @@
 {
-	"name": "squire"
+	"name": "squire",
+	"scripts": {
+		"test": "echo \"test\""
+	}
 }
