@@ -7,11 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"node_modules",
-			"dist",
-			"**/dist/**"
-		]
+		"ignore": ["node_modules", "dist", "**/dist/**", ".svelte*", ".vscode*"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -31,8 +27,8 @@
 				"noUselessCatch": "error",
 				"noUselessTypeConstraint": "error",
 				"noWith": "error"
-			  },
-			  "correctness": {
+			},
+			"correctness": {
 				"noConstAssign": "error",
 				"noConstantCondition": "error",
 				"noEmptyCharacterClassInRegex": "error",
@@ -57,13 +53,12 @@
 				"useValidForDirection": "error",
 				"useYield": "error",
 				"noUnusedImports": "error"
-			  },
-			  "style": {
-				"noNamespace": "error",
+			},
+			"style": {
 				"noNonNullAssertion": "error",
 				"useAsConstAssertion": "error"
-			  },
-			  "suspicious": {
+			},
+			"suspicious": {
 				"noAsyncPromiseExecutor": "error",
 				"noCatchAssign": "error",
 				"noClassAssign": "error",
@@ -91,7 +86,7 @@
 				"useAwait": "error",
 				"useGetterReturn": "error",
 				"useValidTypeof": "error"
-			  }
+			}
 		}
 	},
 	"javascript": {
