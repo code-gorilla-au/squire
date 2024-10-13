@@ -1,19 +1,16 @@
 {
-  "name": "squire-core",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "lint": "bunx biome check .",
-    "lint:fix": "bunx biome check --write ."
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.3",
-    "typescript": "^5.0.0",
-    "@types/bun": "latest"
-  },
-  "type": "module",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ]
+	"name": "squire-core",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"lint": "bunx biome check .",
+		"lint:fix": "bunx biome check --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.3",
+		"typescript": "^5.0.0",
+		"@types/bun": "latest"
+	},
+	"type": "module",
+	"workspaces": ["packages/*", "apps/*"]
 }
