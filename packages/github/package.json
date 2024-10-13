@@ -1,4 +1,4 @@
 {
 	"name": "squire-github",
-	"module": "index.ts"
+	"module": "src/index.ts"
 }
