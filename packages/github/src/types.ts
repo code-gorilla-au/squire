@@ -30,6 +30,7 @@ export interface ModelRepository {
 
 export interface ModelVulnerabilityAlerts {
 	state: string;
+	securityVulnerability: ModelSecurityVulnerability;
 }
 
 export interface ModelSecurityVulnerability {
