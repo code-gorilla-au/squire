@@ -1,6 +1,6 @@
 import { env } from "bun";
-import { initClient } from "squire-github";
 import { initService } from "squire";
+import { initClient } from "squire-github";
 
 const ghToken = env.GH_TOKEN ?? "";
 
