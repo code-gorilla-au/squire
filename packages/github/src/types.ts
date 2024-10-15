@@ -15,7 +15,7 @@ export interface RootNode<T> {
 		endCursor: null;
 		hasNextPage: boolean;
 	};
-	edges: Node<T>[];
+	nodes: T[];
 }
 
 export interface Node<T> {

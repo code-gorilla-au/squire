@@ -2,7 +2,6 @@ import { randomUUID } from "node:crypto";
 import type {
 	ModelRepository as GhModelRepo,
 	ModelVulnerabilityAlerts,
-	Node,
 } from "squire-github";
 import type { ModelRepository, ModelSecurity } from "./types";
 
@@ -24,23 +23,22 @@ export function generateSecurityFromGhModel(
 	ghRepo: GhModelRepo,
 	repositoryId: string,
 ): ModelSecurity[] {
-	return ghRepo.vulnerabilityAlerts.edges.map((edge) => {
+	return ghRepo.vulnerabilityAlerts.nodes.map((edge) => {
 		return transformToSecurityModel(edge, repositoryId);
 	});
 }
 
 function transformToSecurityModel(
-	edge: Node<ModelVulnerabilityAlerts>,
+	edge: ModelVulnerabilityAlerts,
 	repositoryId: string,
 ): ModelSecurity {
 	return {
 		id: randomUUID(),
 		repositoryId,
-		state: edge.node.state,
-		packageName: edge.node.securityVulnerability.package.name,
-		severity: edge.node.securityVulnerability.advisory.severity,
-		patchedVersion:
-			edge.node.securityVulnerability.firstPatchedVersion.identifier,
+		state: edge.state,
+		packageName: edge.securityVulnerability.package.name,
+		severity: edge.securityVulnerability.advisory.severity,
+		patchedVersion: edge.securityVulnerability.firstPatchedVersion.identifier,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
