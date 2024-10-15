@@ -1,6 +1,12 @@
 import { post } from "./api";
 import { queryReposByTopic } from "./query";
-import type { ClientOptions, SearchOptions, SearchParameters } from "./types";
+import type {
+	ClientOptions,
+	ModelRepository,
+	QuerySearch,
+	SearchOptions,
+	SearchParameters,
+} from "./types";
 
 export function initClient(defaultOptions: ClientOptions) {
 	return {
@@ -10,7 +16,9 @@ export function initClient(defaultOptions: ClientOptions) {
 				searchOpts.owner,
 				searchOpts.topics.join(","),
 			);
-			return post(defaultOptions.ghToken, { query });
+			return post<QuerySearch<ModelRepository>>(defaultOptions.ghToken, {
+				query,
+			});
 		},
 	};
 }
