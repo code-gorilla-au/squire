@@ -1,5 +1,10 @@
 import type { Database } from "duckdb-async";
-import type { ModelRepository, ModelSecurity } from "./types";
+import type {
+	ModelRepository,
+	ModelSecurity,
+	StoreActionResult,
+} from "./types";
+import { logger } from "toolbox";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
@@ -69,30 +74,59 @@ export const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
 
 export function initRepository(db: Database) {
 	return {
-		async bulkInsertRepos(repos: ModelRepository[]) {
-			const stmt = await db.prepare(queryInsertRepo);
+		async bulkInsertRepos(
+			repos: ModelRepository[],
+		): Promise<StoreActionResult> {
+			try {
+				logger.debug("Inserting repos into database");
+				const stmt = await db.prepare(queryInsertRepo);
 
-			for (const repo of repos) {
-				stmt.run(repo.id, repo.name, repo.url, repo.topic);
+				for (const repo of repos) {
+					stmt.run(repo.id, repo.name, repo.url, repo.topic);
+				}
+
+				await stmt.finalize();
+
+				logger.debug("Inserted repos into database");
+				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err });
+
+				return {
+					error: err,
+				};
 			}
-
-			await stmt.finalize();
 		},
-		async bulkInsertSecVulnerabilities(securities: ModelSecurity[]) {
-			const stmt = await db.prepare(queryInsertSecurity);
+		async bulkInsertSecVulnerabilities(
+			securities: ModelSecurity[],
+		): Promise<StoreActionResult> {
+			try {
+				const stmt = await db.prepare(queryInsertSecurity);
 
-			for (const security of securities) {
-				stmt.run(
-					security.id,
-					security.repositoryId,
-					security.packageName,
-					security.state,
-					security.severity,
-					security.patchedVersion,
-				);
+				for (const security of securities) {
+					stmt.run(
+						security.id,
+						security.repositoryId,
+						security.packageName,
+						security.state,
+						security.severity,
+						security.patchedVersion,
+					);
+				}
+
+				await stmt.finalize();
+
+				logger.debug("Inserted repos into database");
+				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err });
+
+				return {
+					error: err,
+				};
 			}
-
-			await stmt.finalize();
 		},
 	};
 }

@@ -22,14 +22,23 @@ export interface ModelSecurity {
 
 export type SecurityDto = ModelSecurity;
 
-export type StoreActionResult<T> = StoreActionSuccess<T> | StoreActionFailure;
+export type StoreActionResult<T = null> =
+	| StoreActionSuccess<T>
+	| StoreActionFailure;
 
-export type StoreActionSuccess<T> = {
-	data?: T;
-	error: never;
+export type StoreActionSuccess<T = null> = {
+	data?: T | undefined;
+	error?: never;
 };
 
 export type StoreActionFailure = {
-	data: never;
+	data?: never;
 	error: Error;
 };
+
+export interface Store {
+	bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult>;
+	bulkInsertSecVulnerabilities(
+		securities: ModelSecurity[],
+	): Promise<StoreActionResult>;
+}
