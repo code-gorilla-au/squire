@@ -1,7 +1,8 @@
 {
 	"name": "workers",
 	"dependencies": {
-		"squire-github": "workspace:*",
-		"squire": "workspace:*"
+		"duckdb-async": "^1.1.1",
+		"squire": "workspace:*",
+		"squire-github": "workspace:*"
 	}
 }
