@@ -1,7 +1,7 @@
 export function queryReposByTopic(
 	owner: string,
 	topic: string,
-	first: number,
+	first = 100,
 ): string {
 	return `
 {

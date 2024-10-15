@@ -50,3 +50,14 @@ export interface PrFilter {
 	prefix?: string[];
 	exact?: string[];
 }
+
+export interface ClientOptions {
+	ghToken: string;
+	defaultOwner: string;
+	defaultTopics?: string[];
+}
+
+export interface SearchOptions {
+	topics: string[];
+	owner: string;
+}

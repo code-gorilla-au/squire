@@ -1,4 +1,0 @@
-{
-    "name": "squire-fetcher",
-    "module": "./src/index.ts"
-}
