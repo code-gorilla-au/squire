@@ -12,5 +12,8 @@
 	"peerDependencies": {
 		"typescript": "^5.0.0"
 	},
-	"workspaces": ["packages/*", "apps/*"]
+	"workspaces": ["packages/*", "apps/*"],
+	"dependencies": {
+		"pino": "^9.5.0"
+	}
 }

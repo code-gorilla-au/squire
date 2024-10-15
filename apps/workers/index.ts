@@ -12,7 +12,7 @@ const client = initClient({
 	ghToken,
 	defaultOwner: "code-gorilla-au",
 });
-const service = initService(client);
+const service = initService(client, db);
 
 const resp = await service.syncReposByTopics("cli");
 

@@ -19,3 +19,17 @@ export interface ModelSecurity {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export type SecurityDto = ModelSecurity;
+
+export type StoreActionResult<T> = StoreActionSuccess<T> | StoreActionFailure;
+
+export type StoreActionSuccess<T> = {
+	data?: T;
+	error: never;
+};
+
+export type StoreActionFailure = {
+	data: never;
+	error: Error;
+};
