@@ -12,5 +12,7 @@
 		"@types/bun": "latest"
 	},
 	"type": "module",
-	"workspaces": ["packages/*", "apps/*"]
+	"workspaces": [
+		"packages/*"
+	]
 }
