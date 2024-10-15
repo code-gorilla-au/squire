@@ -1,18 +1,19 @@
 {
-  "name": "squire-core",
-  "module": "index.ts",
-  "type": "module",
-  "dependencies": {
-    "squire-github": "workspace:*"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ]
+	"name": "squire-core",
+	"module": "index.ts",
+	"type": "module",
+	"scripts": {
+		"lint:fix": "bunx biome check --write ."
+	},
+	"dependencies": {
+		"squire-github": "workspace:*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.3",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"workspaces": ["packages/*", "apps/*"]
 }

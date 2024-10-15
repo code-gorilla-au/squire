@@ -1,6 +1,6 @@
 import { post } from "./api";
 import { queryReposByTopic } from "./query";
-import type { ClientOptions, SearchOptions } from "./types";
+import type { ClientOptions, SearchOptions, SearchParameters } from "./types";
 
 export function initClient(defaultOptions: ClientOptions) {
 	return {
@@ -15,8 +15,11 @@ export function initClient(defaultOptions: ClientOptions) {
 	};
 }
 
-function mergeOptions(defaultOptions: ClientOptions, options?: SearchOptions) {
-	const searchOpt: SearchOptions = {
+function mergeOptions(
+	defaultOptions: ClientOptions,
+	options?: SearchOptions,
+): SearchParameters {
+	const searchOpt: SearchParameters = {
 		owner: defaultOptions.defaultOwner,
 		topics: defaultOptions.defaultTopics ?? [],
 	};
@@ -26,7 +29,7 @@ function mergeOptions(defaultOptions: ClientOptions, options?: SearchOptions) {
 	}
 
 	return {
-		...searchOpt,
-		...options,
+		owner: options.owner ?? searchOpt.owner,
+		topics: options.topics ?? searchOpt.topics,
 	};
 }

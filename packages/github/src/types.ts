@@ -58,6 +58,11 @@ export interface ClientOptions {
 }
 
 export interface SearchOptions {
+	topics?: string[];
+	owner?: string;
+}
+
+export interface SearchParameters {
 	topics: string[];
 	owner: string;
 }

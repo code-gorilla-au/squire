@@ -1,6 +1,6 @@
 {
-    "name": "workers",
-    "dependencies": {
-        "squire-github": "workspace:*"
-    }
+	"name": "workers",
+	"dependencies": {
+		"squire-github": "workspace:*"
+	}
 }
