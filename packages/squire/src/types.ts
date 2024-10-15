@@ -7,6 +7,8 @@ export interface ModelRepository {
 	updatedAt: Date;
 }
 
+export type RepositoryDto = ModelRepository;
+
 export interface ModelSecurity {
 	id: string;
 	repositoryId: string;
@@ -14,6 +16,6 @@ export interface ModelSecurity {
 	state: string;
 	severity: string;
 	patchedVersion: string;
-	createdAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date;
 }

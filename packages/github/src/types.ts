@@ -66,3 +66,7 @@ export interface SearchParameters {
 	topics: string[];
 	owner: string;
 }
+
+export interface Client {
+	searchRepos(options?: SearchOptions): Promise<QuerySearch<ModelRepository>>;
+}
