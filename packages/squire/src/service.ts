@@ -69,5 +69,12 @@ export function initService(client: Client, store: Store) {
 
 			return result.data as SecurityDto[];
 		},
+		async syncRepos() {
+			const repos = await store.getReposWhereLastUpdatedIsOlderThan5Minutes();
+			if (repos.error) {
+				logger.error({ error: repos.error }, "Error getting repos");
+				throw new Error("error getting repos");
+			}
+		},
 	};
 }
