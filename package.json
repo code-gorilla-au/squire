@@ -3,7 +3,9 @@
 	"module": "index.ts",
 	"type": "module",
 	"scripts": {
-		"lint:fix": "bunx biome check --write ."
+		"lint:fix": "bunx biome check --write .",
+		"db:clean": "rm -rf .db && mkdir .db",
+		"dev:worker": "bun run ./apps/worker/index.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
@@ -12,8 +14,12 @@
 	"peerDependencies": {
 		"typescript": "^5.0.0"
 	},
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"dependencies": {
-		"pino": "^9.5.0"
+		"pino": "^9.5.0",
+		"pino-caller": "^3.4.0"
 	}
 }

@@ -33,6 +33,8 @@ export function initService(client: Client, store: Store) {
 			if (repoResult.error) {
 				logger.error({ error: repoResult.error }, "error inserting into store");
 				insertErrors.push(repoResult.error);
+
+				return insertErrors;
 			}
 
 			logger.debug(

@@ -1,4 +1,7 @@
 import { env } from "bun";
 import pino from "pino";
+import pinoCaller from "pino-caller";
 
-export const logger = pino({ level: env.LOG_LEVEL ?? "info" });
+const base = pino({ level: env.LOG_LEVEL ?? "info" });
+
+export const logger = pinoCaller(base);

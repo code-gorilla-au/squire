@@ -9,7 +9,7 @@ import { logger } from "toolbox";
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
         id uuid PRIMARY KEY,
-        name VARCHAR,
+        name VARCHAR UNIQUE,
         url VARCHAR,
         topic VARCHAR,
         createdAt TIMESTAMP WITH TIME ZONE,
