@@ -14,7 +14,6 @@ export function initService(client: Client, store: Store) {
 		},
 		async syncReposByTopics(topic: string) {
 			const resp = await client.searchRepos({ topics: [topic] });
-			console.log(resp, null, 2);
 
 			const repos: ModelRepository[] = [];
 			const securities: ModelSecurity[] = [];
