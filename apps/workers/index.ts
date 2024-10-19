@@ -1,17 +1,16 @@
-import { env } from "bun";
 import { initService, initRepository } from "squire";
 import { initClient } from "squire-github";
 import { Database, OPEN_READWRITE } from "duckdb-async";
 import { logger } from "toolbox";
+import { loadConfig } from "./src/env";
 
-const ghToken = env.GH_TOKEN ?? "";
-const dbFilePath = env.DB_FILE_PATH ?? ":memory:";
+const config = loadConfig();
 
-const db = await Database.create(dbFilePath, OPEN_READWRITE);
+const db = await Database.create(config.dbFilePath, OPEN_READWRITE);
 
 const client = initClient({
-	ghToken,
-	defaultOwner: "code-gorilla-au",
+	ghToken: config.ghToken,
+	defaultOwner: config.ghOwner,
 });
 
 const repo = initRepository(db);
@@ -24,5 +23,9 @@ if (err) {
 }
 
 const resp = await service.syncReposByTopics("cli");
+if (resp.length) {
+	logger.error({ resp }, "Error syncing repos");
+	process.exit(1);
+}
 
 logger.info({ resp }, "Synced repos");

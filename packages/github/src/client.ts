@@ -1,5 +1,5 @@
 import { post } from "./api";
-import { queryReposByTopic } from "./query";
+import { queryReposAndActiveSecByTopic } from "./query";
 import type {
 	ClientOptions,
 	ModelRepository,
@@ -12,7 +12,7 @@ export function initClient(defaultOptions: ClientOptions) {
 	return {
 		searchRepos(options?: SearchOptions) {
 			const searchOpts = mergeOptions(defaultOptions, options);
-			const query = queryReposByTopic(
+			const query = queryReposAndActiveSecByTopic(
 				searchOpts.owner,
 				searchOpts.topics.join(","),
 			);

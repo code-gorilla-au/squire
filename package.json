@@ -20,6 +20,7 @@
 	],
 	"dependencies": {
 		"pino": "^9.5.0",
-		"pino-caller": "^3.4.0"
+		"pino-caller": "^3.4.0",
+		"zod": "^3.23.8"
 	}
 }

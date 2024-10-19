@@ -1,4 +1,4 @@
-export function queryReposByTopic(
+export function queryReposAndActiveSecByTopic(
 	owner: string,
 	topic: string,
 	first = 100,
@@ -16,7 +16,10 @@ export function queryReposByTopic(
         ... on Repository {
           name
           url
-          vulnerabilityAlerts(first: 100) {
+          vulnerabilityAlerts(
+            states: OPEN
+            first: 100
+          ) {
             pageInfo {
               hasNextPage
               endCursor
