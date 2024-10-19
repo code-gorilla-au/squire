@@ -41,4 +41,5 @@ export interface Store {
 	bulkInsertSecVulnerabilities(
 		securities: ModelSecurity[],
 	): Promise<StoreActionResult>;
+	initTables(): Promise<StoreActionResult>;
 }

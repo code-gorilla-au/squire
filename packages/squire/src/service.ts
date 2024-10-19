@@ -1,5 +1,4 @@
 import type { Client } from "squire-github";
-import type { Database } from "duckdb-async";
 import {
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
@@ -9,6 +8,10 @@ import { logger } from "toolbox";
 
 export function initService(client: Client, store: Store) {
 	return {
+		async init() {
+			const result = await store.initTables();
+			return result.error;
+		},
 		async syncReposByTopics(topic: string) {
 			const resp = await client.searchRepos({ topics: [topic] });
 

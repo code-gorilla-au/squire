@@ -70,10 +70,23 @@ export const queryInsertSecurity = `
     )
 `;
 
-export const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
+const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
 
 export function initRepository(db: Database) {
 	return {
+		async initTables(): Promise<StoreActionResult> {
+			try {
+				await db.run(migrations.join(";"));
+				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return {
+					error: err,
+				};
+			}
+		},
 		async bulkInsertRepos(
 			repos: ModelRepository[],
 		): Promise<StoreActionResult> {
@@ -91,7 +104,7 @@ export function initRepository(db: Database) {
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
-				logger.error({ error: err });
+				logger.error({ error: err.message });
 
 				return {
 					error: err,
@@ -121,7 +134,7 @@ export function initRepository(db: Database) {
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
-				logger.error({ error: err });
+				logger.error({ error: err.message });
 
 				return {
 					error: err,

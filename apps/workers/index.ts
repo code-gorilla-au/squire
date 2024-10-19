@@ -1,5 +1,5 @@
 import { env } from "bun";
-import { initService } from "squire";
+import { initService, initRepository } from "squire";
 import { initClient } from "squire-github";
 import { Database, OPEN_READWRITE } from "duckdb-async";
 
@@ -12,7 +12,15 @@ const client = initClient({
 	ghToken,
 	defaultOwner: "code-gorilla-au",
 });
-const service = initService(client, db);
+
+const repo = initRepository(db);
+const service = initService(client, repo);
+
+const err = await service.init();
+if (err) {
+	console.error(err);
+	process.exit(1);
+}
 
 const resp = await service.syncReposByTopics("cli");
 
