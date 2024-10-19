@@ -20,6 +20,7 @@ export const queryCreateRepoTable = `
 export const queryCreateSecurityTable = `
     CREATE TABLE IF NOT EXISTS securities (
         id uuid PRIMARY KEY,
+		externalId VARCHAR UNIQUE,
         repositoryId uuid,
         packageName VARCHAR,
         state VARCHAR,
@@ -51,6 +52,7 @@ export const queryInsertRepo = `
 export const queryInsertSecurity = `
     INSERT INTO securities (
         id,
+		externalId,
         repositoryId,
         packageName,
         state,
@@ -65,6 +67,7 @@ export const queryInsertSecurity = `
         $4,
         $5,
         $6,
+		$7,
         now(),
         now()
     )
@@ -95,7 +98,7 @@ export function initRepository(db: Database) {
 				const stmt = await db.prepare(queryInsertRepo);
 
 				for (const repo of repos) {
-					stmt.run(repo.id, repo.name, repo.url, repo.topic);
+					await stmt.run(repo.id, repo.name, repo.url, repo.topic);
 				}
 
 				await stmt.finalize();
@@ -118,8 +121,9 @@ export function initRepository(db: Database) {
 				const stmt = await db.prepare(queryInsertSecurity);
 
 				for (const security of securities) {
-					stmt.run(
+					await stmt.run(
 						security.id,
+						security.externalId,
 						security.repositoryId,
 						security.packageName,
 						security.state,

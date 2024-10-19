@@ -34,6 +34,7 @@ function transformToSecurityModel(
 ): ModelSecurity {
 	return {
 		id: randomUUID(),
+		externalId: edge.id,
 		repositoryId,
 		state: edge.state,
 		packageName: edge.securityVulnerability.package.name,

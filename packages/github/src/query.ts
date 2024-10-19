@@ -23,6 +23,8 @@ export function queryReposByTopic(
             }
             nodes {
               state
+              id
+              number
               securityVulnerability {
                 package {
                   name

@@ -11,6 +11,7 @@ export type RepositoryDto = ModelRepository;
 
 export interface ModelSecurity {
 	id: string;
+	externalId: string;
 	repositoryId: string;
 	packageName: string;
 	state: string;
