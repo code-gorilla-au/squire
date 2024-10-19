@@ -43,4 +43,7 @@ export interface Store {
 		securities: ModelSecurity[],
 	): Promise<StoreActionResult>;
 	initTables(): Promise<StoreActionResult>;
+	getOpenSecByRepoId(
+		repoId: string,
+	): Promise<StoreActionResult<ModelSecurity[]>>;
 }

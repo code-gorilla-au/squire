@@ -3,7 +3,12 @@ import {
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
-import type { ModelRepository, ModelSecurity, Store } from "./types";
+import type {
+	ModelRepository,
+	ModelSecurity,
+	SecurityDto,
+	Store,
+} from "./types";
 import { logger } from "toolbox";
 
 export function initService(client: Client, store: Store) {
@@ -12,7 +17,7 @@ export function initService(client: Client, store: Store) {
 			const result = await store.initTables();
 			return result.error;
 		},
-		async syncReposByTopics(topic: string) {
+		async ingestRepoByTopic(topic: string) {
 			const resp = await client.searchRepos({ topics: [topic] });
 
 			const repos: ModelRepository[] = [];
@@ -53,6 +58,16 @@ export function initService(client: Client, store: Store) {
 			}
 
 			return insertErrors;
+		},
+		async getOpenSecurityVulnerabilitiesByRepoId(repoId: string) {
+			const result = await store.getOpenSecByRepoId(repoId);
+
+			if (result.error) {
+				logger.error({ error: result.error }, "Error getting open security");
+				throw new Error("error getting security vulnerabilities");
+			}
+
+			return result.data as SecurityDto[];
 		},
 	};
 }

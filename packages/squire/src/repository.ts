@@ -73,6 +73,10 @@ export const queryInsertSecurity = `
     )
 `;
 
+const querySelectAllOpenSecByRepo = `
+	SELECT * FROM securities WHERE state = 'OPEN' AND repositoryId = $1;
+`;
+
 const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
 
 export function initRepository(db: Database) {
@@ -143,6 +147,24 @@ export function initRepository(db: Database) {
 				return {
 					error: err,
 				};
+			}
+		},
+		async getOpenSecByRepoId(
+			repoId: string,
+		): Promise<StoreActionResult<ModelSecurity[]>> {
+			try {
+				const result = await db.all(querySelectAllOpenSecByRepo, repoId);
+
+				return Promise.resolve({
+					data: result as ModelSecurity[],
+				});
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
 			}
 		},
 	};
