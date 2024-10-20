@@ -46,10 +46,4 @@ export interface Store {
 	getOpenSecByRepoId(
 		repoId: string,
 	): Promise<StoreActionResult<ModelSecurity[]>>;
-	getReposWhereLastUpdatedIsOlderThan5Minutes(): Promise<
-		StoreActionResult<ModelRepository[]>
-	>;
-	bulkUpdateSecurityVulnerabilities(
-		vulnerabilities: ModelSecurity[],
-	): Promise<StoreActionResult>;
 }

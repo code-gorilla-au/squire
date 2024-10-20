@@ -2,6 +2,7 @@ import type { Database } from "duckdb-async";
 import type {
 	ModelRepository,
 	ModelSecurity,
+	Store,
 	StoreActionResult,
 } from "./types";
 import { logger } from "toolbox";
@@ -46,7 +47,7 @@ export const queryInsertRepo = `
         $4,
         now(),
         now()
-    )
+    ) ON CONFLICT DO NOTHING;
 `;
 
 export const queryInsertSecurity = `
@@ -70,28 +71,19 @@ export const queryInsertSecurity = `
 		$7,
         now(),
         now()
-    )
+    ) ON CONFLICT DO UPDATE SET state = EXCLUDED.state, 
+	 	severity = EXCLUDED.severity, 
+		patchedVersion = EXCLUDED.patchedVersion, 
+		updatedAt = now();
 `;
 
 const querySelectAllOpenSecByRepo = `
 	SELECT * FROM securities WHERE state = 'OPEN' AND repositoryId = $1;
 `;
 
-const getReposWhereLastUpdatedIsOlderThan5Minutes = `
-	SELECT * FROM repositories WHERE updatedAt < now() - interval '5 minutes';
-`;
-
-const updateSecByExternalId = `
-	UPDATE securities SET state = $1,
-		severity = $2,
-		patchedVersion = $3,
-		updatedAt = now() 
-	WHERE externalId = $4;
-`;
-
 const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
 
-export function initRepository(db: Database) {
+export function initRepository(db: Database): Store {
 	return {
 		async initTables(): Promise<StoreActionResult> {
 			try {
@@ -177,54 +169,6 @@ export function initRepository(db: Database) {
 				return Promise.resolve({
 					error: err,
 				});
-			}
-		},
-		async getReposWhereLastUpdatedIsOlderThan5Minutes(): Promise<
-			StoreActionResult<ModelRepository[]>
-		> {
-			try {
-				const result = await db.all(
-					getReposWhereLastUpdatedIsOlderThan5Minutes,
-				);
-
-				return Promise.resolve({
-					data: result as ModelRepository[],
-				});
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async bulkUpdateSecurityVulnerabilities(
-			vulnerabilities: ModelSecurity[],
-		): Promise<StoreActionResult> {
-			try {
-				const stmt = await db.prepare(updateSecByExternalId);
-
-				for (const vulnerability of vulnerabilities) {
-					await stmt.run(
-						vulnerability.state,
-						vulnerability.severity,
-						vulnerability.patchedVersion,
-						vulnerability.externalId,
-					);
-				}
-
-				await stmt.finalize();
-
-				logger.debug("Updated security vulnerabilities in database");
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return {
-					error: err,
-				};
 			}
 		},
 	};
