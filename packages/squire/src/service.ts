@@ -47,7 +47,7 @@ export function initService(client: Client, store: Store) {
 			}
 
 			logger.debug(
-				{ totalRepos: securities.length },
+				{ totalSecurityVulnerabilities: securities.length },
 				"Inserting security vulnerabilities",
 			);
 			const securityResult =
