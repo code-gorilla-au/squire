@@ -28,19 +28,27 @@ export interface ModelRepository {
 	vulnerabilityAlerts: RootNode<ModelVulnerabilityAlerts>;
 }
 
+export type VulnerabilityAlertState =
+	| "OPEN"
+	| "FIXED"
+	| "DISMISSED"
+	| "AUTO_DISMISSED";
+
 export interface ModelVulnerabilityAlerts {
-	state: string;
+	state: VulnerabilityAlertState;
 	id: string;
 	number: number;
 	securityVulnerability: ModelSecurityVulnerability;
 }
+
+export type AdvisorySeverity = "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
 
 export interface ModelSecurityVulnerability {
 	package: {
 		name: string;
 	};
 	advisory: {
-		severity: "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
+		severity: AdvisorySeverity;
 	};
 	firstPatchedVersion: {
 		identifier: string;

@@ -71,7 +71,7 @@ export const queryInsertSecurity = `
 		$7,
         now(),
         now()
-    ) ON CONFLICT DO UPDATE SET state = EXCLUDED.state, 
+    ) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state, 
 	 	severity = EXCLUDED.severity, 
 		patchedVersion = EXCLUDED.patchedVersion, 
 		updatedAt = now();
