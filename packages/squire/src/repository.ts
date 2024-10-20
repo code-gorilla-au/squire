@@ -2,6 +2,7 @@ import type { Database } from "duckdb-async";
 import type {
 	ModelRepository,
 	ModelSecurity,
+	ModelSecurityAdvisory,
 	Store,
 	StoreActionResult,
 } from "./types";
@@ -13,6 +14,7 @@ export const queryCreateRepoTable = `
         name VARCHAR UNIQUE,
         url VARCHAR,
         topic VARCHAR,
+        owner VARCHAR,
         createdAt TIMESTAMP WITH TIME ZONE,
         updatedAt TIMESTAMP WITH TIME ZONE
     );
@@ -38,6 +40,7 @@ export const queryInsertRepo = `
         name,
         url,
         topic,
+		owner,
         createdAt,
         updatedAt
     ) VALUES (
@@ -45,6 +48,7 @@ export const queryInsertRepo = `
         $2,
         $3,
         $4,
+		$5,
         now(),
         now()
     ) ON CONFLICT DO NOTHING;
@@ -81,6 +85,21 @@ const querySelectAllOpenSecByRepo = `
 	SELECT * FROM securities WHERE state = 'OPEN' AND repositoryId = $1;
 `;
 
+const querySelectSecurityAdvisory = `
+	SELECT sec.id, 
+		sec.externalId, 
+		sec.state,
+		sec.createdAt,
+		sec.updatedAt, 
+		repo.owner as repoOwner, 
+		repo.name as repoName
+	FROM securities sec
+	JOIN repositories repo ON sec.repositoryId = repo.id
+	WHERE state = 'OPEN'
+	ORDER BY sec.updatedAt DESC
+	LIMIT $1;
+`;
+
 const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
 
 export function initRepository(db: Database): Store {
@@ -106,7 +125,7 @@ export function initRepository(db: Database): Store {
 				const stmt = await db.prepare(queryInsertRepo);
 
 				for (const repo of repos) {
-					await stmt.run(repo.id, repo.name, repo.url, repo.topic);
+					await stmt.run(repo.id, repo.name, repo.url, repo.topic, repo.owner);
 				}
 
 				await stmt.finalize();
@@ -161,6 +180,24 @@ export function initRepository(db: Database): Store {
 
 				return Promise.resolve({
 					data: result as ModelSecurity[],
+				});
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async getSecurityAdvisoryOrderByLastUpdated(
+			limit: number,
+		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
+			try {
+				const result = await db.all(querySelectSecurityAdvisory, limit);
+
+				return Promise.resolve({
+					data: result as ModelSecurityAdvisory[],
 				});
 			} catch (error) {
 				const err = error as Error;

@@ -25,6 +25,9 @@ export interface Node<T> {
 export interface ModelRepository {
 	url: string;
 	name: string;
+	owner: {
+		login: string;
+	};
 	vulnerabilityAlerts: RootNode<ModelVulnerabilityAlerts>;
 }
 

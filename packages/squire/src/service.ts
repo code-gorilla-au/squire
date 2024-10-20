@@ -24,7 +24,11 @@ export function initService(client: Client, store: Store) {
 			const securities: ModelSecurity[] = [];
 
 			for (const node of resp.data.search.edges) {
-				const repo = generateRepoFromGhModel(node.node, topic);
+				const repo = generateRepoFromGhModel(
+					node.node,
+					node.node.owner.login,
+					topic,
+				);
 				repos.push(repo);
 
 				const security = generateSecurityFromGhModel(node.node, repo.id);

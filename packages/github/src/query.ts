@@ -26,6 +26,9 @@ function queryReposWithSec(
         ... on Repository {
           name
           url
+          owner {
+            login
+          }
           vulnerabilityAlerts(
             states: ${securityStates}
             first: 100

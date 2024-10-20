@@ -7,6 +7,7 @@ import type { ModelRepository, ModelSecurity } from "./types";
 
 export function generateRepoFromGhModel(
 	ghRepo: GhModelRepo,
+	owner: string,
 	topic: string,
 ): ModelRepository {
 	return {
@@ -14,6 +15,7 @@ export function generateRepoFromGhModel(
 		name: ghRepo.name,
 		url: ghRepo.url,
 		topic,
+		owner,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};

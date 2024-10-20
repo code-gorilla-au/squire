@@ -3,6 +3,7 @@ export interface ModelRepository {
 	name: string;
 	url: string;
 	topic: string;
+	owner: string;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -22,6 +23,16 @@ export interface ModelSecurity {
 }
 
 export type SecurityDto = ModelSecurity;
+
+export interface ModelSecurityAdvisory {
+	id: string;
+	externalId: string;
+	state: string;
+	repoOwner: string;
+	repoName: string;
+	createdAt: Date;
+	updatedAt: Date;
+}
 
 export type StoreActionResult<T = null> =
 	| StoreActionSuccess<T>
@@ -46,4 +57,7 @@ export interface Store {
 	getOpenSecByRepoId(
 		repoId: string,
 	): Promise<StoreActionResult<ModelSecurity[]>>;
+	getSecurityAdvisoryOrderByLastUpdated(
+		limit: number,
+	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
 }
