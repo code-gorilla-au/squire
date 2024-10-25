@@ -22,7 +22,7 @@ if (err) {
 	process.exit(1);
 }
 
-const resp = await service.ingestRepoByTopic("cli");
+const resp = await service.ingestRepoByTopic("blueprint");
 if (resp.length) {
 	logger.error({ resp }, "Error syncing repos");
 	process.exit(1);

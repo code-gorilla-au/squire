@@ -5,7 +5,7 @@
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
 		"db:clean": "rm -rf .db && mkdir .db",
-		"dev:worker": "bun run ./apps/worker/index.ts"
+		"dev:worker": "bun apps/workers/index.ts"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
