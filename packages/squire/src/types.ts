@@ -47,17 +47,3 @@ export type StoreActionFailure = {
 	data?: never;
 	error: Error;
 };
-
-export interface Store {
-	bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult>;
-	bulkInsertSecVulnerabilities(
-		securities: ModelSecurity[],
-	): Promise<StoreActionResult>;
-	initTables(): Promise<StoreActionResult>;
-	getOpenSecByRepoId(
-		repoId: string,
-	): Promise<StoreActionResult<ModelSecurity[]>>;
-	getSecurityAdvisoryOrderByLastUpdated(
-		limit: number,
-	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
-}

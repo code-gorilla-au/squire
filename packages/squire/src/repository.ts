@@ -3,9 +3,9 @@ import type {
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
-	Store,
 	StoreActionResult,
 } from "./types";
+import type { Store } from "./interfaces";
 import { logger } from "toolbox";
 
 export const queryCreateRepoTable = `
@@ -32,6 +32,16 @@ export const queryCreateSecurityTable = `
         createdAt TIMESTAMP WITH TIME ZONE,
         updatedAt TIMESTAMP WITH TIME ZONE
     );
+`;
+
+export const queryCreateProductsTable = `
+	CREATE TABLE IF NOT EXISTS products (
+		id uuid PRIMARY KEY,
+		name VARCHAR UNIQUE,
+		tags VARCHAR[],
+		createdAt TIMESTAMP WITH TIME ZONE,
+		updatedAt TIMESTAMP WITH TIME ZONE
+	);
 `;
 
 export const queryInsertRepo = `
@@ -100,7 +110,27 @@ const querySelectSecurityAdvisory = `
 	LIMIT $1;
 `;
 
-const migrations = [queryCreateRepoTable, queryCreateSecurityTable];
+const queryInsertIntoProducts = `
+	INSERT INTO products (
+		id,
+		name,
+		tags,
+		createdAt,
+		updatedAt
+	) VALUES (
+		gen_random_uuid(),
+		$1,
+		$2,
+		now(),
+		now()
+	);
+`;
+
+const migrations = [
+	queryCreateRepoTable,
+	queryCreateSecurityTable,
+	queryCreateProductsTable,
+];
 
 export function initRepository(db: Database): Store {
 	return {
@@ -199,6 +229,22 @@ export function initRepository(db: Database): Store {
 				return Promise.resolve({
 					data: result as ModelSecurityAdvisory[],
 				});
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async insertProduct(
+			name: string,
+			tags: string[],
+		): Promise<StoreActionResult> {
+			try {
+				await db.run(queryInsertIntoProducts, name, tags);
+				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });
