@@ -6,15 +6,24 @@ import type { PageData } from "./$types";
 export let data: PageData;
 
 function routeToProducts() {
-	goto("/products");
+	goto("/products/create");
 }
 </script>
 
-<h1>Dashboard</h1>
+<h1 class="heading-1">Dashboard</h1>
 
-<h4>total products {JSON.stringify(data)}</h4>
+{#if data.props.products.length > 0}
+    <h2>Products</h2>
+    <ul>
+        {#each data.props.products as product}
+            <li>{product.name}</li>
+        {/each}
+    </ul>
+{:else}
+    <h2>No products found, create your first product</h2>   
+    <Button on:click={routeToProducts}>Create</Button>
+{/if}
 
-<Button on:click={routeToProducts}>Products</Button>
 
 <svelte:head>
     <title>Dashboard | Squire</title>
