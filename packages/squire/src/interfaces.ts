@@ -1,9 +1,10 @@
 import type {
+	ModelProduct,
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
 	StoreActionResult,
-} from "./types";
+} from "./models";
 
 export interface Store {
 	bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult>;
@@ -18,4 +19,5 @@ export interface Store {
 		limit: number,
 	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
 	insertProduct(name: string, tags: string[]): Promise<StoreActionResult>;
+	getAllProducts(): Promise<StoreActionResult<ModelProduct[]>>;
 }

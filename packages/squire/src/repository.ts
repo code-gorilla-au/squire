@@ -1,10 +1,11 @@
 import type { Database } from "duckdb-async";
 import type {
+	ModelProduct,
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
 	StoreActionResult,
-} from "./types";
+} from "./models";
 import type { Store } from "./interfaces";
 import { logger } from "toolbox";
 
@@ -126,6 +127,10 @@ const queryInsertIntoProducts = `
 	);
 `;
 
+const queryGetAllProducts = `
+	SELECT * FROM products;
+`;
+
 const migrations = [
 	queryCreateRepoTable,
 	queryCreateSecurityTable,
@@ -245,6 +250,19 @@ export function initRepository(db: Database): Store {
 			try {
 				await db.run(queryInsertIntoProducts, name, tags);
 				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async getAllProducts(): Promise<StoreActionResult<ModelProduct[]>> {
+			try {
+				const result = await db.all(queryGetAllProducts);
+				return Promise.resolve({ data: result as ModelProduct[] });
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });

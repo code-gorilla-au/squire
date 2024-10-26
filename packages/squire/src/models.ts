@@ -34,6 +34,16 @@ export interface ModelSecurityAdvisory {
 	updatedAt: Date;
 }
 
+export interface ModelProduct {
+	id: string;
+	name: string;
+	tags: string[];
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+export type ProductDto = ModelProduct;
+
 export type StoreActionResult<T = null> =
 	| StoreActionSuccess<T>
 	| StoreActionFailure;

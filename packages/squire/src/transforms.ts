@@ -3,7 +3,7 @@ import type {
 	ModelRepository as GhModelRepo,
 	ModelVulnerabilityAlerts,
 } from "squire-github";
-import type { ModelRepository, ModelSecurity } from "./types";
+import type { ModelRepository, ModelSecurity } from "./models";
 
 export function generateRepoFromGhModel(
 	ghRepo: GhModelRepo,

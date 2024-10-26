@@ -1,4 +1,4 @@
-import { initService, initRepository } from "squire";
+import { initWorker, initRepository } from "squire";
 import { initClient } from "squire-github";
 import { Database, OPEN_READWRITE } from "duckdb-async";
 import { logger } from "toolbox";
@@ -14,7 +14,7 @@ const client = initClient({
 });
 
 const repo = initRepository(db);
-const service = initService(client, repo);
+const service = initWorker(client, repo);
 
 const err = await service.init();
 if (err) {
