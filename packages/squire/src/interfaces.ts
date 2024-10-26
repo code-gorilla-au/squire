@@ -12,12 +12,13 @@ export interface Store {
 		securities: ModelSecurity[],
 	): Promise<StoreActionResult>;
 	initTables(): Promise<StoreActionResult>;
-	getOpenSecByRepoId(
-		repoId: string,
-	): Promise<StoreActionResult<ModelSecurity[]>>;
-	getSecurityAdvisoryOrderByLastUpdated(
+	getSecurityAdvisoryByProductId(
+		productId: string,
 		limit: number,
 	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
+	getReposByProductId(
+		productId: string,
+	): Promise<StoreActionResult<ModelRepository[]>>;
 	insertProduct(name: string, tags: string[]): Promise<StoreActionResult>;
 	getAllProducts(): Promise<StoreActionResult<ModelProduct[]>>;
 }

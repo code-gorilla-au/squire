@@ -9,6 +9,10 @@ export let data: PageData;
 function routeToProducts() {
 	goto("/products/create");
 }
+
+function routeToProduct(id: string) {
+	goto(`/products/${id}`);
+}
 </script>
 
 <h1 class="heading-1">Dashboard</h1>
@@ -22,7 +26,10 @@ function routeToProducts() {
    
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each data.props.products as product}
-            <Card class="p-3 cursor-pointer">
+            <Card on:click={(event: Event) => {
+                event.preventDefault();
+                routeToProduct(product.id)
+            }} class="p-3 cursor-pointer">
                 <h3 class="font-semibold">{product.name}</h3>
                 <span class=" text-xs bg-muted p-1 text-muted-foreground">{product.tags}</span>
             </Card>

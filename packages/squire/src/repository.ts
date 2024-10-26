@@ -4,6 +4,7 @@ import type {
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
+	RepositoryDto,
 	StoreActionResult,
 } from "./models";
 import type { Store } from "./interfaces";
@@ -92,11 +93,7 @@ export const queryInsertSecurity = `
 		updatedAt = now();
 `;
 
-const querySelectAllOpenSecByRepo = `
-	SELECT * FROM securities WHERE state = 'OPEN' AND repositoryId = $1;
-`;
-
-const querySelectSecurityAdvisory = `
+const queryGetAllSecurityAdvisoryByProduct = `
 	SELECT sec.id, 
 		sec.externalId, 
 		sec.state,
@@ -104,11 +101,18 @@ const querySelectSecurityAdvisory = `
 		sec.updatedAt, 
 		repo.owner as repoOwner, 
 		repo.name as repoName
+		repo.url as repoUrl
 	FROM securities sec
 	JOIN repositories repo ON sec.repositoryId = repo.id
-	WHERE state = 'OPEN'
+	JOIN products prod ON repo.topic IN prod.tags
+	WHERE sec.state = 'OPEN'
+	AND prod.id = $1
 	ORDER BY sec.updatedAt DESC
-	LIMIT $1;
+	LIMIT $2;
+`;
+
+const queryGetReposByProductId = `
+	SELECT * FROM repositories WHERE topic IN (SELECT tags FROM products WHERE id = $1);
 `;
 
 const queryInsertIntoProducts = `
@@ -207,14 +211,19 @@ export function initRepository(db: Database): Store {
 				};
 			}
 		},
-		async getOpenSecByRepoId(
-			repoId: string,
-		): Promise<StoreActionResult<ModelSecurity[]>> {
+		async getSecurityAdvisoryByProductId(
+			productId: string,
+			limit: number,
+		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
 			try {
-				const result = await db.all(querySelectAllOpenSecByRepo, repoId);
+				const result = await db.all(
+					queryGetAllSecurityAdvisoryByProduct,
+					productId,
+					limit,
+				);
 
 				return Promise.resolve({
-					data: result as ModelSecurity[],
+					data: result as ModelSecurityAdvisory[],
 				});
 			} catch (error) {
 				const err = error as Error;
@@ -225,15 +234,12 @@ export function initRepository(db: Database): Store {
 				});
 			}
 		},
-		async getSecurityAdvisoryOrderByLastUpdated(
-			limit: number,
-		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
+		async getReposByProductId(
+			productId: string,
+		): Promise<StoreActionResult<ModelRepository[]>> {
 			try {
-				const result = await db.all(querySelectSecurityAdvisory, limit);
-
-				return Promise.resolve({
-					data: result as ModelSecurityAdvisory[],
-				});
+				const result = await db.all(queryGetReposByProductId, productId);
+				return Promise.resolve({ data: result as RepositoryDto[] });
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });
