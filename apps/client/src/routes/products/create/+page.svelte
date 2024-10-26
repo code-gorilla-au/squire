@@ -1,22 +1,30 @@
 <script lang="ts">
-import Input from "$components/ui/input/input.svelte";
-import Label from "$components/ui/label/label.svelte";
+import Button from "$components/ui/button/button.svelte";
+import { Input } from "$components/ui/input";
+import { Label } from "$components/ui/label";
+import type { ActionData } from "./$types";
 
-const form = {
-	name: "",
-	tags: [],
-};
+export let form: ActionData;
 </script>
 
 
 <h1 class="heading-1">Create Product</h1>
 
 <div>
-    <form>
+    <form method="POST">
         <Label>
             Name
-            <Input bind:value={form.name} />
+            <Input required name="name"  />
         </Label>
+        <Label>
+            Tag
+            <Input required name="tags"  />
+        </Label>
+        {#if form?.success == false}
+            <p  class="text-destructive">Form has errors</p>
+            <p>{JSON.stringify(form?.errors)}</p>
+        {/if}
+        <Button type="submit">Submit</Button>
     </form>
 </div>
 

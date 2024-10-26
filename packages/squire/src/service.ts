@@ -22,9 +22,7 @@ export function initService(store: Store) {
 
 			logger.info({ totalProducts: results.data?.length }, "Fetched products");
 
-			const products: ProductDto[] = {
-				...(results.data as ProductDto[]),
-			};
+			const products: ProductDto[] = [...(results.data as ProductDto[])];
 
 			return products;
 		},

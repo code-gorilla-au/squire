@@ -121,7 +121,7 @@ const queryInsertIntoProducts = `
 	) VALUES (
 		gen_random_uuid(),
 		$1,
-		$2,
+		LIST_VALUE($2),
 		now(),
 		now()
 	);
