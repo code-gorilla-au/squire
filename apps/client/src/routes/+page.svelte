@@ -18,18 +18,17 @@ function routeToProducts() {
 </div>
 
 {#if data.props.products.length > 0}
+    <h2 class="font-semibold my-4">Products ({data.props.products.length})</h2>
    
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    {#each data.props.products as product}
-        <Card class="p-3 cursor-pointer">
-            <h3 class="font-semibold">{product.name}</h3>
-            <span class=" text-xs bg-muted p-1 text-muted-foreground">{product.tags}</span>
-        </Card>
-    {/each}
-</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {#each data.props.products as product}
+            <Card class="p-3 cursor-pointer">
+                <h3 class="font-semibold">{product.name}</h3>
+                <span class=" text-xs bg-muted p-1 text-muted-foreground">{product.tags}</span>
+            </Card>
+        {/each}
+    </div>
    
-    
-
 {:else}
     <h2>No products found, create your first product</h2>   
     <Button on:click={routeToProducts}>Create</Button>
