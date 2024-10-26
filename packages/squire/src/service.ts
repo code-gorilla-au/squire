@@ -3,12 +3,8 @@ import {
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
-import type {
-	ModelRepository,
-	ModelSecurity,
-	SecurityDto,
-	Store,
-} from "./types";
+import type { ModelRepository, ModelSecurity, SecurityDto } from "./types";
+import type { Store } from "./interfaces";
 import { logger } from "toolbox";
 
 export function initService(client: Client, store: Store) {
@@ -72,6 +68,14 @@ export function initService(client: Client, store: Store) {
 			}
 
 			return result.data as SecurityDto[];
+		},
+		async createProduct(name: string, tags: string[]): Promise<void> {
+			const result = await store.insertProduct(name, tags);
+
+			if (result.error) {
+				logger.error({ error: result.error }, "Error creating product");
+				throw new Error("error creating product");
+			}
 		},
 	};
 }
