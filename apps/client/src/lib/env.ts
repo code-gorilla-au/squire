@@ -1,5 +1,17 @@
+import { join } from "node:path";
 import { logger } from "toolbox";
 import { z } from "zod";
+
+const dbFilePath =
+	join(
+		import.meta.dirname,
+		"..",
+		"..",
+		"..",
+		"..",
+		import.meta.env.VITE_DB_FILE_PATH,
+	) ?? ":memory:";
+const logLevel = import.meta.env.vITE_LOG_LEVEL ?? "debug";
 
 const serverSchema = z.object({
 	dbFilePath: z.string(),
@@ -9,9 +21,6 @@ const serverSchema = z.object({
 export type WorkerConfig = z.infer<typeof serverSchema>;
 
 export function loadConfig() {
-	const dbFilePath = process.env.DB_FILE_PATH ?? ":memory:";
-	const logLevel = process.env.LOG_LEVEL ?? "info";
-
 	logger.info({ dbFilePath, logLevel }, "Loaded configuration");
 
 	return serverSchema.parse({
