@@ -13,6 +13,10 @@ function routeToProducts() {
 
 <h1 class="heading-1">Dashboard</h1>
 
+<div>
+    <a class="text-xs text-link" href="/products/create">Add additional products</a>
+</div>
+
 {#if data.props.products.length > 0}
     {#each data.props.products as product}
         <Card class="p-3">
