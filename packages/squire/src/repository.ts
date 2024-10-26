@@ -100,7 +100,7 @@ const queryGetAllSecurityAdvisoryByProduct = `
 		sec.createdAt,
 		sec.updatedAt, 
 		repo.owner as repoOwner, 
-		repo.name as repoName
+		repo.name as repoName,
 		repo.url as repoUrl
 	FROM securities sec
 	JOIN repositories repo ON sec.repositoryId = repo.id
@@ -112,7 +112,10 @@ const queryGetAllSecurityAdvisoryByProduct = `
 `;
 
 const queryGetReposByProductId = `
-	SELECT * FROM repositories WHERE topic IN (SELECT tags FROM products WHERE id = $1);
+	SELECT * FROM repositories r
+	left join products as p
+	on r.topic in p.tags  
+	WHERE p.id = $1;
 `;
 
 const queryInsertIntoProducts = `
@@ -133,6 +136,10 @@ const queryInsertIntoProducts = `
 
 const queryGetAllProducts = `
 	SELECT * FROM products;
+`;
+
+const queryGetProductById = `
+	SELECT * FROM products WHERE id = $1;
 `;
 
 const migrations = [
@@ -256,6 +263,19 @@ export function initRepository(db: Database): Store {
 			try {
 				await db.run(queryInsertIntoProducts, name, tags);
 				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async getProductById(id: string): Promise<StoreActionResult<ModelProduct>> {
+			try {
+				const result = await db.all(queryGetProductById, id);
+				return Promise.resolve({ data: result[0] as ModelProduct });
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });

@@ -20,5 +20,6 @@ export interface Store {
 		productId: string,
 	): Promise<StoreActionResult<ModelRepository[]>>;
 	insertProduct(name: string, tags: string[]): Promise<StoreActionResult>;
+	getProductById(id: string): Promise<StoreActionResult<ModelProduct>>;
 	getAllProducts(): Promise<StoreActionResult<ModelProduct[]>>;
 }

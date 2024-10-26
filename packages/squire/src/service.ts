@@ -26,6 +26,18 @@ export function initService(store: Store) {
 
 			return products;
 		},
+		async getProductById(productId: string): Promise<ProductDto> {
+			const result = await store.getProductById(productId);
+
+			if (result.error) {
+				logger.error({ error: result.error }, "Error fetching product");
+				throw new Error("error fetching product");
+			}
+
+			const product = result.data as ProductDto;
+
+			return product;
+		},
 		async getSecurityAdvisoryByProductId(
 			productId: string,
 		): Promise<SecurityAdvisoryDto[]> {
