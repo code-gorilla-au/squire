@@ -7,10 +7,10 @@ function routeToProducts() {
 }
 </script>
 
-<h1>Squire</h1>
+<h1>Dashboard</h1>
 
 <Button on:click={routeToProducts}>Products</Button>
 
 <svelte:head>
-    <title>Squire</title>
+    <title>Dashboard | Squire</title>
 </svelte:head>
