@@ -42,7 +42,13 @@ export interface ModelProduct {
 	updatedAt: Date;
 }
 
-export type ProductDto = ModelProduct;
+export interface ProductDto {
+	id: string;
+	name: string;
+	tags: string[];
+	createdAt: Date;
+	updatedAt: Date;
+}
 
 export type StoreActionResult<T = null> =
 	| StoreActionSuccess<T>
