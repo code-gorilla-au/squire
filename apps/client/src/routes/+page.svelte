@@ -21,7 +21,7 @@ function routeToProducts() {
    
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {#each data.props.products as product}
-        <Card class="p-3">
+        <Card class="p-3 cursor-pointer">
             <h3 class="font-semibold">{product.name}</h3>
             <span class=" text-xs bg-muted p-1 text-muted-foreground">{product.tags}</span>
         </Card>
