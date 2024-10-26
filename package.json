@@ -6,7 +6,7 @@
 		"lint:fix": "bunx biome check --write .",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"dev:worker": "bun apps/workers/index.ts",
-		"dev:app": "bun --bun run --filter client dev"
+		"dev:app": "bun --env=\"./.env.local\" run --filter client dev"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
