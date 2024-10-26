@@ -1,3 +1,4 @@
 {
-	"name": "squire-github"
+	"name": "squire-github",
+	"type": "module"
 }

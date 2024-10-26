@@ -1,3 +1,4 @@
 {
-    "name": "toolbox"
+    "name": "toolbox",
+    "type": "module"
 }
