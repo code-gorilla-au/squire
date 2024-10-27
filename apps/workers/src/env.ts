@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { env } from "bun";
+import { z } from "zod";
 
 const workersSchema = z.object({
 	ghToken: z.string(),

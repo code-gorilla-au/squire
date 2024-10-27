@@ -1,10 +1,10 @@
 <script lang="ts">
-import Card from "$components/ui/card/card.svelte";
-import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
-import type { PageData } from "./$types";
 import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
+import Card from "$components/ui/card/card.svelte";
 import { format } from "date-fns";
+import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
+import type { PageData } from "./$types";
 
 export let data: PageData;
 

@@ -1,4 +1,6 @@
 import type { Database } from "duckdb-async";
+import { logger } from "toolbox";
+import type { Store } from "./interfaces";
 import type {
 	ModelProduct,
 	ModelRepository,
@@ -7,8 +9,6 @@ import type {
 	RepositoryDto,
 	StoreActionResult,
 } from "./models";
-import type { Store } from "./interfaces";
-import { logger } from "toolbox";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (

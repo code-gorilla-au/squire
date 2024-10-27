@@ -1,5 +1,5 @@
-import type { Store } from "./interfaces";
 import { logger } from "toolbox";
+import type { Store } from "./interfaces";
 import type { ProductDto, RepositoryDto, SecurityAdvisoryDto } from "./models";
 
 export function initService(store: Store) {

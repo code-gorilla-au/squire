@@ -1,11 +1,11 @@
 import type { Client } from "squire-github";
+import { logger } from "toolbox";
+import type { Store } from "./interfaces";
+import type { ModelRepository, ModelSecurity } from "./models";
 import {
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
-import type { ModelRepository, ModelSecurity } from "./models";
-import type { Store } from "./interfaces";
-import { logger } from "toolbox";
 
 export function initWorker(client: Client, store: Store) {
 	return {
