@@ -3,7 +3,7 @@ import {
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
-import type { ModelRepository, ModelSecurity, SecurityDto } from "./models";
+import type { ModelRepository, ModelSecurity } from "./models";
 import type { Store } from "./interfaces";
 import { logger } from "toolbox";
 
@@ -58,16 +58,6 @@ export function initWorker(client: Client, store: Store) {
 			}
 
 			return insertErrors;
-		},
-		async getOpenSecurityVulnerabilitiesByRepoId(repoId: string) {
-			const result = await store.getOpenSecByRepoId(repoId);
-
-			if (result.error) {
-				logger.error({ error: result.error }, "Error getting open security");
-				throw new Error("error getting security vulnerabilities");
-			}
-
-			return result.data as SecurityDto[];
 		},
 	};
 }

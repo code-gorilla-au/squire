@@ -12,7 +12,7 @@ let { children } = $props();
 			</ul>
 		</nav>
 	</aside>
-	<div class="p-2 w-full">
+	<div class="p-2 w-full h-screen overflow-auto">
 		{@render children()}
 	</div>
 </main>

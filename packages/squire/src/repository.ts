@@ -96,7 +96,10 @@ export const queryInsertSecurity = `
 const queryGetAllSecurityAdvisoryByProduct = `
 	SELECT sec.id, 
 		sec.externalId, 
+		sec.packageName,
 		sec.state,
+		sec.patchedVersion,
+		sec.severity,
 		sec.createdAt,
 		sec.updatedAt, 
 		repo.owner as repoOwner, 

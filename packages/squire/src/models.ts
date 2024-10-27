@@ -33,6 +33,9 @@ export interface ModelSecurity {
 export interface ModelSecurityAdvisory {
 	id: string;
 	externalId: string;
+	packageName: string;
+	patchedVersion: string;
+	severity: string;
 	state: string;
 	repoOwner: string;
 	repoName: string;
@@ -44,6 +47,9 @@ export interface ModelSecurityAdvisory {
 export interface SecurityAdvisoryDto {
 	id: string;
 	externalId: string;
+	packageName: string;
+	patchedVersion: string;
+	severity: string;
 	state: string;
 	repoOwner: string;
 	repoName: string;

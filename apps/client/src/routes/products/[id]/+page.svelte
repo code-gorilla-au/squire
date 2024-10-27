@@ -4,6 +4,7 @@ import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
 import type { PageData } from "./$types";
 import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
+import { format } from "date-fns";
 
 export let data: PageData;
 
@@ -29,12 +30,26 @@ function goBack() {
 
 <div>
     <h3 class="heading-3 my-3">Open security issues</h3>
-    <div>
+    <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each secAdvisory as sec }
-        <Card class="p-2">
-            <h3 class="font-semibold underline capitalize mb-2">{sec.id}</h3>
-            <Tag >{sec.repoName}</Tag>
-        </Card>
+            <Card class="p-3">
+                <h3 class="font-semibold underline capitalize mb-2">{sec.packageName}</h3>
+                <div class="text-sm">
+                    <div>
+                        <span class="font-semibold">Severity:</span>
+                        <span class=" lowercase">{sec.severity}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Status:</span>
+                        <span class=" lowercase">{sec.state}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Last update:</span>
+                        <span class=" lowercase">{format(sec.updatedAt, 'yyyy-MM-dd')}</span>
+                    </div>
+                </div>
+                <Tag>{sec.repoName}</Tag>
+            </Card>
         {/each}
     </div>
 </div>
