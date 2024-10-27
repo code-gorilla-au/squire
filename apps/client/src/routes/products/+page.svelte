@@ -10,8 +10,12 @@ const products = data.props.products;
 
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     {#each products as product }
-        <a href={`/products/${product.id}`} >
+        <a href={`/products/${product.id}/edit`} >
             <ProductCard product={product} />
         </a>
     {/each}
 </div>
+
+<svelte:head>
+    <title>Products | Squire</title>
+</svelte:head>
