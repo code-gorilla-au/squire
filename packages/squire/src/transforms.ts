@@ -41,7 +41,8 @@ function transformToSecurityModel(
 		state: edge.state,
 		packageName: edge.securityVulnerability.package.name,
 		severity: edge.securityVulnerability.advisory.severity,
-		patchedVersion: edge.securityVulnerability.firstPatchedVersion.identifier,
+		patchedVersion:
+			edge.securityVulnerability?.firstPatchedVersion?.identifier ?? null,
 		createdAt: new Date(),
 		updatedAt: new Date(),
 	};
