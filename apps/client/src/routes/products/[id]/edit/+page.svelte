@@ -16,7 +16,7 @@ const product = data.props.product;
     <form method="post" action="?/update">
         <Label>
             Name
-            <Input readonly required name="name" value={product.name}  />
+            <Input required name="name" value={product.name}  />
         </Label>
         <Label>
             Tag

@@ -313,6 +313,18 @@ export function initRepository(db: Database): Store {
 			tags: string[];
 		}): Promise<StoreActionResult> {
 			try {
+				const existingProducts = (await db.all(
+					queryGetProductByName,
+					id,
+				)) as ModelProduct[];
+
+				const matched = existingProducts.find((p) => p.name === name);
+				if (matched && matched.id !== id) {
+					return Promise.resolve({
+						error: new Error("Product name already exists"),
+					});
+				}
+
 				await db.run(queryUpdateProductById, id, name, tags);
 				return Promise.resolve({ data: null });
 			} catch (error) {
