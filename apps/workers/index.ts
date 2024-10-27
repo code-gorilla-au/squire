@@ -22,10 +22,16 @@ if (err) {
 	process.exit(1);
 }
 
-const resp = await service.ingestRepoByTopic("blueprint");
-if (resp.length) {
-	logger.error({ resp }, "Error syncing repos");
+const blueprintErr = await service.ingestRepoByTopic("blueprint");
+if (blueprintErr.length) {
+	logger.error({ blueprintErr }, "Error syncing repos");
 	process.exit(1);
 }
 
-logger.info({ resp }, "Synced repos");
+const imErr = await service.ingestRepoByTopic("inventory-management");
+if (imErr.length) {
+	logger.error({ imErr }, "Error syncing repos");
+	process.exit(1);
+}
+
+logger.info("Synced repos");

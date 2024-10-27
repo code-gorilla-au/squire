@@ -38,8 +38,8 @@ export const queryCreateSecurityTable = `
 
 export const queryCreateProductsTable = `
 	CREATE TABLE IF NOT EXISTS products (
-		id uuid PRIMARY KEY,
-		name VARCHAR UNIQUE,
+		id uuid,
+		name VARCHAR,
 		tags VARCHAR[],
 		createdAt TIMESTAMP WITH TIME ZONE,
 		updatedAt TIMESTAMP WITH TIME ZONE
@@ -129,7 +129,7 @@ const queryInsertIntoProducts = `
 		createdAt,
 		updatedAt
 	) VALUES (
-		gen_random_uuid(),
+		UUID(),
 		$1,
 		LIST_VALUE($2),
 		now(),
@@ -145,8 +145,12 @@ const queryGetProductById = `
 	SELECT * FROM products WHERE id = $1;
 `;
 
+const queryGetProductByName = `
+	SELECT * FROM products WHERE name = $1;
+`;
+
 const queryUpdateProductById = `
-	UPDATE products SET name = $2, tags = $3, updatedAt = now() WHERE id = $1;
+	UPDATE products SET name = $2, tags = LIST_VALUE($3) WHERE id = $1;
 `;
 
 const migrations = [
@@ -268,6 +272,13 @@ export function initRepository(db: Database): Store {
 			tags: string[],
 		): Promise<StoreActionResult> {
 			try {
+				const results = await db.all(queryGetProductByName, name);
+				if (results.length > 0) {
+					return Promise.resolve({
+						error: new Error("Product already exists"),
+					});
+				}
+
 				await db.run(queryInsertIntoProducts, name, tags);
 				return Promise.resolve({ data: null });
 			} catch (error) {
@@ -302,7 +313,7 @@ export function initRepository(db: Database): Store {
 			tags: string[];
 		}): Promise<StoreActionResult> {
 			try {
-				await db.exec(queryUpdateProductById, id, name, tags);
+				await db.run(queryUpdateProductById, id, name, tags);
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
