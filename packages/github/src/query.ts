@@ -31,7 +31,7 @@ function queryReposWithSec(
           }
           vulnerabilityAlerts(
             states: ${securityStates}
-            first: 100
+            last: 100
           ) {
             pageInfo {
               hasNextPage
