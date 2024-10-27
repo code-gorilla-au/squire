@@ -1,5 +1,6 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
+import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
 import type { PageData } from "./$types";
@@ -31,7 +32,7 @@ function routeToProduct(id: string) {
                 routeToProduct(product.id)
             }} class="p-3 cursor-pointer">
                 <h3 class="font-semibold">{product.name}</h3>
-                <span class=" text-xs bg-muted p-1 text-muted-foreground">{product.tags}</span>
+                <Tag>{product.tags}</Tag>
             </Card>
         {/each}
     </div>
