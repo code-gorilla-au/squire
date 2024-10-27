@@ -1,6 +1,7 @@
 <script lang="ts">
+// biome-ignore lint/style/useImportType: LabelPrimitive is actually being used
+import { Label as LabelPrimitive } from "bits-ui";
 import { cn } from "$lib/utils.js";
-import type { Label as LabelPrimitive } from "bits-ui";
 
 type $$Props = LabelPrimitive.Props;
 
