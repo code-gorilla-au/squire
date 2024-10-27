@@ -16,6 +16,9 @@ export interface Store {
 		productId: string,
 		limit: number,
 	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
+	getAllSecurityAdvisory(
+		limit?: number,
+	): Promise<StoreActionResult<ModelSecurityAdvisory[]>>;
 	getReposByProductId(
 		productId: string,
 	): Promise<StoreActionResult<ModelRepository[]>>;

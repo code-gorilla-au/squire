@@ -114,6 +114,26 @@ const queryGetAllSecurityAdvisoryByProduct = `
 	LIMIT $2;
 `;
 
+const queryGetAllSecurityAdvisory = `
+	SELECT sec.id, 
+		sec.externalId, 
+		sec.packageName,
+		sec.state,
+		sec.patchedVersion,
+		sec.severity,
+		sec.createdAt,
+		sec.updatedAt, 
+		repo.owner as repoOwner, 
+		repo.name as repoName,
+		repo.url as repoUrl
+	FROM securities sec
+	JOIN repositories repo ON sec.repositoryId = repo.id
+	JOIN products prod ON repo.topic IN prod.tags
+	WHERE sec.state = 'OPEN'
+	ORDER BY sec.updatedAt DESC
+	LIMIT $1;
+`;
+
 const queryGetReposByProductId = `
 	SELECT r.* FROM repositories r
 	left join products as p
@@ -227,6 +247,21 @@ export function initRepository(db: Database): Store {
 				return {
 					error: err,
 				};
+			}
+		},
+		async getAllSecurityAdvisory(
+			limit = 100,
+		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
+			try {
+				const result = await db.all(queryGetAllSecurityAdvisory, limit);
+				return Promise.resolve({ data: result as ModelSecurityAdvisory[] });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
 			}
 		},
 		async getSecurityAdvisoryByProductId(

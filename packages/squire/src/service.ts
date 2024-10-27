@@ -56,6 +56,28 @@ export function initService(store: Store) {
 			}
 			logger.info({ productId, name, tags }, "Product updated");
 		},
+		async getAllSecurityAdvisories(): Promise<SecurityAdvisoryDto[]> {
+			const results = await store.getAllSecurityAdvisory();
+
+			if (results.error) {
+				logger.error(
+					{ error: results.error },
+					"Error fetching security advisories",
+				);
+				throw new Error("error fetching security advisories");
+			}
+
+			logger.info(
+				{ totalAdvisories: results.data?.length },
+				"Fetched security advisories",
+			);
+
+			const advisories: SecurityAdvisoryDto[] = [
+				...(results.data as SecurityAdvisoryDto[]),
+			];
+
+			return advisories;
+		},
 		async getSecurityAdvisoryByProductId(
 			productId: string,
 		): Promise<SecurityAdvisoryDto[]> {
