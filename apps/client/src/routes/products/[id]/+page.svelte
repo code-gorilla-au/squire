@@ -73,5 +73,5 @@ function goBack() {
 </div>
 
 <svelte:head>
-    <title>Product | Squire</title>
+    <title>{product.name} | Squire</title>
 </svelte:head>

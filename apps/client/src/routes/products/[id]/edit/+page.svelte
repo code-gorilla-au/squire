@@ -29,3 +29,7 @@ const product = data.props.product;
         <Button type="submit">Update</Button>
     </form>
 </div>
+
+<svelte:head>
+    <title>Edit {product.name} | Squire</title>
+</svelte:head>
