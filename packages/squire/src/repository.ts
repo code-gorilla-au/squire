@@ -112,7 +112,7 @@ const queryGetAllSecurityAdvisoryByProduct = `
 `;
 
 const queryGetReposByProductId = `
-	SELECT * FROM repositories r
+	SELECT r.* FROM repositories r
 	left join products as p
 	on r.topic in p.tags  
 	WHERE p.id = $1;

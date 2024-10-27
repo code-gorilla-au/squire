@@ -33,7 +33,9 @@
 	},
 	"dependencies": {
 		"duckdb-async": "^1.1.1",
-		"zod": "^3.23.8",
-		"squire": "workspace:*"
+		"install": "^0.13.0",
+		"lucide-svelte": "^0.453.0",
+		"squire": "workspace:*",
+		"zod": "^3.23.8"
 	}
 }

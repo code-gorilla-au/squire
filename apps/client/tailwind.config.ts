@@ -69,6 +69,9 @@ const config: Config = {
 				".heading-2": {
 					"@apply text-2xl dark:text-white": {},
 				},
+				".heading-3": {
+					"@apply text-xl dark:text-white": {},
+				},
 				".text-link": {
 					"@apply underline text-primary hover:text-primary/50": {},
 				},
