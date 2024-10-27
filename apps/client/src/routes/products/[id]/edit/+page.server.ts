@@ -1,5 +1,5 @@
 import { service } from "$products/server.js";
-import type { Actions } from "@sveltejs/kit";
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types.js";
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -16,28 +16,29 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-	update: async ({ request }) => {
+	default: async ({ request, params }) => {
 		const data = await request.formData();
 
 		const name = data.get("name");
 		const tags = data.get("tags");
 
 		if (!name) {
-			return {
+			return fail(400, {
 				success: false,
 				errors: ["Name is required"],
-			};
+			});
 		}
 
 		if (!tags) {
-			return {
+			return fail(400, {
 				success: false,
 				errors: ["Tags is required"],
-			};
+			});
 		}
 
-		return {
-			success: true,
-		};
+		await service.updateProduct(params.id ?? "", name.toString(), [
+			tags.toString(),
+		]);
+		redirect(303, "/");
 	},
 } satisfies Actions;

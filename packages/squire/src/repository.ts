@@ -145,6 +145,10 @@ const queryGetProductById = `
 	SELECT * FROM products WHERE id = $1;
 `;
 
+const queryUpdateProductById = `
+	UPDATE products SET name = $2, tags = $3, updatedAt = now() WHERE id = $1;
+`;
+
 const migrations = [
 	queryCreateRepoTable,
 	queryCreateSecurityTable,
@@ -279,6 +283,27 @@ export function initRepository(db: Database): Store {
 			try {
 				const result = await db.all(queryGetProductById, id);
 				return Promise.resolve({ data: result[0] as ModelProduct });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async updateProduct({
+			id,
+			name,
+			tags,
+		}: {
+			id: string;
+			name: string;
+			tags: string[];
+		}): Promise<StoreActionResult> {
+			try {
+				await db.exec(queryUpdateProductById, id, name, tags);
+				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });

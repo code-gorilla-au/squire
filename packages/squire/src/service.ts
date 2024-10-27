@@ -38,6 +38,23 @@ export function initService(store: Store) {
 
 			return product;
 		},
+		async updateProduct(
+			productId: string,
+			name: string,
+			tags: string[],
+		): Promise<void> {
+			logger.info({ productId, name, tags }, "Updating product");
+			const result = await store.updateProduct({
+				id: productId,
+				name,
+				tags,
+			});
+
+			if (result.error) {
+				logger.error({ error: result.error }, "Error updating product");
+				throw new Error("error updating product");
+			}
+		},
 		async getSecurityAdvisoryByProductId(
 			productId: string,
 		): Promise<SecurityAdvisoryDto[]> {

@@ -24,9 +24,5 @@ export const actions = {
 
 		await service.createProduct(name.toString(), [tags?.toString()]);
 		redirect(303, "/");
-
-		return {
-			success: true,
-		};
 	},
 } satisfies Actions;
