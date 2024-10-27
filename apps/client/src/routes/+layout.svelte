@@ -13,6 +13,7 @@ let { children } = $props();
 			</ul>
 		</nav>
 	</aside>
+	
 	{#if $navigating}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
 			<div class="bg-white p-4 rounded-lg">
