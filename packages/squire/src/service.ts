@@ -54,6 +54,7 @@ export function initService(store: Store) {
 				logger.error({ error: result.error }, "Error updating product");
 				throw new Error("error updating product");
 			}
+			logger.info({ productId, name, tags }, "Product updated");
 		},
 		async getSecurityAdvisoryByProductId(
 			productId: string,

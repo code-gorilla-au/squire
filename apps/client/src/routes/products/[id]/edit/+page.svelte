@@ -13,10 +13,10 @@ const product = data.props.product;
 <h1 class="heading-1">{product.name}</h1>
 
 <div>
-    <form method="post">
+    <form method="post" action="?/update">
         <Label>
             Name
-            <Input required name="name" value={product.name}  />
+            <Input readonly required name="name" value={product.name}  />
         </Label>
         <Label>
             Tag

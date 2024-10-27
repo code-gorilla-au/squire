@@ -1,6 +1,7 @@
 import { service } from "$products/server.js";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types.js";
+import { logger } from "toolbox";
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-	default: async ({ request, params }) => {
+	update: async ({ request, params }) => {
 		const data = await request.formData();
 
 		const name = data.get("name");
@@ -39,6 +40,9 @@ export const actions = {
 		await service.updateProduct(params.id ?? "", name.toString(), [
 			tags.toString(),
 		]);
+
+		logger.info("Product updated", { id: params.id, name, tags });
+
 		redirect(303, "/");
 	},
 } satisfies Actions;
