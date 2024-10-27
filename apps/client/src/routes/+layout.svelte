@@ -4,7 +4,7 @@ import { navigating } from "$app/stores";
 let { children } = $props();
 </script>
 <main class="flex">
-	<aside class="bg-primary w-36 h-screen">
+	<aside class="bg-primary w-36 h-screen rounded-md shadow-md">
 		<h3 class="text-primary-foreground font-bold text-2xl p-4">Squire</h3>
 		<nav class="text-primary-foreground">
 			<ul class="">
