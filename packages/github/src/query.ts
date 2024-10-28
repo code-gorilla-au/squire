@@ -1,18 +1,12 @@
-import type { VulnerabilityAlertState } from "./types";
-
 export function queryReposAndActiveSecByTopic(
 	owner: string,
 	topic: string,
 	first = 100,
 ): string {
-	return queryReposWithSec(`owner:${owner} topic:${topic}`, "OPEN", first);
+	return queryReposWithSec(`owner:${owner} topic:${topic}`, first);
 }
 
-function queryReposWithSec(
-	query: string,
-	securityStates: VulnerabilityAlertState[] | VulnerabilityAlertState = "OPEN",
-	first = 100,
-): string {
+function queryReposWithSec(query: string, first = 100): string {
 	return `
 {
   search(query: "${query}", type: REPOSITORY, first: ${first}) {
@@ -29,8 +23,18 @@ function queryReposWithSec(
           owner {
             login
           }
+          pullRequests(last:100) {
+            nodes {
+              id
+              state
+              createdAt
+              closedAt
+              mergedAt
+              permalink
+            }
+            totalCount
+          }            
           vulnerabilityAlerts(
-            states: ${securityStates}
             last: 100
           ) {
             pageInfo {
