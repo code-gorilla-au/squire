@@ -41,6 +41,7 @@ function queryReposWithSec(
               state
               id
               number
+              createdAt
               securityVulnerability {
                 package {
                   name

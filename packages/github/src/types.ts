@@ -29,6 +29,7 @@ export interface ModelRepository {
 		login: string;
 	};
 	vulnerabilityAlerts: RootNode<ModelVulnerabilityAlerts>;
+	pullRequests: RootNode<ModelPullRequest>;
 }
 
 export type VulnerabilityAlertState =
@@ -42,6 +43,7 @@ export interface ModelVulnerabilityAlerts {
 	id: string;
 	number: number;
 	securityVulnerability: ModelSecurityVulnerability;
+	createdAt: Date;
 }
 
 export type AdvisorySeverity = "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
@@ -57,6 +59,14 @@ export interface ModelSecurityVulnerability {
 		identifier: string;
 	};
 	updatedAt: Date;
+}
+
+export interface ModelPullRequest {
+	id: string;
+	state: "OPEN" | "CLOSED" | "MERGED";
+	createdAt: Date;
+	mergedAt: Date;
+	permalink: string;
 }
 
 export interface PrFilter {
