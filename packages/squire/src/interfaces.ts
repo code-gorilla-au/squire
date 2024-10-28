@@ -4,12 +4,16 @@ import type {
 	ModelSecurity,
 	ModelSecurityAdvisory,
 	StoreActionResult,
+	ModelPullRequest,
 } from "./models";
 
 export interface Store {
 	bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult>;
 	bulkInsertSecVulnerabilities(
 		securities: ModelSecurity[],
+	): Promise<StoreActionResult>;
+	bulkInsertPullRequests(
+		pullRequests: ModelPullRequest[],
 	): Promise<StoreActionResult>;
 	initTables(): Promise<StoreActionResult>;
 	getSecurityAdvisoryByProductId(

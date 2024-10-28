@@ -3,6 +3,7 @@ import { logger } from "toolbox";
 import type { Store } from "./interfaces";
 import type {
 	ModelProduct,
+	ModelPullRequest,
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
@@ -41,6 +42,19 @@ export const queryCreateProductsTable = `
 		id uuid,
 		name VARCHAR,
 		tags VARCHAR[],
+		createdAt TIMESTAMP WITH TIME ZONE,
+		updatedAt TIMESTAMP WITH TIME ZONE
+	);
+`;
+
+export const queryCreateTablePullRequests = `
+	CREATE TABLE IF NOT EXISTS pull_requests (
+		id uuid PRIMARY KEY,
+		externalId VARCHAR UNIQUE,
+		repositoryId uuid,
+		url VARCHAR,
+		state VARCHAR,
+		mergedAt TIMESTAMP WITH TIME ZONE,
 		createdAt TIMESTAMP WITH TIME ZONE,
 		updatedAt TIMESTAMP WITH TIME ZONE
 	);
@@ -173,10 +187,35 @@ const queryUpdateProductById = `
 	UPDATE products SET name = $2, tags = LIST_VALUE($3) WHERE id = $1;
 `;
 
+const queryInsertPullRequest = `
+	INSERT INTO pull_requests (
+		id,
+		externalId,
+		repositoryId,
+		url,
+		state,
+		mergedAt,
+		createdAt,
+		updatedAt
+	) VALUES (
+		$1,
+		$2,
+		$3,
+		$4,
+		$5,
+		$6,
+		now(),
+		now()
+	) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state,
+	 		mergedAt = EXCLUDED.mergedAt,
+			updatedAt = now();
+`;
+
 const migrations = [
 	queryCreateRepoTable,
 	queryCreateSecurityTable,
 	queryCreateProductsTable,
+	queryCreateTablePullRequests,
 ];
 
 export function initRepository(db: Database): Store {
@@ -239,6 +278,36 @@ export function initRepository(db: Database): Store {
 				await stmt.finalize();
 
 				logger.debug("Inserted repos into database");
+				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return {
+					error: err,
+				};
+			}
+		},
+		async bulkInsertPullRequests(
+			pullRequests: ModelPullRequest[],
+		): Promise<StoreActionResult> {
+			try {
+				const stmt = await db.prepare(queryInsertPullRequest);
+
+				for (const pr of pullRequests) {
+					await stmt.run(
+						pr.id,
+						pr.externalId,
+						pr.repositoryId,
+						pr.url,
+						pr.state,
+						pr.mergedAt,
+					);
+				}
+
+				await stmt.finalize();
+
+				logger.debug("Inserted pull requests into database");
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;

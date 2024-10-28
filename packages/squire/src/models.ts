@@ -44,6 +44,17 @@ export interface ModelSecurityAdvisory {
 	updatedAt: Date;
 }
 
+export interface ModelPullRequest {
+	id: string;
+	externalId: string;
+	repositoryId: string;
+	url: string;
+	state: string;
+	mergedAt: Date;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
 export interface SecurityAdvisoryDto {
 	id: string;
 	externalId: string;

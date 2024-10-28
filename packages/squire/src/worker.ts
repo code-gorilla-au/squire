@@ -1,8 +1,13 @@
 import type { Client } from "squire-github";
 import { logger } from "toolbox";
 import type { Store } from "./interfaces";
-import type { ModelRepository, ModelSecurity } from "./models";
+import type {
+	ModelRepository,
+	ModelSecurity,
+	ModelPullRequest,
+} from "./models";
 import {
+	generatePullRequestFromGhModel,
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
@@ -18,6 +23,7 @@ export function initWorker(client: Client, store: Store) {
 
 			const repos: ModelRepository[] = [];
 			const securities: ModelSecurity[] = [];
+			const pullRequests: ModelPullRequest[] = [];
 
 			for (const node of resp.data.search.edges) {
 				const repo = generateRepoFromGhModel(
@@ -29,6 +35,9 @@ export function initWorker(client: Client, store: Store) {
 
 				const security = generateSecurityFromGhModel(node.node, repo.id);
 				securities.push(...security);
+
+				const pr = generatePullRequestFromGhModel(node.node, repo.id);
+				pullRequests.push(...pr);
 			}
 
 			const insertErrors: Error[] = [];
@@ -55,6 +64,17 @@ export function initWorker(client: Client, store: Store) {
 					"error inserting into store",
 				);
 				insertErrors.push(securityResult.error);
+			}
+
+			logger.debug(
+				{ totalPullRequests: pullRequests.length },
+				"Inserting pull requests",
+			);
+
+			const prResult = await store.bulkInsertPullRequests(pullRequests);
+			if (prResult.error) {
+				logger.error({ error: prResult.error }, "error inserting into store");
+				insertErrors.push(prResult.error);
 			}
 
 			return insertErrors;
