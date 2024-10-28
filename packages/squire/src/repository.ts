@@ -99,7 +99,7 @@ export const queryInsertSecurity = `
         $5,
         $6,
 		$7,
-        now(),
+        $8,
         now()
     ) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state, 
 	 	severity = EXCLUDED.severity, 
@@ -272,6 +272,7 @@ export function initRepository(db: Database): Store {
 						security.state,
 						security.severity,
 						security.patchedVersion,
+						security.createdAt,
 					);
 				}
 

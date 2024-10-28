@@ -34,4 +34,6 @@ if (imErr.length) {
 	process.exit(1);
 }
 
+db.close();
+
 logger.info("Synced repos");
