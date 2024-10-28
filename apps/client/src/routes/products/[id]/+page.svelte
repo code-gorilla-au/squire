@@ -11,6 +11,7 @@ export let data: PageData;
 const product = data.props.product;
 const repos = data.props.repositories;
 const secAdvisory = data.props.securityAdvisory;
+const pullRequests = data.props.pullRequests;
 
 function goBack() {
 	if (!browser) {
@@ -50,6 +51,27 @@ function goBack() {
                         </div>
                     </div>
                     <Tag>{sec.repoName}</Tag>
+                </Card>
+            </a>
+        {/each}
+    </div>
+</div>
+
+<div class="my-10">
+    <h3 class="heading-3 my-3">Open pull requests</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {#each pullRequests as pullRequest }
+            <a href={pullRequest.url}>
+                <Card class="p-2">
+                    <h3 class="text-sm font-semibold underline capitalize mb-2">{pullRequest.externalId}</h3>
+                    <div>
+                        <span class="font-semibold">Status:</span>
+                        <span class="lowercase">{pullRequest.state}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Created:</span>
+                        <span class="lowercase">{format(pullRequest.createdAt, "yyyy-MM-dd")}</span>
+                    </div>
                 </Card>
             </a>
         {/each}
