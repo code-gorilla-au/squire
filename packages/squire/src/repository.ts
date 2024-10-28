@@ -204,7 +204,7 @@ const queryInsertPullRequest = `
 		$4,
 		$5,
 		$6,
-		now(),
+		$7,
 		now()
 	) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state,
 	 		mergedAt = EXCLUDED.mergedAt,
@@ -302,6 +302,7 @@ export function initRepository(db: Database): Store {
 						pr.url,
 						pr.state,
 						pr.mergedAt,
+						pr.createdAt,
 					);
 				}
 
