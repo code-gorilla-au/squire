@@ -1,6 +1,11 @@
 import { logger } from "toolbox";
 import type { Store } from "./interfaces";
-import type { ProductDto, RepositoryDto, SecurityAdvisoryDto } from "./models";
+import type {
+	ProductDto,
+	PullRequestDto,
+	RepositoryDto,
+	SecurityAdvisoryDto,
+} from "./models";
 
 export function initService(store: Store) {
 	return {
@@ -115,6 +120,22 @@ export function initService(store: Store) {
 			const repos: RepositoryDto[] = [...(results.data as RepositoryDto[])];
 
 			return repos;
+		},
+		async getPullRequestsByProductId(
+			productId: string,
+		): Promise<PullRequestDto[]> {
+			const results = await store.getOpenPullRequestsByProductId(productId);
+
+			if (results.error) {
+				logger.error({ error: results.error }, "Error fetching PRs");
+				throw new Error("error fetching PRs");
+			}
+
+			logger.info({ totalPRs: results.data?.length }, "Fetched PRs");
+
+			const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
+
+			return prs;
 		},
 	};
 }

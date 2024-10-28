@@ -38,4 +38,7 @@ export interface Store {
 	}): Promise<StoreActionResult>;
 	getProductById(id: string): Promise<StoreActionResult<ModelProduct>>;
 	getAllProducts(): Promise<StoreActionResult<ModelProduct[]>>;
+	getOpenPullRequestsByProductId(
+		id: string,
+	): Promise<StoreActionResult<ModelPullRequest[]>>;
 }
