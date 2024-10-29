@@ -121,6 +121,18 @@ export function initService(store: Store) {
 
 			return repos;
 		},
+		async getAllOpenPullRequests(): Promise<PullRequestDto[]> {
+			const results = await store.getOpenPullRequests();
+			if (results.error) {
+				logger.error({ error: results.error }, "Error fetching PRs");
+				throw new Error("error fetching PRs");
+			}
+
+			logger.info({ totalPRs: results.data?.length }, "Fetched PRs");
+
+			const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
+			return prs;
+		},
 		async getPullRequestsByProductId(
 			productId: string,
 		): Promise<PullRequestDto[]> {

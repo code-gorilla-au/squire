@@ -223,6 +223,17 @@ const queryGetOpenPullRequestsByProductId = `
 	AND pr.state = 'OPEN';
 `;
 
+const queryGetOpenPullRequests = `
+	SELECT 
+		pr.*,
+		r.owner as repoOwner,
+		r.name as repoName
+	FROM pull_requests pr
+	JOIN repositories r ON pr.repositoryId = r.id
+	JOIN products p ON r.topic IN p.tags
+	WHERE pr.state = 'OPEN';
+`;
+
 const migrations = [
 	queryCreateRepoTable,
 	queryCreateSecurityTable,
@@ -472,6 +483,22 @@ export function initRepository(db: Database): Store {
 		): Promise<StoreActionResult<ModelPullRequest[]>> {
 			try {
 				const result = await db.all(queryGetOpenPullRequestsByProductId, id);
+				return Promise.resolve({ data: result as ModelPullRequest[] });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+
+		async getOpenPullRequests(): Promise<
+			StoreActionResult<ModelPullRequest[]>
+		> {
+			try {
+				const result = await db.all(queryGetOpenPullRequests);
 				return Promise.resolve({ data: result as ModelPullRequest[] });
 			} catch (error) {
 				const err = error as Error;

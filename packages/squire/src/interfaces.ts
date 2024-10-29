@@ -41,4 +41,5 @@ export interface Store {
 	getOpenPullRequestsByProductId(
 		id: string,
 	): Promise<StoreActionResult<ModelPullRequest[]>>;
+	getOpenPullRequests(): Promise<StoreActionResult<ModelPullRequest[]>>;
 }
