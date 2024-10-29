@@ -2,7 +2,7 @@
 import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
 import type { PageData } from "./$types";
 
@@ -70,8 +70,10 @@ function goBack() {
                     </div>
                     <div>
                         <span class="font-semibold">Created:</span>
-                        <span class="lowercase">{format(pullRequest.createdAt, "yyyy-MM-dd")}</span>
+                        <span class="lowercase">{formatDistanceToNow(pullRequest.createdAt)}</span>
                     </div>
+                    <Tag>{pullRequest.repoOwner}</Tag>
+                    <Tag>{pullRequest.repoName}</Tag>
                 </Card>
             </a>
         {/each}

@@ -48,6 +48,8 @@ export interface ModelPullRequest {
 	id: string;
 	externalId: string;
 	repositoryId: string;
+	repoOwner: string;
+	repoName: string;
 	url: string;
 	state: string;
 	mergedAt: Date;
@@ -59,6 +61,8 @@ export interface PullRequestDto {
 	id: string;
 	externalId: string;
 	repositoryId: string;
+	repoOwner: string;
+	repoName: string;
 	url: string;
 	state: string;
 	mergedAt: Date;

@@ -17,7 +17,7 @@ const client = initClient({
 
 export const worker = initWorker(client, repo);
 
-cron.schedule("*/2 * * * *", async () => {
+cron.schedule("*/1 * * * *", async () => {
 	logger.info("syncing repos");
 	const blueprintErr = await worker.ingestRepoByTopic("blueprint");
 	if (blueprintErr.length) {

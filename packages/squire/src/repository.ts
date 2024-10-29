@@ -212,7 +212,11 @@ const queryInsertPullRequest = `
 `;
 
 const queryGetOpenPullRequestsByProductId = `
-	SELECT pr.* FROM pull_requests pr
+	SELECT 
+		pr.*,
+		r.owner as repoOwner,
+		r.name as repoName
+	FROM pull_requests pr
 	JOIN repositories r ON pr.repositoryId = r.id
 	JOIN products p ON r.topic IN p.tags
 	WHERE p.id = $1
