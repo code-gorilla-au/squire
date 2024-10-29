@@ -13,7 +13,7 @@ const product = data.props.product;
 <h1 class="heading-1">{product.name}</h1>
 
 <div>
-    <form method="post" action="?/update">
+    <form class="my-4" method="post" action="?/update">
         <Label>
             Name
             <Input required name="name" value={product.name}  />
@@ -26,7 +26,7 @@ const product = data.props.product;
             <p  class="text-destructive">Form has errors</p>
             <p>{JSON.stringify(form?.errors)}</p>
         {/if}        
-        <Button type="submit">Update</Button>
+        <Button class="mt-4" type="submit">Update</Button>
     </form>
 </div>
 
