@@ -23,19 +23,15 @@ if (err) {
 }
 
 logger.info("syncing repos");
-const blueprintErr = await worker.ingestRepoByTopic("blueprint");
-if (blueprintErr.length) {
-	logger.error({ blueprintErr }, "Error syncing repos");
-	process.exit(1);
-}
+const syncErrors: Error[] = [];
 
-const imErr = await worker.ingestRepoByTopic("inventory-management");
-if (imErr.length) {
-	logger.error({ imErr }, "Error syncing repos");
-	process.exit(1);
+for (const topic of config.ghRepoTopics) {
+	logger.info({ topic }, "Syncing repos by topic");
+	const err = await worker.ingestRepoByTopic(topic);
+	if (err.length) {
+		syncErrors.push(...err);
+	}
 }
-
-logger.info("syncing complete");
 
 db.close();
 

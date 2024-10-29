@@ -23,24 +23,37 @@ export function initWorker(client: Client, store: Store) {
 			return result.error;
 		},
 
-		async syncProducts() {
-			const tags = await store.getAllProductTags();
-			if (tags.error || !tags.data) {
-				logger.error({ error: tags.error }, "error getting product tags");
-				return tags.error;
+		async syncProducts(): Promise<Error[]> {
+			const bulkInsertErrors: Error[] = [];
+
+			const topics = await store.getAllProductTags();
+			if (topics.error) {
+				logger.error({ error: topics.error }, "error getting product tags");
+				bulkInsertErrors.push(topics.error);
+
+				return bulkInsertErrors;
 			}
 
-			const resp = await client.searchRepos({ topics: [...tags.data] });
+			if (!topics.data) {
+				logger.warn("no topics found, finishing sync");
+				return bulkInsertErrors;
+			}
 
-			const { repos, security, pullRequests } = generateModels(resp, topic);
+			for (const topic of topics.data) {
+				const resp = await client.searchRepos({ topics: [topic] });
 
-			const insertErrors: Error[] = await bulkInsert(store, {
-				repos,
-				security,
-				pullRequests,
-			});
+				const { repos, security, pullRequests } = generateModels(resp, topic);
 
-			return insertErrors;
+				const insertErrors: Error[] = await bulkInsert(store, {
+					repos,
+					security,
+					pullRequests,
+				});
+
+				bulkInsertErrors.push(...insertErrors);
+			}
+
+			return bulkInsertErrors;
 		},
 		async ingestRepoByTopic(topic: string) {
 			const resp = await client.searchRepos({ topics: [topic] });
