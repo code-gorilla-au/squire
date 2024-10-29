@@ -9,6 +9,7 @@ let { children } = $props();
 		<nav class="text-primary-foreground">
 			<ul class="">
 				<li><a href="/">Home</a></li>
+				<li><a href="/docs">Documentation</a></li>
 				<li><a href="/products">Products</a></li>
 			</ul>
 		</nav>
