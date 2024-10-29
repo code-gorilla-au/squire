@@ -26,9 +26,11 @@ export function initWorker(client: Client, store: Store) {
 			const pullRequests: ModelPullRequest[] = [];
 
 			for (const node of resp.data.search.edges) {
-				const repo = generateRepoFromGhModel(node.node, node.node.owner.login, [
+				const repo = generateRepoFromGhModel(
+					node.node,
+					node.node.owner.login,
 					topic,
-				]);
+				);
 				repos.push(repo);
 
 				const security = generateSecurityFromGhModel(node.node, repo.id);

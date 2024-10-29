@@ -56,20 +56,31 @@ function transformToSecurityModel(
 export function generatePullRequestFromGhModel(
 	nodes: GhModelRepo,
 	repositoryId: string,
+	owner: string,
+	repoName: string,
 ): ModelPullRequest[] {
 	return nodes.pullRequests.nodes.map((node) => {
-		return transformToPullRequestFromGhModel(node, repositoryId);
+		return transformToPullRequestFromGhModel(
+			node,
+			repositoryId,
+			owner,
+			repoName,
+		);
 	});
 }
 
 function transformToPullRequestFromGhModel(
 	node: GHModelPullRequest,
 	repositoryId: string,
+	owner: string,
+	repoName: string,
 ): ModelPullRequest {
 	return {
 		id: randomUUID(),
 		externalId: node.id,
 		repositoryId: repositoryId,
+		repoOwner: owner,
+		repoName,
 		url: node.permalink,
 		state: node.state,
 		mergedAt: node.mergedAt,
