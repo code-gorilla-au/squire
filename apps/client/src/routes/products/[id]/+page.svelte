@@ -2,10 +2,10 @@
 import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { formatDistanceToNow } from "date-fns";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
 import type { PageData } from "./$types";
 import PullRequestCard from "$components/pull-request-card.svelte";
+import SecurityCard from "$components/security-card.svelte";
 
 export let data: PageData;
 
@@ -34,26 +34,7 @@ function goBack() {
     <h3 class="heading-3 my-3">Open security issues</h3>
     <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each secAdvisory as sec }
-            <a href={sec.repoUrl} target="_blank">
-                <Card class="p-3">
-                    <h3 class="font-semibold underline capitalize mb-2">{sec.packageName}</h3>
-                    <div class="text-sm">
-                        <div>
-                            <span class="font-semibold">Severity:</span>
-                            <span class=" lowercase">{sec.severity}</span>
-                        </div>
-                        <div>
-                            <span class="font-semibold">Status:</span>
-                            <span class=" lowercase">{sec.state}</span>
-                        </div>
-                        <div>
-                            <span class="font-semibold">Last update:</span>
-                            <span class=" lowercase">{formatDistanceToNow(sec.updatedAt)}</span>
-                        </div>
-                    </div>
-                    <Tag>{sec.repoName}</Tag>
-                </Card>
-            </a>
+            <SecurityCard security={sec} />
         {/each}
     </div>
 </div>

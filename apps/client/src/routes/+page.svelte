@@ -6,6 +6,7 @@ import Card from "$components/ui/card/card.svelte";
 import { formatDistanceToNow } from "date-fns";
 import type { PageData } from "./$types";
 import { cn } from "$lib/utils";
+import SecurityCard from "$components/security-card.svelte";
 
 export let data: PageData;
 
@@ -15,19 +16,6 @@ function routeToProducts() {
 
 function routeToProduct(id: string) {
 	goto(`/products/${id}`);
-}
-
-function styleTagBySeverity(severity: string) {
-	switch (severity) {
-		case "MODERATE":
-			return "bg-yellow-100 text-yellow-800";
-		case "HIGH":
-			return "bg-destructive text-text-destructive-foreground";
-		case "CRITICAL":
-			return "bg-destructive text-text-destructive-foreground";
-		default:
-			return "";
-	}
 }
 </script>
 
@@ -42,15 +30,7 @@ function styleTagBySeverity(severity: string) {
     <h2 class="font-semibold my-4">Security Advisories</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each data.props.securityAdvisories as advisory}
-            <a href={advisory.repoUrl} target="_blank">
-                <Card class="p-3">
-                    <h3 class="font-semibold mb-3">{advisory.packageName}</h3>
-                    <p class="text-xs">Status: {advisory.state}</p>
-                    <p class="text-xs">Created: {formatDistanceToNow(advisory.createdAt)}</p>
-                    <Tag class="lowercase">{advisory.repoName}</Tag>
-                    <Tag class={cn("lowercase", styleTagBySeverity(advisory.severity))}>{advisory.severity}</Tag>
-                </Card>
-            </a>
+            <SecurityCard security={advisory} />
         {/each}
     </div>
 </div>
