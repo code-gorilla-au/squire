@@ -11,7 +11,7 @@ export let form: ActionData;
 <h1 class="heading-1">Create Product</h1>
 
 <div>
-    <form method="POST">
+    <form class="my-4 max-w-sm" method="POST">
         <Label>
             Name
             <Input required name="name"  />
@@ -24,7 +24,7 @@ export let form: ActionData;
             <p  class="text-destructive">Form has errors</p>
             <p>{JSON.stringify(form?.errors)}</p>
         {/if}
-        <Button type="submit">Submit</Button>
+        <Button class="mt-4" type="submit">Submit</Button>
     </form>
 </div>
 

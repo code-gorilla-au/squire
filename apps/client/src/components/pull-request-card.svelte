@@ -5,11 +5,18 @@ import { formatDistanceToNow } from "date-fns";
 import type { PullRequestDto } from "squire";
 
 export let pullRequest: PullRequestDto;
+
+function truncateString(str: string, num = 20): string {
+	if (str.length <= num) {
+		return str;
+	}
+	return `${str.slice(0, num)}...`;
+}
 </script>
     
 <a href={pullRequest.url} target="_blank">
     <Card class="p-2">
-        <h3 class="text-sm font-semibold underline capitalize mb-2">{pullRequest.externalId}</h3>
+        <h3 class="text-sm font-semibold underline capitalize mb-2">{truncateString(pullRequest.title)}</h3>
         <div>
             <span class="font-semibold text-xs">Status:</span>
             <span class="lowercase text-xs">{pullRequest.state}</span>

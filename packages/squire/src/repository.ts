@@ -51,6 +51,7 @@ export const queryCreateTablePullRequests = `
 	CREATE TABLE IF NOT EXISTS pull_requests (
 		id uuid PRIMARY KEY,
 		externalId VARCHAR UNIQUE,
+		title VARCHAR,
 		repositoryId uuid,
 		url VARCHAR,
 		state VARCHAR,
@@ -179,6 +180,10 @@ const queryGetProductById = `
 	SELECT * FROM products WHERE id = $1;
 `;
 
+const queryDeleteProductById = `
+	DELETE FROM products WHERE id = $1;
+`;
+
 const queryGetProductByName = `
 	SELECT * FROM products WHERE name = $1;
 `;
@@ -191,6 +196,7 @@ const queryInsertPullRequest = `
 	INSERT INTO pull_requests (
 		id,
 		externalId,
+		title,
 		repositoryId,
 		url,
 		state,
@@ -205,6 +211,7 @@ const queryInsertPullRequest = `
 		$5,
 		$6,
 		$7,
+		$8,
 		now()
 	) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state,
 	 		mergedAt = EXCLUDED.mergedAt,
@@ -322,6 +329,7 @@ export function initRepository(db: Database): Store {
 					await stmt.run(
 						pr.id,
 						pr.externalId,
+						pr.title,
 						pr.repositoryId,
 						pr.url,
 						pr.state,
@@ -455,6 +463,19 @@ export function initRepository(db: Database): Store {
 				}
 
 				await db.run(queryUpdateProductById, id, name, tags);
+				return Promise.resolve({ data: null });
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async deleteProduct(id: string): Promise<StoreActionResult> {
+			try {
+				await db.run(queryDeleteProductById, id);
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;

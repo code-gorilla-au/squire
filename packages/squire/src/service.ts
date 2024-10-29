@@ -121,6 +121,16 @@ export function initService(store: Store) {
 
 			return repos;
 		},
+		async removeProduct(productId: string): Promise<void> {
+			const result = await store.deleteProduct(productId);
+
+			if (result.error) {
+				logger.error({ error: result.error }, "Error deleting product");
+				throw new Error("error deleting product");
+			}
+
+			logger.info({ productId }, "Product deleted");
+		},
 		async getAllOpenPullRequests(): Promise<PullRequestDto[]> {
 			const results = await store.getOpenPullRequests();
 			if (results.error) {

@@ -45,4 +45,10 @@ export const actions = {
 
 		redirect(303, "/");
 	},
+	remove: ({ params }) => {
+		service.removeProduct(params.id ?? "");
+
+		logger.info("Product removed", { id: params.id });
+		redirect(303, "/");
+	},
 } satisfies Actions;
