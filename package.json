@@ -1,6 +1,5 @@
 {
 	"name": "squire-core",
-	"module": "index.ts",
 	"type": "module",
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
@@ -16,7 +15,10 @@
 	"peerDependencies": {
 		"typescript": "^5.0.0"
 	},
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"dependencies": {
 		"node-cron": "^3.0.3",
 		"pino": "^9.5.0",
