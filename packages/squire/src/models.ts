@@ -47,6 +47,7 @@ export interface ModelSecurityAdvisory {
 export interface ModelPullRequest {
 	id: string;
 	externalId: string;
+	title: string;
 	repositoryId: string;
 	repoOwner: string;
 	repoName: string;
@@ -60,6 +61,7 @@ export interface ModelPullRequest {
 export interface PullRequestDto {
 	id: string;
 	externalId: string;
+	title: string;
 	repositoryId: string;
 	repoOwner: string;
 	repoName: string;

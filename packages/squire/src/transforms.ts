@@ -78,6 +78,7 @@ function transformToPullRequestFromGhModel(
 	return {
 		id: randomUUID(),
 		externalId: node.id,
+		title: node.title,
 		repositoryId: repositoryId,
 		repoOwner: owner,
 		repoName,
