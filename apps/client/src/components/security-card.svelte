@@ -1,6 +1,7 @@
 <script lang="ts">
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
+import { cn } from "$lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import type { SecurityAdvisoryDto } from "squire";
 
@@ -11,9 +12,9 @@ function styleTagBySeverity(severity: string) {
 		case "MODERATE":
 			return "bg-yellow-100 text-yellow-800";
 		case "HIGH":
-			return "bg-destructive text-text-destructive-foreground";
+			return "bg-destructive text-destructive-foreground";
 		case "CRITICAL":
-			return "bg-destructive text-text-destructive-foreground";
+			return "bg-destructive text-destructive-foreground";
 		default:
 			return "";
 	}
@@ -27,7 +28,7 @@ function styleTagBySeverity(severity: string) {
         <div class="text-sm">
             <div>
                 <span class="font-semibold">Severity:</span>
-                <span class=" lowercase">{styleTagBySeverity(security.severity)}</span>
+                <Tag class={cn("lowercase", styleTagBySeverity(security.severity))}>{security.severity}</Tag>
             </div>
             <div>
                 <span class="font-semibold">Status:</span>
@@ -35,7 +36,7 @@ function styleTagBySeverity(severity: string) {
             </div>
             <div>
                 <span class="font-semibold">Last update:</span>
-                <span class=" lowercase">{formatDistanceToNow(security.updatedAt)}</span>
+                <span class=" lowercase">{formatDistanceToNow(security.createdAt)}</span>
             </div>
         </div>
         <Tag>{security.repoName}</Tag>
