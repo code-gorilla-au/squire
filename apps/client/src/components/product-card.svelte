@@ -1,7 +1,7 @@
 <script lang="ts">
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import PencilIcon from "lucide-svelte/icons/pencil";
 import type { ProductDto } from "squire";
 
@@ -16,7 +16,7 @@ export let product: ProductDto;
     <div class="text-xs">
         <div class="mb-2">
             <span class="font-semibold">Last updated:</span>
-            <span class="">{format(product.updatedAt, 'yyyy-MM-dd')}</span>
+            <span class="">{formatDistanceToNow(product.updatedAt)}</span>
         </div>  
         <Tag >{product.tags}</Tag>
     </div>

@@ -3,7 +3,7 @@ import { goto } from "$app/navigation";
 import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import type { PageData } from "./$types";
 import { cn } from "$lib/utils";
 
@@ -42,11 +42,11 @@ function styleTagBySeverity(severity: string) {
     <h2 class="font-semibold my-4">Security Advisories</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each data.props.securityAdvisories as advisory}
-            <a href={advisory.repoUrl}>
+            <a href={advisory.repoUrl} target="_blank">
                 <Card class="p-3">
                     <h3 class="font-semibold mb-3">{advisory.packageName}</h3>
                     <p class="text-xs">Status: {advisory.state}</p>
-                    <p class="text-xs">Last Updated: {format(advisory.updatedAt, "yyyy-MM-dd")}</p>
+                    <p class="text-xs">Created: {formatDistanceToNow(advisory.createdAt)}</p>
                     <Tag class="lowercase">{advisory.repoName}</Tag>
                     <Tag class={cn("lowercase", styleTagBySeverity(advisory.severity))}>{advisory.severity}</Tag>
                 </Card>

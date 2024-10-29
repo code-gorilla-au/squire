@@ -2,9 +2,10 @@
 import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
 import type { PageData } from "./$types";
+import PullRequestCard from "$components/pull-request-card.svelte";
 
 export let data: PageData;
 
@@ -33,7 +34,7 @@ function goBack() {
     <h3 class="heading-3 my-3">Open security issues</h3>
     <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each secAdvisory as sec }
-            <a href={sec.repoUrl}>
+            <a href={sec.repoUrl} target="_blank">
                 <Card class="p-3">
                     <h3 class="font-semibold underline capitalize mb-2">{sec.packageName}</h3>
                     <div class="text-sm">
@@ -47,7 +48,7 @@ function goBack() {
                         </div>
                         <div>
                             <span class="font-semibold">Last update:</span>
-                            <span class=" lowercase">{format(sec.updatedAt, 'yyyy-MM-dd')}</span>
+                            <span class=" lowercase">{formatDistanceToNow(sec.updatedAt)}</span>
                         </div>
                     </div>
                     <Tag>{sec.repoName}</Tag>
@@ -61,21 +62,7 @@ function goBack() {
     <h3 class="heading-3 my-3">Open pull requests</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each pullRequests as pullRequest }
-            <a href={pullRequest.url}>
-                <Card class="p-2">
-                    <h3 class="text-sm font-semibold underline capitalize mb-2">{pullRequest.externalId}</h3>
-                    <div>
-                        <span class="font-semibold">Status:</span>
-                        <span class="lowercase">{pullRequest.state}</span>
-                    </div>
-                    <div>
-                        <span class="font-semibold">Created:</span>
-                        <span class="lowercase">{formatDistanceToNow(pullRequest.createdAt)}</span>
-                    </div>
-                    <Tag>{pullRequest.repoOwner}</Tag>
-                    <Tag>{pullRequest.repoName}</Tag>
-                </Card>
-            </a>
+            <PullRequestCard pullRequest={pullRequest} />
         {/each}
     </div>
 </div>
@@ -84,7 +71,7 @@ function goBack() {
     <h3 class="heading-3 my-3">Repositories for {product.name}</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each repos as repo }
-        <a href={repo.url}>
+        <a href={repo.url} target="_blank">
             <Card class="p-2">
                 <h3 class="text-sm font-semibold underline capitalize mb-2">{repo.name}</h3>
                 <Tag >{repo.owner}</Tag>
