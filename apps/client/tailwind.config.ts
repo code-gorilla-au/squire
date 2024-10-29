@@ -67,10 +67,10 @@ const config: Config = {
 					"@apply text-4xl font-bold dark:text-white": {},
 				},
 				".heading-2": {
-					"@apply text-2xl dark:text-white": {},
+					"@apply font-semibold text-2xl dark:text-white": {},
 				},
 				".heading-3": {
-					"@apply text-xl dark:text-white": {},
+					"@apply font-semibold text-xl dark:text-white": {},
 				},
 				".text-link": {
 					"@apply underline text-primary hover:text-primary/50": {},
