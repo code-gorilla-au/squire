@@ -40,15 +40,7 @@ export function initWorker(client: Client, store: Store) {
 			}
 
 			for (const topic of topics.data) {
-				const resp = await client.searchRepos({ topics: [topic] });
-
-				const { repos, security, pullRequests } = generateModels(resp, topic);
-
-				const insertErrors: Error[] = await bulkInsert(store, {
-					repos,
-					security,
-					pullRequests,
-				});
+				const insertErrors: Error[] = await this.ingestRepoByTopic(topic);
 
 				bulkInsertErrors.push(...insertErrors);
 			}
