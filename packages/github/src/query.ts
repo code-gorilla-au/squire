@@ -26,6 +26,7 @@ function queryReposWithSec(query: string, first = 100): string {
           pullRequests(last:100) {
             nodes {
               id
+              title
               state
               createdAt
               closedAt

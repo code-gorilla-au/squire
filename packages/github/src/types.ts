@@ -63,6 +63,7 @@ export interface ModelSecurityVulnerability {
 
 export interface ModelPullRequest {
 	id: string;
+	title: string;
 	state: "OPEN" | "CLOSED" | "MERGED";
 	createdAt: Date;
 	mergedAt: Date;
