@@ -22,7 +22,7 @@ let { children } = $props();
 		</div>
 
 	{:else}
-		<div class="p-2 w-full h-screen overflow-auto">
+		<div class="p-2 w-full h-screen overflow-auto max-w-screen-lg">
 			{@render children()}
 		</div>
 	{/if}

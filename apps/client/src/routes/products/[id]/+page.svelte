@@ -31,7 +31,12 @@ function goBack() {
 </div>
 
 <div class="my-10">
-    <h3 class="heading-3 my-3">Open security issues</h3>
+    {#if secAdvisory.length > 0 }
+        <h3 class="heading-3 my-3">Open security issues</h3>
+    {:else}
+        <h3 class="heading-3 my-3">No security issues</h3>
+    {/if}
+
     <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each secAdvisory as sec }
             <SecurityCard security={sec} />
@@ -40,7 +45,12 @@ function goBack() {
 </div>
 
 <div class="my-10">
-    <h3 class="heading-3 my-3">Open pull requests</h3>
+    {#if pullRequests.length > 0 }
+        <h3 class="heading-3 my-3">Open pull requests</h3>
+    {:else}
+        <h3 class="heading-3 my-3">No pull requests</h3>
+    {/if}    
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {#each pullRequests as pullRequest }
             <PullRequestCard pullRequest={pullRequest} />
