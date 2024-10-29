@@ -176,6 +176,10 @@ const queryGetAllProducts = `
 	SELECT * FROM products;
 `;
 
+const queryGetAllProductTags = `
+	select distinct unnest(tags) as tag from products;
+`;
+
 const queryGetProductById = `
 	SELECT * FROM products WHERE id = $1;
 `;
@@ -480,6 +484,21 @@ export function initRepository(db: Database): Store {
 			} catch (error) {
 				const err = error as Error;
 				logger.error({ error: err.message });
+
+				return Promise.resolve({
+					error: err,
+				});
+			}
+		},
+		async getAllProductTags(): Promise<StoreActionResult<string[]>> {
+			try {
+				const result = await db.all(queryGetAllProductTags);
+				return Promise.resolve({
+					data: result.map((r) => r.tag) as string[],
+				});
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message }, "could not get all product tags");
 
 				return Promise.resolve({
 					error: err,
