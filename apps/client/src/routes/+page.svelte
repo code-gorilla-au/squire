@@ -3,13 +3,10 @@ import { goto } from "$app/navigation";
 import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
-import { formatDistanceToNow } from "date-fns";
-import type { PageData } from "./$types";
-import { cn } from "$lib/utils";
 import SecurityCard from "$components/security-card.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
 
-export let data: PageData;
+let { data } = $props();
 const pullRequests = data.props.pullRequests;
 
 function routeToProducts() {
