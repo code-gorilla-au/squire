@@ -11,7 +11,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@types/bun": "latest",
-		"@types/node-cron": "^3.0.11"
+		"@types/node-cron": "^3.0.11",
+		"sveltekit-sse": "^0.13.9"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"

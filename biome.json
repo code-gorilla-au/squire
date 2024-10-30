@@ -7,7 +7,10 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["node_modules", ".svelte-kit"]
+		"ignore": [
+			"node_modules",
+			".svelte-kit"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -97,7 +100,9 @@
 	},
 	"overrides": [
 		{
-			"include": ["*.svelte"],
+			"include": [
+				"*.svelte"
+			],
 			"linter": {
 				"rules": {
 					"style": {
