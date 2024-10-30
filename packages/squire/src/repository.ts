@@ -256,6 +256,7 @@ export function initRepository(db: Database): Store {
 	return {
 		async initTables(): Promise<StoreActionResult> {
 			try {
+				logger.debug("Creating tables");
 				await db.run(migrations.join(";"));
 				return Promise.resolve({ data: null });
 			} catch (error) {
@@ -295,6 +296,10 @@ export function initRepository(db: Database): Store {
 			securities: ModelSecurity[],
 		): Promise<StoreActionResult> {
 			try {
+				logger.debug(
+					{ totalSecurities: securities.length },
+					"Inserting securities into database",
+				);
 				const stmt = await db.prepare(queryInsertSecurity);
 
 				for (const security of securities) {
@@ -312,7 +317,7 @@ export function initRepository(db: Database): Store {
 
 				await stmt.finalize();
 
-				logger.debug("Inserted repos into database");
+				logger.debug("Inserted securities into database");
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
@@ -327,6 +332,11 @@ export function initRepository(db: Database): Store {
 			pullRequests: ModelPullRequest[],
 		): Promise<StoreActionResult> {
 			try {
+				logger.debug(
+					{ totalPullRequests: pullRequests.length },
+					"Inserting pull requests into database",
+				);
+
 				const stmt = await db.prepare(queryInsertPullRequest);
 
 				for (const pr of pullRequests) {
@@ -344,7 +354,10 @@ export function initRepository(db: Database): Store {
 
 				await stmt.finalize();
 
-				logger.debug("Inserted pull requests into database");
+				logger.debug(
+					{ totalPullRequests: pullRequests.length },
+					"Inserted pull requests into database",
+				);
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;

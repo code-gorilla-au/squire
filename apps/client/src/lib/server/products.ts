@@ -19,6 +19,11 @@ export const worker = initWorker(client, repo);
 
 await worker.init();
 
+process.on("sveltekit:shutdown", async () => {
+	logger.debug("shutting down");
+	await db.close();
+});
+
 cron.schedule("*/1 * * * *", async () => {
 	logger.info("syncing repos");
 	const errors = await worker.syncProducts();

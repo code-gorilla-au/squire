@@ -1,4 +1,4 @@
-import { service } from "$products/server.js";
+import { service } from "$lib/server/products.js";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types.js";
 import { logger } from "toolbox";

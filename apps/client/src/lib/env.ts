@@ -11,7 +11,7 @@ const dbFilePath =
 		"..",
 		import.meta.env.VITE_DB_FILE_PATH,
 	) ?? ":memory:";
-const logLevel = import.meta.env.vITE_LOG_LEVEL ?? "debug";
+const logLevel = import.meta.env.VITE_LOG_LEVEL ?? "debug";
 
 const serverSchema = z.object({
 	dbFilePath: z.string(),

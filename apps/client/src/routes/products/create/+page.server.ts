@@ -1,4 +1,4 @@
-import { service } from "$products/server";
+import { service } from "$lib/server/products";
 import { type Actions, redirect } from "@sveltejs/kit";
 
 export const actions = {
