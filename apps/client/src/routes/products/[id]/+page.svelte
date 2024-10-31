@@ -3,11 +3,10 @@ import { browser } from "$app/environment";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
-import type { PageData } from "./$types";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 
-export let data: PageData;
+let { data } = $props();
 
 const product = data.props.product;
 const repos = data.props.repositories;
@@ -24,7 +23,7 @@ function goBack() {
 </script>
 
 <div class="flex items-center">
-    <button on:click|preventDefault={goBack}>
+    <button onclick={goBack}>
         <ChevronLeftIcon  />
     </button>
     <h1 class="heading-1">Product: {data.props.product.name} </h1>

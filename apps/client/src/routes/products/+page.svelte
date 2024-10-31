@@ -1,8 +1,7 @@
 <script lang="ts">
 import ProductCard from "$components/product-card.svelte";
-import type { PageData } from "./$types";
 
-export let data: PageData;
+let { data } = $props();
 const products = data.props.products;
 </script>
 
