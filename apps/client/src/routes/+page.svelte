@@ -5,16 +5,39 @@ import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
+import type { DashboardSummary } from "$lib/dashboard/types.js";
+import { source } from "sveltekit-sse";
+import { derived } from "svelte/store";
 
 let { data } = $props();
-const pullRequests = data.props.pullRequests;
 
-function routeToProducts() {
-	goto("/products/create");
+const m = source("/events/summary");
+const channel = m.select("update");
+const summary = channel.transform((value: string) => {
+	const d = JSON.parse(value) as DashboardSummary;
+	return {
+		pullRequests: d.pullRequests ?? [],
+		securityAdvisories: d.securityAdvisories ?? [],
+		products: d.products ?? [],
+	};
+});
+
+const pullRequests = derived(
+	summary,
+	($summary?) => $summary?.pullRequests ?? [],
+);
+const securityAdvisories = derived(
+	summary,
+	($summary?) => $summary?.securityAdvisories ?? [],
+);
+const products = derived(summary, ($summary?) => $summary?.products ?? []);
+
+async function routeToProducts() {
+	await goto("/products/create");
 }
 
-function routeToProduct(id: string) {
-	goto(`/products/${id}`);
+async function routeToProduct(id: string) {
+	await goto(`/products/${id}`);
 }
 </script>
 
@@ -24,22 +47,22 @@ function routeToProduct(id: string) {
     <a class="text-xs text-link" href="/products/create">Add additional products</a>
 </div>
 
-{#if data.props.securityAdvisories.length > 0}
+{#if $securityAdvisories?.length > 0}
     <div>
         <h2 class="font-semibold my-4">Security Advisories</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {#each data.props.securityAdvisories as advisory}
+            {#each $securityAdvisories as advisory}
                 <SecurityCard security={advisory} />
             {/each}
         </div>
     </div>
 {/if}
 
-{#if pullRequests.length > 0}
+{#if $pullRequests.length > 0}
 
-    <h2 class="font-semibold my-4" >Pull Requests ({pullRequests.length})</h2>
+    <h2 class="font-semibold my-4" >Pull Requests ({$pullRequests.length})</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each pullRequests as pr}
+        {#each $pullRequests as pr}
             <PullRequestCard pullRequest={pr} />
         {/each}
     </div>
@@ -47,11 +70,11 @@ function routeToProduct(id: string) {
 {/if}
     
 
-{#if data.props.products.length > 0}
-    <h2 class="font-semibold my-4">Products ({data.props.products.length})</h2>
+{#if $products.length > 0}
+    <h2 class="font-semibold my-4">Products ({$products.length})</h2>
    
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each data.props.products as product}
+        {#each $products as product}
             <Card on:click={(event: Event) => {
                 event.preventDefault();
                 routeToProduct(product.id)
