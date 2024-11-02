@@ -1,24 +1,29 @@
 <script lang="ts">
-import { goto } from "$app/navigation";
-import Tag from "$components/tag.svelte";
-import Button from "$components/ui/button/button.svelte";
-import Card from "$components/ui/card/card.svelte";
-import SecurityCard from "$components/security-card.svelte";
-import PullRequestCard from "$components/pull-request-card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types.js";
 import { source } from "sveltekit-sse";
 import { derived } from "svelte/store";
+import { ShieldEllipsis } from "lucide-svelte";
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events.js";
+import Dashboard from "$components/dashboard-summary.svelte";
+
+let loading: boolean = $state(true);
 
 const eventSource = source("/events/dashboard-summary");
 const channel = eventSource.select(EVENT_DASHBOARD_SUMMARY_UPDATE);
 const summary = channel.transform((value: string) => {
 	const d = JSON.parse(value) as DashboardSummary;
+	loading = false;
 	return {
 		pullRequests: d.pullRequests ?? [],
 		securityAdvisories: d.securityAdvisories ?? [],
 		products: d.products ?? [],
 	};
+});
+
+$effect(() => {
+	if (summary !== null) {
+		loading = false;
+	}
 });
 
 const pullRequests = derived(
@@ -30,14 +35,6 @@ const securityAdvisories = derived(
 	($summary?) => $summary?.securityAdvisories ?? [],
 );
 const products = derived(summary, ($summary?) => $summary?.products ?? []);
-
-async function routeToProducts() {
-	await goto("/products/create");
-}
-
-async function routeToProduct(id: string) {
-	await goto(`/products/${id}`);
-}
 </script>
 
 <h1 class="heading-1">Dashboard</h1>
@@ -46,48 +43,15 @@ async function routeToProduct(id: string) {
     <a class="text-xs text-link" href="/products/create">Add additional products</a>
 </div>
 
-{#if $securityAdvisories?.length > 0}
-    <div>
-        <h2 class="font-semibold my-4">Security Advisories</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {#each $securityAdvisories as advisory}
-                <SecurityCard security={advisory} />
-            {/each}
-        </div>
+{#if loading }
+    <div class="w-full my-44 flex flex-col items-center justify-center">
+        <ShieldEllipsis size="150" />
+        <h3 class="heading-3">Loading...</h3>
     </div>
+{:else} 
+    <Dashboard pullRequests={$pullRequests} securityAdvisories={$securityAdvisories} products={$products} />
 {/if}
 
-{#if $pullRequests.length > 0}
-
-    <h2 class="font-semibold my-4" >Pull Requests ({$pullRequests.length})</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each $pullRequests as pr}
-            <PullRequestCard pullRequest={pr} />
-        {/each}
-    </div>
-    
-{/if}
-    
-
-{#if $products.length > 0}
-    <h2 class="font-semibold my-4">Products ({$products.length})</h2>
-   
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each $products as product}
-            <Card on:click={(event: Event) => {
-                event.preventDefault();
-                routeToProduct(product.id)
-            }} class="p-3 cursor-pointer">
-                <h3 class="font-semibold">{product.name}</h3>
-                <Tag>{product.tags}</Tag>
-            </Card>
-        {/each}
-    </div>
-   
-{:else}
-    <h2>No products found, create your first product</h2>   
-    <Button on:click={routeToProducts}>Create</Button>
-{/if}
 
 
 <svelte:head>
