@@ -6,24 +6,15 @@ import { ShieldEllipsis } from "lucide-svelte";
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events.js";
 import Dashboard from "$components/dashboard-summary.svelte";
 
-let loading: boolean = $state(true);
-
 const eventSource = source("/events/dashboard-summary");
 const channel = eventSource.select(EVENT_DASHBOARD_SUMMARY_UPDATE);
 const summary = channel.transform((value: string) => {
 	const d = JSON.parse(value) as DashboardSummary;
-	loading = false;
 	return {
 		pullRequests: d.pullRequests ?? [],
 		securityAdvisories: d.securityAdvisories ?? [],
 		products: d.products ?? [],
 	};
-});
-
-$effect(() => {
-	if (summary !== null) {
-		loading = false;
-	}
 });
 
 const pullRequests = derived(
@@ -43,7 +34,7 @@ const products = derived(summary, ($summary?) => $summary?.products ?? []);
     <a class="text-xs text-link" href="/products/create">Add additional products</a>
 </div>
 
-{#if loading }
+{#if $summary === null}
     <div class="w-full my-44 flex flex-col items-center justify-center">
         <ShieldEllipsis size="150" />
         <h3 class="heading-3">Loading...</h3>
