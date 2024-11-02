@@ -1,11 +1,11 @@
 <script lang="ts">
+import EmptySlate from "$components/empty-slate.svelte";
+import Grid from "$components/grid.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 import { Tag } from "$components/tag";
-import Card from "$components/ui/card/card.svelte";
-import Grid from "$components/grid.svelte";
-import EmptySlate from "$components/empty-slate.svelte";
 import { Title } from "$components/title";
+import Card from "$components/ui/card/card.svelte";
 
 let { data } = $props();
 

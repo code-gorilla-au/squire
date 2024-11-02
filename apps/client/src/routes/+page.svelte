@@ -1,8 +1,8 @@
 <script lang="ts">
 import Dashboard from "$components/dashboard-summary.svelte";
+import { summaryStore } from "$lib/dashboard/store";
 import { ShieldEllipsis } from "lucide-svelte";
 import { derived } from "svelte/store";
-import { summaryStore } from "$lib/dashboard/store";
 
 const pullRequests = derived(
 	summaryStore,
