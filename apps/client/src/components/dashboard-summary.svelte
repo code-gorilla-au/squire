@@ -8,6 +8,7 @@ import Card from "$components/ui/card/card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
 import { CircleCheckBig } from "lucide-svelte";
 import { ShieldAlert } from "lucide-svelte";
+import Grid from "./grid.svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
@@ -24,11 +25,11 @@ async function routeToProduct(id: string) {
 
     <h2 class="font-semibold my-4">Security Advisories ({securityAdvisories?.length})</h2>
 {#if securityAdvisories?.length > 0}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <Grid >
         {#each securityAdvisories as advisory}
             <SecurityCard security={advisory} />
         {/each}
-    </div>
+    </Grid>
 {:else}
     <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
         <CircleCheckBig class="text-green-700" size="32" /> 
@@ -41,11 +42,11 @@ async function routeToProduct(id: string) {
 
     <h2 class="font-semibold my-4" >Open pull requests ({pullRequests.length})</h2>
 {#if pullRequests.length > 0}    
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <Grid >
         {#each pullRequests as pr}
             <PullRequestCard pullRequest={pr} />
         {/each}
-    </div>
+    </Grid>
 {:else}
     <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
         <CircleCheckBig class="text-green-700" size="32" /> 
@@ -58,7 +59,7 @@ async function routeToProduct(id: string) {
 
     <h2 class="font-semibold my-4">Products ({products.length})</h2>
 {#if products.length > 0}    
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <Grid >
         {#each products as product}
             <Card on:click={(event: Event) => {
                 event.preventDefault();
@@ -68,7 +69,7 @@ async function routeToProduct(id: string) {
                 <Tag>{product.tags}</Tag>
             </Card>
         {/each}
-    </div>
+    </Grid>
 {:else}
 <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
     <ShieldAlert  size="32" /> 
