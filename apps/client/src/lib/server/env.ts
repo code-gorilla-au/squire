@@ -9,6 +9,7 @@ const dbFilePath =
 		"..",
 		"..",
 		"..",
+		"..",
 		import.meta.env.VITE_DB_FILE_PATH,
 	) ?? ":memory:";
 const logLevel = import.meta.env.VITE_LOG_LEVEL ?? "debug";

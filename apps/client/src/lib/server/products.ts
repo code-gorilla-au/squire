@@ -1,5 +1,5 @@
 import { db } from "$lib/server/database";
-import { loadConfig } from "$lib/env";
+import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
 import { initRepository, initService, initWorker } from "squire";
 import { initClient } from "squire-github";
