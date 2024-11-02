@@ -1,10 +1,10 @@
 import type {
 	ModelProduct,
+	ModelPullRequest,
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
 	StoreActionResult,
-	ModelPullRequest,
 } from "./models";
 
 export interface Store {

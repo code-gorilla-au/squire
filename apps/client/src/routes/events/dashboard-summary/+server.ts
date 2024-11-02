@@ -1,15 +1,20 @@
-import { produce } from "sveltekit-sse";
 import { SECOND, sleep } from "$lib";
-import { logger } from "toolbox";
+import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events";
 import { service } from "$lib/server/products";
+import { produce } from "sveltekit-sse";
+import { logger } from "toolbox";
 
 export const POST = () => {
 	return produce(async function start({ emit }) {
+		logger.debug("starting dashboard summary update");
 		let running = true;
 		while (running) {
 			logger.debug("emitting update");
 			const data = await getSummary();
-			const { error } = emit("update", JSON.stringify(data));
+			const { error } = emit(
+				EVENT_DASHBOARD_SUMMARY_UPDATE,
+				JSON.stringify(data),
+			);
 			if (error) {
 				running = false;
 				break;

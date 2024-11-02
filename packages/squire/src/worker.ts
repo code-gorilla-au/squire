@@ -1,14 +1,14 @@
 import type {
 	Client,
-	QuerySearch,
 	ModelRepository as GhModelRepository,
+	QuerySearch,
 } from "squire-github";
 import { logger } from "toolbox";
 import type { Store } from "./interfaces";
 import type {
+	ModelPullRequest,
 	ModelRepository,
 	ModelSecurity,
-	ModelPullRequest,
 } from "./models";
 import {
 	generatePullRequestFromGhModel,

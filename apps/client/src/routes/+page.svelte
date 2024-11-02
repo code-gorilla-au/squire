@@ -1,21 +1,20 @@
 <script lang="ts">
-import { goto } from "$app/navigation";
-import Tag from "$components/tag.svelte";
-import Button from "$components/ui/button/button.svelte";
-import Card from "$components/ui/card/card.svelte";
-import SecurityCard from "$components/security-card.svelte";
-import PullRequestCard from "$components/pull-request-card.svelte";
+import Dashboard from "$components/dashboard-summary.svelte";
+import { ShieldEllipsis } from "lucide-svelte";
+import { derived } from "svelte/store";
+import { summaryStore } from "$lib/dashboard/store";
 
-let { data } = $props();
-const pullRequests = data.props.pullRequests;
+const pullRequests = derived(
+	summaryStore,
+	($summary?) => $summary?.pullRequests ?? [],
+);
 
-function routeToProducts() {
-	goto("/products/create");
-}
+const securityAdvisories = derived(
+	summaryStore,
+	($summary?) => $summary?.securityAdvisories ?? [],
+);
 
-function routeToProduct(id: string) {
-	goto(`/products/${id}`);
-}
+const products = derived(summaryStore, ($summary?) => $summary?.products ?? []);
 </script>
 
 <h1 class="heading-1">Dashboard</h1>
@@ -24,48 +23,15 @@ function routeToProduct(id: string) {
     <a class="text-xs text-link" href="/products/create">Add additional products</a>
 </div>
 
-{#if data.props.securityAdvisories.length > 0}
-    <div>
-        <h2 class="font-semibold my-4">Security Advisories</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {#each data.props.securityAdvisories as advisory}
-                <SecurityCard security={advisory} />
-            {/each}
-        </div>
+{#if $summaryStore === null}
+    <div class="w-full my-44 flex flex-col items-center justify-center">
+        <ShieldEllipsis size="150" />
+        <h3 class="heading-3">Loading...</h3>
     </div>
+{:else} 
+    <Dashboard pullRequests={$pullRequests} securityAdvisories={$securityAdvisories} products={$products} />
 {/if}
 
-{#if pullRequests.length > 0}
-
-    <h2 class="font-semibold my-4" >Pull Requests ({pullRequests.length})</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each pullRequests as pr}
-            <PullRequestCard pullRequest={pr} />
-        {/each}
-    </div>
-    
-{/if}
-    
-
-{#if data.props.products.length > 0}
-    <h2 class="font-semibold my-4">Products ({data.props.products.length})</h2>
-   
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each data.props.products as product}
-            <Card on:click={(event: Event) => {
-                event.preventDefault();
-                routeToProduct(product.id)
-            }} class="p-3 cursor-pointer">
-                <h3 class="font-semibold">{product.name}</h3>
-                <Tag>{product.tags}</Tag>
-            </Card>
-        {/each}
-    </div>
-   
-{:else}
-    <h2>No products found, create your first product</h2>   
-    <Button on:click={routeToProducts}>Create</Button>
-{/if}
 
 
 <svelte:head>

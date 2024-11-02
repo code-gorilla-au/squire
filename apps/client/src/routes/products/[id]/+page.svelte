@@ -1,10 +1,12 @@
 <script lang="ts">
 import { browser } from "$app/environment";
+import PullRequestCard from "$components/pull-request-card.svelte";
+import SecurityCard from "$components/security-card.svelte";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
-import PullRequestCard from "$components/pull-request-card.svelte";
-import SecurityCard from "$components/security-card.svelte";
+import Grid from "$components/grid.svelte";
+import EmptySlate from "$components/empty-slate.svelte";
 
 let { data } = $props();
 
@@ -30,46 +32,53 @@ function goBack() {
 </div>
 
 <div class="my-10">
+    <h3 class="font-semibold my-3">Open security issues ({secAdvisory.length})</h3>
     {#if secAdvisory.length > 0 }
-        <h3 class="heading-3 my-3">Open security issues</h3>
+        <Grid >
+            {#each secAdvisory as sec }
+                <SecurityCard security={sec} />
+            {/each}
+        </Grid>
     {:else}
-        <h3 class="heading-3 my-3">No security issues</h3>
+        <EmptySlate title="No security advisories found" description="Stay safe and keep your dependencies up to date" />
     {/if}
 
-    <div  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each secAdvisory as sec }
-            <SecurityCard security={sec} />
-        {/each}
-    </div>
+
 </div>
 
 <div class="my-10">
+    <h3 class="font-semibold my-3">Open pull requests ({ pullRequests.length })</h3>
     {#if pullRequests.length > 0 }
-        <h3 class="heading-3 my-3">Open pull requests</h3>
+        <Grid>
+            {#each pullRequests as pullRequest }
+                <PullRequestCard pullRequest={pullRequest} />
+            {/each}
+        </Grid>
     {:else}
-        <h3 class="heading-3 my-3">No pull requests</h3>
+        <EmptySlate title="No open pull requests" />
     {/if}    
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each pullRequests as pullRequest }
-            <PullRequestCard pullRequest={pullRequest} />
-        {/each}
-    </div>
+  
 </div>
 
 <div class="my-10">
-    <h3 class="heading-3 my-3">Repositories for {product.name}</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {#each repos as repo }
-        <a href={repo.url} target="_blank">
-            <Card class="p-2">
-                <h3 class="text-sm font-semibold underline capitalize mb-2">{repo.name}</h3>
-                <Tag >{repo.owner}</Tag>
-                <Tag >{repo.topic}</Tag>
-            </Card>
-        </a>
-        {/each}
-    </div>
+    <h3 class="font-semibold my-3">Repositories ({repos.length})</h3>
+    {#if repos.length > 0 }
+        <Grid >
+            {#each repos as repo }
+            <a href={repo.url} target="_blank">
+                <Card class="p-2">
+                    <h3 class="text-sm font-semibold underline capitalize mb-2">{repo.name}</h3>
+                    <Tag >{repo.owner}</Tag>
+                    <Tag >{repo.topic}</Tag>
+                </Card>
+            </a>
+            {/each}
+        </Grid>
+    {:else}
+        <EmptySlate caution title="No repositories found" description="Check if the product has the correct topic added" />
+    {/if}
+  
 
 </div>
 
