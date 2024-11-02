@@ -18,5 +18,5 @@ function goBack() {
     <button class="bg-muted p-1 flex items-center justify-center rounded-full hover:bg-primary/90 hover:text-primary-foreground" onclick={goBack}>
         <ChevronLeftIcon  />
     </button>
-    <h1 class="ml-1 heading-1">{@render children()}</h1>
+    <h1 class="ml-1 heading-1">{@render children?.()}</h1>
 </div>
