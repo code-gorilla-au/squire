@@ -6,9 +6,9 @@ import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
-import { CircleCheckBig } from "lucide-svelte";
 import { ShieldAlert } from "lucide-svelte";
 import Grid from "./grid.svelte";
+import EmptySlate from "./empty-slate.svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
@@ -31,11 +31,7 @@ async function routeToProduct(id: string) {
         {/each}
     </Grid>
 {:else}
-    <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
-        <CircleCheckBig class="text-green-700" size="32" /> 
-        <h3 class="my-2">No security advisories found</h3>
-        <p class="text-xs text-muted-foreground">Stay safe and keep your dependencies up to date</p>
-    </div> 
+    <EmptySlate title="No security advisories found" description="Stay safe and keep your dependencies up to date" />
 {/if}
 
 
@@ -48,10 +44,7 @@ async function routeToProduct(id: string) {
         {/each}
     </Grid>
 {:else}
-    <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
-        <CircleCheckBig class="text-green-700" size="32" /> 
-        <h3 class="my-2">No open pull requests</h3>
-    </div> 
+    <EmptySlate title="No open pull requests" />
 {/if}
 
     
