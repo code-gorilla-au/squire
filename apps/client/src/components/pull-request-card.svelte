@@ -1,5 +1,5 @@
 <script lang="ts">
-import Tag from "$components/tag.svelte";
+import Tag from "$components/tag/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import { formatDistanceToNow } from "date-fns";
 import type { PullRequestDto } from "squire";

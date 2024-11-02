@@ -2,7 +2,7 @@
 import { goto } from "$app/navigation";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
-import Tag from "$components/tag.svelte";
+import Tag from "$components/tag/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";

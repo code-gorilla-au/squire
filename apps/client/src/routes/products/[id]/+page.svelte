@@ -1,7 +1,7 @@
 <script lang="ts">
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
-import Tag from "$components/tag.svelte";
+import Tag from "$components/tag/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import Grid from "$components/grid.svelte";
 import EmptySlate from "$components/empty-slate.svelte";
