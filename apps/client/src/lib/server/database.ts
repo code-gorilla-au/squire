@@ -1,5 +1,5 @@
 import { Database, OPEN_READWRITE } from "duckdb-async";
-import { loadConfig } from "./env";
+import { loadConfig } from "../env";
 
 const config = loadConfig();
 
