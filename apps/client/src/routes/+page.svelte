@@ -8,11 +8,10 @@ import PullRequestCard from "$components/pull-request-card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types.js";
 import { source } from "sveltekit-sse";
 import { derived } from "svelte/store";
+import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events.js";
 
-let { data } = $props();
-
-const m = source("/events/summary");
-const channel = m.select("update");
+const eventSource = source("/events/dashboard-summary");
+const channel = eventSource.select(EVENT_DASHBOARD_SUMMARY_UPDATE);
 const summary = channel.transform((value: string) => {
 	const d = JSON.parse(value) as DashboardSummary;
 	return {
