@@ -11,12 +11,8 @@ import ProductCard from "./product-card.svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
-async function routeToProducts() {
+async function routeToCreateProduct() {
 	await goto("/products/create");
-}
-
-async function routeToProduct(id: string) {
-	await goto(`/products/${id}`);
 }
 </script>
     
@@ -57,11 +53,11 @@ async function routeToProduct(id: string) {
         {/each}
     </Grid>
 {:else}
-<div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
-    <ShieldAlert  size="32" /> 
-    <h3 class="my-2">No products found, create your first product</h3>
-    <Button on:click={routeToProducts}>Create</Button>
-</div> 
+    <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
+        <ShieldAlert  size="32" /> 
+        <h3 class="my-2">No products found, create your first product</h3>
+        <Button on:click={routeToCreateProduct}>Create</Button>
+    </div> 
    
 {/if}
 
