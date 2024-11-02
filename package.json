@@ -15,7 +15,10 @@
 		"@types/bun": "latest",
 		"@types/node-cron": "^3.0.11",
 		"jsdom": "^25.0.1",
-		"sveltekit-sse": "^0.13.9"
+		"sveltekit-sse": "^0.13.9",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/svelte": "^5.2.4",
+		"vitest": "^2.1.4"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
@@ -25,12 +28,9 @@
 		"apps/*"
 	],
 	"dependencies": {
-		"@testing-library/jest-dom": "^6.6.3",
-		"@testing-library/svelte": "^5.2.4",
 		"node-cron": "^3.0.3",
 		"pino": "^9.5.0",
 		"pino-caller": "^3.4.0",
-		"vitest": "^2.1.4",
 		"zod": "^3.23.8"
 	}
 }
