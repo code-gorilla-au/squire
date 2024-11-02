@@ -17,4 +17,8 @@ describe("title component", () => {
 		render(Title);
 		expect(screen.getByText("Hello World")).toBeInTheDocument();
 	});
+	it("should match snapshot", () => {
+		const { container } = render(Title);
+		expect(container.innerHTML).toMatchSnapshot();
+	});
 });

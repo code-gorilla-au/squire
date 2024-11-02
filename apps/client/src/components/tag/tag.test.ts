@@ -9,4 +9,8 @@ describe("title component", () => {
 
 		expect(screen.getByText("Test Tag")).toBeInTheDocument();
 	});
+	it("should match snapshot", () => {
+		const { container } = render(Tag);
+		expect(container.innerHTML).toMatchSnapshot();
+	});
 });
