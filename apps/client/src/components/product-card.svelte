@@ -1,5 +1,5 @@
 <script lang="ts">
-import Tag from "$components/tag/tag.svelte";
+import { Tag } from "$components/tag";
 import Card from "$components/ui/card/card.svelte";
 import { formatDistanceToNow } from "date-fns";
 import PencilIcon from "lucide-svelte/icons/pencil";
