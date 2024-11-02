@@ -7,7 +7,7 @@
 
 <h3 class="heading-3 mt-4 mb-2">Core concepts</h3>
 <p class="text-muted-foreground">Details on the main entities within Squire</p>
-<h4 class="font-semibold text-lg mt-4">
+<h4 class="font-semibold mt-4">
     Products
 </h4>
 <p class="text-muted-foreground">
@@ -15,7 +15,7 @@
     They represent a collection of repositories that are related to a specific topic within Github.
 </p>
 
-<h4 class="font-semibold text-lg mt-4">
+<h4 class="font-semibold mt-4">
     Repositories
 </h4>
 <p class="text-muted-foreground">
@@ -24,7 +24,7 @@
     then associate it with a product.
 </p>
 
-<h4 class="font-semibold text-lg mt-4">Security Advisories</h4>
+<h4 class="font-semibold mt-4">Security Advisories</h4>
 <p class="text-muted-foreground">
     Security advisories are the security vulnerabilities that are found within the repositories.
     Squire will automatically scan the repositories for security vulnerabilities and display them on the dashboard.
