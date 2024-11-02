@@ -1,4 +1,5 @@
 <script lang="ts" >
+import { Title } from "$components/title";
 import { Button } from "$components/ui/button";
 import { Input } from "$components/ui/input";
 import { Label } from "$components/ui/label";
@@ -10,10 +11,12 @@ export let form: ActionData;
 const product = data.props.product;
 </script>
 
-<h1 class="heading-1">{product.name}</h1>
+<Title>
+    {product.name}
+</Title>
 
-<div>
-    <form class="my-4 max-w-sm" method="post" action="?/update">
+<div class="">
+    <form class="my-4 max-w-sm mx-auto" method="post" action="?/update">
         <Label>
             Name
             <Input required name="name" value={product.name}  />

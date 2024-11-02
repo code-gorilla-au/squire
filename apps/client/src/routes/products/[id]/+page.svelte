@@ -1,12 +1,11 @@
 <script lang="ts">
-import { browser } from "$app/environment";
+import EmptySlate from "$components/empty-slate.svelte";
+import Grid from "$components/grid.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
-import Tag from "$components/tag.svelte";
+import { Tag } from "$components/tag";
+import { Title } from "$components/title";
 import Card from "$components/ui/card/card.svelte";
-import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
-import Grid from "$components/grid.svelte";
-import EmptySlate from "$components/empty-slate.svelte";
 
 let { data } = $props();
 
@@ -14,22 +13,12 @@ const product = data.props.product;
 const repos = data.props.repositories;
 const secAdvisory = data.props.securityAdvisory;
 const pullRequests = data.props.pullRequests;
-
-function goBack() {
-	if (!browser) {
-		return;
-	}
-
-	window.history.back();
-}
 </script>
 
-<div class="flex items-center">
-    <button onclick={goBack}>
-        <ChevronLeftIcon  />
-    </button>
-    <h1 class="heading-1">Product: {data.props.product.name} </h1>
-</div>
+<Title>
+    Product: {data.props.product.name}
+</Title>
+
 
 <div class="my-10">
     <h3 class="font-semibold my-3">Open security issues ({secAdvisory.length})</h3>

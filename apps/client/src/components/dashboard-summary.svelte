@@ -2,22 +2,17 @@
 import { goto } from "$app/navigation";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
-import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
-import Card from "$components/ui/card/card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
 import { ShieldAlert } from "lucide-svelte";
-import Grid from "./grid.svelte";
 import EmptySlate from "./empty-slate.svelte";
+import Grid from "./grid.svelte";
+import ProductCard from "./product-card.svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
-async function routeToProducts() {
+async function routeToCreateProduct() {
 	await goto("/products/create");
-}
-
-async function routeToProduct(id: string) {
-	await goto(`/products/${id}`);
 }
 </script>
     
@@ -54,21 +49,15 @@ async function routeToProduct(id: string) {
 {#if products.length > 0}    
     <Grid >
         {#each products as product}
-            <Card on:click={(event: Event) => {
-                event.preventDefault();
-                routeToProduct(product.id)
-            }} class="p-3 cursor-pointer">
-                <h3 class="font-semibold">{product.name}</h3>
-                <Tag>{product.tags}</Tag>
-            </Card>
+            <ProductCard product={product} />
         {/each}
     </Grid>
 {:else}
-<div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
-    <ShieldAlert  size="32" /> 
-    <h3 class="my-2">No products found, create your first product</h3>
-    <Button on:click={routeToProducts}>Create</Button>
-</div> 
+    <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
+        <ShieldAlert  size="32" /> 
+        <h3 class="my-2">No products found, create your first product</h3>
+        <Button on:click={routeToCreateProduct}>Create</Button>
+    </div> 
    
 {/if}
 
