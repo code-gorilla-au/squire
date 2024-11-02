@@ -3,6 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
+		"test": "vitest",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"dev:worker": "bun apps/workers/index.ts",
 		"dev:app": "bun run --filter client dev",
@@ -12,16 +13,22 @@
 		"@biomejs/biome": "1.9.3",
 		"@types/bun": "latest",
 		"@types/node-cron": "^3.0.11",
+		"jsdom": "^25.0.1",
 		"sveltekit-sse": "^0.13.9"
 	},
 	"peerDependencies": {
 		"typescript": "^5.0.0"
 	},
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"dependencies": {
+		"@testing-library/svelte": "^5.2.4",
 		"node-cron": "^3.0.3",
 		"pino": "^9.5.0",
 		"pino-caller": "^3.4.0",
+		"vitest": "^2.1.4",
 		"zod": "^3.23.8"
 	}
 }
