@@ -6,6 +6,7 @@
 		"lucide",
 		"pino",
 		"tailwindcss",
-		"unnest"
+		"unnest",
+		"unstub"
 	]
 }

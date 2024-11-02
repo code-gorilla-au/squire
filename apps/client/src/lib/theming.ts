@@ -19,6 +19,8 @@ export function useTheme(): Theme {
 		return currentTheme;
 	}
 
+	console.log("useTheme", window.matchMedia(darkMediaQuery).matches);
+
 	const prefersDark = window.matchMedia(darkMediaQuery).matches;
 
 	const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) ?? "";
