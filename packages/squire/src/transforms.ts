@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type {
-	ModelRepository as GhModelRepo,
 	ModelPullRequest as GHModelPullRequest,
+	ModelRepository as GhModelRepo,
 	ModelVulnerabilityAlerts,
 } from "squire-github";
 import type {

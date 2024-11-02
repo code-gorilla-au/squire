@@ -1,10 +1,10 @@
 <script lang="ts">
-import type { DashboardSummary } from "$lib/dashboard/types.js";
-import { source } from "sveltekit-sse";
-import { derived } from "svelte/store";
-import { ShieldEllipsis } from "lucide-svelte";
-import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events.js";
 import Dashboard from "$components/dashboard-summary.svelte";
+import type { DashboardSummary } from "$lib/dashboard/types.js";
+import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events.js";
+import { ShieldEllipsis } from "lucide-svelte";
+import { derived } from "svelte/store";
+import { source } from "sveltekit-sse";
 
 const eventSource = source("/events/dashboard-summary");
 const channel = eventSource.select(EVENT_DASHBOARD_SUMMARY_UPDATE);

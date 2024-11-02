@@ -1,10 +1,10 @@
 <script lang="ts">
 import { browser } from "$app/environment";
+import PullRequestCard from "$components/pull-request-card.svelte";
+import SecurityCard from "$components/security-card.svelte";
 import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import ChevronLeftIcon from "lucide-svelte/icons/chevron-left";
-import PullRequestCard from "$components/pull-request-card.svelte";
-import SecurityCard from "$components/security-card.svelte";
 
 let { data } = $props();
 

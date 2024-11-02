@@ -1,8 +1,8 @@
-import { produce } from "sveltekit-sse";
 import { SECOND, sleep } from "$lib";
-import { logger } from "toolbox";
-import { service } from "$lib/server/products";
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events";
+import { service } from "$lib/server/products";
+import { produce } from "sveltekit-sse";
+import { logger } from "toolbox";
 
 export const POST = () => {
 	return produce(async function start({ emit }) {

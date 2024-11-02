@@ -1,13 +1,13 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
-import { CircleCheckBig } from "lucide-svelte";
-import { ShieldAlert } from "lucide-svelte";
+import PullRequestCard from "$components/pull-request-card.svelte";
+import SecurityCard from "$components/security-card.svelte";
 import Tag from "$components/tag.svelte";
 import Button from "$components/ui/button/button.svelte";
 import Card from "$components/ui/card/card.svelte";
-import SecurityCard from "$components/security-card.svelte";
-import PullRequestCard from "$components/pull-request-card.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
+import { CircleCheckBig } from "lucide-svelte";
+import { ShieldAlert } from "lucide-svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
