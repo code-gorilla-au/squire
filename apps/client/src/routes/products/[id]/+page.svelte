@@ -5,7 +5,7 @@ import Tag from "$components/tag.svelte";
 import Card from "$components/ui/card/card.svelte";
 import Grid from "$components/grid.svelte";
 import EmptySlate from "$components/empty-slate.svelte";
-import Title from "$components/title.svelte";
+import { Title } from "$components/title";
 
 let { data } = $props();
 

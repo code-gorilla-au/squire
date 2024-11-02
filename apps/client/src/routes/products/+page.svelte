@@ -1,6 +1,6 @@
 <script lang="ts">
 import ProductCard from "$components/product-card.svelte";
-import Title from "$components/title.svelte";
+import { Title } from "$components/title";
 
 let { data } = $props();
 const products = data.props.products;

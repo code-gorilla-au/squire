@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
 import { describe, expect, it } from "vitest";
 
-import Title from "$components/title.test.svelte";
+import Title from "$components/title/title.test.svelte";
 
 describe("title component", () => {
 	it("should render the title", () => {
@@ -15,6 +15,6 @@ describe("title component", () => {
 	});
 	it('heading should have the text "hello"', () => {
 		render(Title);
-		expect(screen.getByText("hello")).toHaveTextContent("hello");
+		expect(screen.getByText("Hello World")).toBeInTheDocument();
 	});
 });
