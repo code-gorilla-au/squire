@@ -3,7 +3,8 @@
 	"type": "module",
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
-		"test": "vitest",
+		"test:watch": "vitest",
+		"test": "vitest --run",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"dev:worker": "bun apps/workers/index.ts",
 		"dev:app": "bun run --filter client dev",
@@ -24,6 +25,7 @@
 		"apps/*"
 	],
 	"dependencies": {
+		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/svelte": "^5.2.4",
 		"node-cron": "^3.0.3",
 		"pino": "^9.5.0",
