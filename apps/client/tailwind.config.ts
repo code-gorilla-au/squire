@@ -73,7 +73,7 @@ const config: Config = {
 					"@apply font-semibold text-xl dark:text-white": {},
 				},
 				".text-link": {
-					"@apply underline text-primary hover:text-primary/50 dark:text-muted dark:hover:text-primary/50":
+					"@apply underline text-primary hover:text-primary/50 dark:text-primary dark:hover:text-primary/50":
 						{},
 				},
 			});
