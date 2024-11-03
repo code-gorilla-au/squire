@@ -48,10 +48,15 @@ export function initWorker(client: Client, store: Store) {
 			return bulkInsertErrors;
 		},
 		async ingestRepoByTopic(topic: string) {
+			logger.debug({ topic }, "ingesting data by topic");
 			const resp = await client.searchRepos({ topics: [topic] });
 
 			const { repos, security, pullRequests } = generateModels(resp, topic);
 
+			logger.debug(
+				{ totalRepos: repos.length },
+				"Inserting repos, pull requests, and security vulnerabilities",
+			);
 			const insertErrors: Error[] = await bulkInsert(store, {
 				repos,
 				security,

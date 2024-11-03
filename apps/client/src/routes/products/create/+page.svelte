@@ -1,4 +1,5 @@
 <script lang="ts">
+import Title from "$components/title/title.svelte";
 import Button from "$components/ui/button/button.svelte";
 import { Input } from "$components/ui/input";
 import { Label } from "$components/ui/label";
@@ -8,10 +9,10 @@ export let form: ActionData;
 </script>
 
 
-<h1 class="heading-1">Create Product</h1>
+<Title>Create Product</Title>
 
-<div>
-    <form class="my-4 max-w-sm" method="POST">
+<div class="">
+    <form class="my-4 max-w-sm mx-auto" method="POST">
         <Label>
             Name
             <Input required name="name"  />

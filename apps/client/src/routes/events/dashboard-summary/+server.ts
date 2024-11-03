@@ -1,4 +1,4 @@
-import { SECOND, sleep } from "$lib";
+import { SECOND, sleep } from "$lib/time";
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events";
 import { service } from "$lib/server/products";
 import { produce } from "sveltekit-sse";

@@ -5,6 +5,14 @@ import { source } from "sveltekit-sse";
 const eventSource = source("/events/dashboard-summary");
 const channel = eventSource.select(EVENT_DASHBOARD_SUMMARY_UPDATE);
 export const summaryStore = channel.transform((value: string) => {
+	if (!value) {
+		return {
+			pullRequests: [],
+			securityAdvisories: [],
+			products: [],
+		};
+	}
+
 	const d = JSON.parse(value) as DashboardSummary;
 	return {
 		pullRequests: d.pullRequests ?? [],

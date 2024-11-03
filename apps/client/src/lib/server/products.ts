@@ -25,11 +25,10 @@ process.on("sveltekit:shutdown", async () => {
 });
 
 cron.schedule("*/1 * * * *", async () => {
-	logger.info("syncing repos");
+	logger.info("fetching dashboard data");
 	const errors = await worker.syncProducts();
 	if (errors.length) {
-		logger.error({ errors }, "errors syncing repos");
-		process.exit(1);
+		logger.error({ errors }, "errors fetching dashboard data");
 	}
-	logger.info("syncing complete");
+	logger.info("dashboard data fetched");
 });

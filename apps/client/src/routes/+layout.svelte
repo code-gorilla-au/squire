@@ -2,20 +2,25 @@
 import "../app.css";
 import { navigating } from "$app/stores";
 import { Shield } from "lucide-svelte";
+import Theme from "$components/theme.svelte";
 let { children } = $props();
 </script>
 <main class="">
-	<nav class="bg-primary text-primary-foreground shadow-md">
+	<nav class="dark:bg-accent dark:text-accent-foreground bg-primary shadow-md">
 		<div class="mx-auto max-w-screen-lg flex items-center justify-between">
 			<div class="flex items-center p-4">
-				<Shield />
+				<Shield class="text-primary-foreground dark:text-accent-foreground" />
 				<h3 class="font-bold text-2xl text-muted-foreground">Squire</h3>
 			</div>
-			<div class="mx-3 text-sm">
-				<a class="underline" href="/">Home</a> |
-				<a class="underline" href="/docs">Documentation</a> |
-				<a class="underline" href="/products">Products</a>
+			<div class="mx-3 flex items-center">
+				<div class="text-sm text-primary-foreground/90 dark:text-accent-foreground">
+					<a class="underline" href="/">Home</a> |
+					<a class="underline" href="/docs">Documentation</a> |
+					<a class="underline" href="/products">Products</a>
+				</div>
+				<Theme class="ml-2" />
 			</div>
+		
 		</div>
 	</nav>
 	{#if $navigating}
