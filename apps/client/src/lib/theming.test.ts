@@ -55,4 +55,15 @@ describe("theming", () => {
 		const darkTheme = useTheme();
 		expect(get(darkTheme.currentTheme)).toBe("dark");
 	});
+	it("should set light theme if reset is called", () => {
+		const resetTheme = useTheme();
+		resetTheme.update("dark");
+		resetTheme.reset();
+		expect(get(resetTheme.currentTheme)).toBe("light");
+	});
+	it("should update to dark theme if update is called", () => {
+		const updateTheme = useTheme();
+		updateTheme.update("dark");
+		expect(get(updateTheme.currentTheme)).toBe("dark");
+	});
 });

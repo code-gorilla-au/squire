@@ -72,6 +72,10 @@ function typeTheme(value: string): value is Theme {
 }
 
 function setColourScheme(theme: Theme) {
+	if (!browser) {
+		return;
+	}
+
 	if (theme === "dark") {
 		document.documentElement.classList.add("dark");
 		return;
