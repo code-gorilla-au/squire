@@ -1,5 +1,14 @@
+import { browser } from "$app/environment";
+
 const THEME_STORAGE_KEY = "--theme";
+
 export type Theme = "dark" | "light";
+
+export type ThemeSwitcher = {
+	currentTheme: Theme;
+	save: (theme: Theme) => void;
+	reset: () => void;
+};
 
 /**
  * media query for dark mode
@@ -9,41 +18,49 @@ const darkMediaQuery = "(prefers-color-scheme: dark)";
 /**
  * in memory store for the current theme
  */
-let currentTheme: Theme | undefined = undefined;
+let currentTheme: Theme = "light";
 
 /**
  * gets the current theme for the user based on their preference or saved theme
  */
-export function useTheme(): Theme {
-	if (currentTheme) {
-		return currentTheme;
+export function useTheme() {
+	if (!browser) {
+		return {
+			currentTheme: "light" as Theme,
+			save: (_: Theme) => {
+				// do nothing
+			},
+			reset: () => {
+				// do nothing
+			},
+		};
 	}
-
-	console.log("useTheme", window.matchMedia(darkMediaQuery).matches);
 
 	const prefersDark = window.matchMedia(darkMediaQuery).matches;
 
-	const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) ?? "";
-	if (typeTheme(storedTheme)) {
-		currentTheme = storedTheme;
-		setColourScheme(storedTheme);
-		return currentTheme;
-	}
-
-	currentTheme = "light";
 	if (prefersDark) {
 		currentTheme = "dark";
 	}
 
+	const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) ?? "";
+	if (typeTheme(storedTheme)) {
+		currentTheme = storedTheme;
+	}
+
 	setColourScheme(currentTheme);
-	return currentTheme;
+
+	return {
+		currentTheme,
+		save: saveTheme,
+		reset: resetTheme,
+	};
 }
 
 /**
  * saves the theme to local storage
  * @param theme theme to save
  */
-export function saveTheme(theme: Theme): void {
+function saveTheme(theme: Theme): void {
 	currentTheme = theme;
 	setColourScheme(theme);
 	localStorage.setItem(THEME_STORAGE_KEY, theme);
@@ -69,6 +86,6 @@ function setColourScheme(theme: Theme) {
 /**
  * resets the current theme
  */
-export function resetTheme() {
-	currentTheme = undefined;
+function resetTheme() {
+	currentTheme = "light";
 }

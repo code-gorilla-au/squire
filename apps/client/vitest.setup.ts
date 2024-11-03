@@ -36,8 +36,8 @@ beforeAll(() => {
 			unobserve: vi.fn(),
 		}));
 
-	Object.defineProperty(window, "matchMedia", {
-		value: vi.fn().mockImplementation((query) => ({
+	window.matchMedia = vi.fn().mockImplementation((query) => {
+		return {
 			matches: false,
 			media: query,
 			onchange: null,
@@ -46,6 +46,6 @@ beforeAll(() => {
 			addEventListener: vi.fn(),
 			removeEventListener: vi.fn(),
 			dispatchEvent: vi.fn(),
-		})),
+		};
 	});
 });
