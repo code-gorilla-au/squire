@@ -29,7 +29,6 @@ cron.schedule("*/1 * * * *", async () => {
 	const errors = await worker.syncProducts();
 	if (errors.length) {
 		logger.error({ errors }, "errors syncing repos");
-		process.exit(1);
 	}
 	logger.info("syncing complete");
 });
