@@ -1,22 +1,20 @@
 <script lang="ts">
 import { Button } from "$components/ui/button";
-import { saveTheme, useTheme } from "$lib/theming";
+import { useTheme } from "$lib/theme";
 import Moon from "lucide-svelte/icons/moon";
 import Sun from "lucide-svelte/icons/sun";
+import { get } from "svelte/store";
 
 let { class: className }: { class?: string } = $props();
 
-let theme = useTheme();
+const theme = useTheme();
 
 function toggleTheme() {
-	if (theme === "dark") {
-		saveTheme("light");
-		theme = "light";
+	if (get(theme.currentTheme) === "dark") {
+		theme.update("light");
 		return;
 	}
-
-	theme = "dark";
-	saveTheme("dark");
+	theme.update("dark");
 }
 </script>
     
