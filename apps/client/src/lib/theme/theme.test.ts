@@ -8,7 +8,7 @@ import {
 	it,
 	vi,
 } from "vitest";
-import { useTheme, type ThemeSwitcher } from "./theming";
+import { useTheme, type ThemeSwitcher } from "./theme";
 import { get } from "svelte/store";
 
 vi.mock("$app/environment", (original) => {
