@@ -9,6 +9,7 @@ import {
 	vi,
 } from "vitest";
 import { useTheme, type ThemeSwitcher } from "./theming";
+import { get } from "svelte/store";
 
 vi.mock("$app/environment", (original) => {
 	return {
@@ -40,18 +41,18 @@ describe("theming", () => {
 	});
 
 	it("should return init theme if non is set", () => {
-		expect(theme.currentTheme).toBe("light");
+		expect(get(theme.currentTheme)).toBe("light");
 	});
 
 	it("should return preferred theme as dark", () => {
 		mockMatchMedia.mockImplementation(() => ({ matches: true }));
 		const darkTheme = useTheme();
 
-		expect(darkTheme.currentTheme).toBe("dark");
+		expect(get(darkTheme.currentTheme)).toBe("dark");
 	});
 	it("should set dark theme if stored in localStorage", () => {
 		localStorage.setItem("--theme", "dark");
 		const darkTheme = useTheme();
-		expect(darkTheme.currentTheme).toBe("dark");
+		expect(get(darkTheme.currentTheme)).toBe("dark");
 	});
 });

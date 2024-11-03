@@ -1,12 +1,13 @@
 import { browser } from "$app/environment";
+import { get, readable, readonly, writable, type Readable } from "svelte/store";
 
 const THEME_STORAGE_KEY = "--theme";
 
 export type Theme = "dark" | "light";
 
 export type ThemeSwitcher = {
-	currentTheme: Theme;
-	save: (theme: Theme) => void;
+	currentTheme: Readable<Theme>;
+	update: (theme: Theme) => void;
 	reset: () => void;
 };
 
@@ -18,16 +19,16 @@ const darkMediaQuery = "(prefers-color-scheme: dark)";
 /**
  * in memory store for the current theme
  */
-let currentTheme: Theme = "light";
+const current = writable<Theme>("light");
 
 /**
  * gets the current theme for the user based on their preference or saved theme
  */
-export function useTheme() {
+export function useTheme(): ThemeSwitcher {
 	if (!browser) {
 		return {
-			currentTheme: "light" as Theme,
-			save: (_: Theme) => {
+			currentTheme: readable("light"),
+			update: (_: Theme) => {
 				// do nothing
 			},
 			reset: () => {
@@ -39,31 +40,27 @@ export function useTheme() {
 	const prefersDark = window.matchMedia(darkMediaQuery).matches;
 
 	if (prefersDark) {
-		currentTheme = "dark";
+		current.set("dark");
 	}
 
 	const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) ?? "";
 	if (typeTheme(storedTheme)) {
-		currentTheme = storedTheme;
+		current.set(storedTheme);
 	}
 
-	setColourScheme(currentTheme);
+	setColourScheme(get(current));
 
 	return {
-		currentTheme,
-		save: saveTheme,
-		reset: resetTheme,
+		currentTheme: readonly(current),
+		update: (theme: Theme) => {
+			current.set(theme);
+			setColourScheme(theme);
+			localStorage.setItem(THEME_STORAGE_KEY, theme);
+		},
+		reset: () => {
+			current.set("light");
+		},
 	};
-}
-
-/**
- * saves the theme to local storage
- * @param theme theme to save
- */
-function saveTheme(theme: Theme): void {
-	currentTheme = theme;
-	setColourScheme(theme);
-	localStorage.setItem(THEME_STORAGE_KEY, theme);
 }
 
 /**
@@ -81,11 +78,4 @@ function setColourScheme(theme: Theme) {
 	}
 
 	document.documentElement.classList.remove("dark");
-}
-
-/**
- * resets the current theme
- */
-function resetTheme() {
-	currentTheme = "light";
 }
