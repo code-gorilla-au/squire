@@ -22,7 +22,7 @@ export interface Node<T> {
 	node: T;
 }
 
-export interface RepositoryDto {
+export interface Repository {
 	url: string;
 	name: string;
 	owner: {
@@ -92,5 +92,5 @@ export interface SearchParameters {
 }
 
 export interface Client {
-	searchRepos(options?: SearchOptions): Promise<QuerySearch<RepositoryDto>>;
+	searchRepos(options?: SearchOptions): Promise<QuerySearch<Repository>>;
 }

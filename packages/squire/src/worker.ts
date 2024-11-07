@@ -1,6 +1,6 @@
 import type {
 	Client,
-	RepositoryDto as GhModelRepository,
+	Repository as GhModelRepository,
 	QuerySearch,
 } from "squire-github";
 import { logger } from "toolbox";
