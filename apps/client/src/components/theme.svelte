@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Button } from "$components/ui/button";
-import { cn } from "$lib/utils";
 import { useTheme } from "$lib/theme";
+import { cn } from "$lib/utils";
 import Moon from "lucide-svelte/icons/moon";
 import Sun from "lucide-svelte/icons/sun";
 import { get } from "svelte/store";

@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { get, readable, readonly, writable, type Readable } from "svelte/store";
+import { type Readable, get, readable, readonly, writable } from "svelte/store";
 
 const THEME_STORAGE_KEY = "--theme";
 

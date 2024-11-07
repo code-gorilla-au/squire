@@ -1,8 +1,8 @@
 <script lang="ts">
 import "../app.css";
 import { navigating } from "$app/stores";
-import { Shield } from "lucide-svelte";
 import Theme from "$components/theme.svelte";
+import { Shield } from "lucide-svelte";
 let { children } = $props();
 </script>
 <main class="">

@@ -2,8 +2,8 @@ import { post } from "./api";
 import { queryReposAndActiveSecByTopic } from "./query";
 import type {
 	ClientOptions,
-	RepositoryDto,
 	QuerySearch,
+	RepositoryDto,
 	SearchOptions,
 	SearchParameters,
 } from "./types";
