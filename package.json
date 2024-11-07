@@ -4,7 +4,8 @@
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
 		"test:watch": "vitest",
-		"test": "vitest --run",
+		"test:client": "bun run --filter client test",
+		"test": "bun run test:client && vitest --run",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"dev:worker": "bun apps/workers/index.ts",
 		"dev:app": "bun run --filter client dev",
@@ -23,7 +24,10 @@
 	"peerDependencies": {
 		"typescript": "^5.0.0"
 	},
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"dependencies": {
 		"node-cron": "^3.0.3",
 		"pino": "^9.5.0",

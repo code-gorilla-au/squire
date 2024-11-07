@@ -1,2 +1,2 @@
 export * from "./src/types";
-export * from "./src/client.ts";
+export { initClient } from "./src/client.ts";

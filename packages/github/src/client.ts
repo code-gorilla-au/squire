@@ -23,7 +23,7 @@ export function initClient(defaultOptions: ClientOptions) {
 	};
 }
 
-function mergeOptions(
+export function mergeOptions(
 	defaultOptions: ClientOptions,
 	options?: SearchOptions,
 ): SearchParameters {
