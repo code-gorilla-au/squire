@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import type {
-	ModelPullRequest as GHModelPullRequest,
-	ModelRepository as GhModelRepo,
-	ModelVulnerabilityAlerts,
+	PullRequest as GHModelPullRequest,
+	RepositoryDto as GhModelRepo,
+	VulnerabilityAlerts,
 } from "squire-github";
 import type {
 	ModelPullRequest,
@@ -36,7 +36,7 @@ export function generateSecurityFromGhModel(
 }
 
 function transformToSecurityModel(
-	edge: ModelVulnerabilityAlerts,
+	edge: VulnerabilityAlerts,
 	repositoryId: string,
 ): ModelSecurity {
 	return {

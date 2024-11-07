@@ -2,7 +2,7 @@ import { post } from "./api";
 import { queryReposAndActiveSecByTopic } from "./query";
 import type {
 	ClientOptions,
-	ModelRepository,
+	RepositoryDto,
 	QuerySearch,
 	SearchOptions,
 	SearchParameters,
@@ -16,7 +16,7 @@ export function initClient(defaultOptions: ClientOptions) {
 				searchOpts.owner,
 				searchOpts.topics.join(","),
 			);
-			return post<QuerySearch<ModelRepository>>(defaultOptions.ghToken, {
+			return post<QuerySearch<RepositoryDto>>(defaultOptions.ghToken, {
 				query,
 			});
 		},
