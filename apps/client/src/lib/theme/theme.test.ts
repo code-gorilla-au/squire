@@ -1,3 +1,4 @@
+import { get } from "svelte/store";
 import {
 	afterAll,
 	afterEach,
@@ -8,8 +9,7 @@ import {
 	it,
 	vi,
 } from "vitest";
-import { useTheme, type ThemeSwitcher } from "./theme";
-import { get } from "svelte/store";
+import { type ThemeSwitcher, useTheme } from "./theme";
 
 vi.mock("$app/environment", (original) => {
 	return {

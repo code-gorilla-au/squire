@@ -2,8 +2,8 @@ import { post } from "./api";
 import { queryReposAndActiveSecByTopic } from "./query";
 import type {
 	ClientOptions,
-	ModelRepository,
 	QuerySearch,
+	Repository,
 	SearchOptions,
 	SearchParameters,
 } from "./types";
@@ -16,14 +16,14 @@ export function initClient(defaultOptions: ClientOptions) {
 				searchOpts.owner,
 				searchOpts.topics.join(","),
 			);
-			return post<QuerySearch<ModelRepository>>(defaultOptions.ghToken, {
+			return post<QuerySearch<Repository>>(defaultOptions.ghToken, {
 				query,
 			});
 		},
 	};
 }
 
-function mergeOptions(
+export function mergeOptions(
 	defaultOptions: ClientOptions,
 	options?: SearchOptions,
 ): SearchParameters {

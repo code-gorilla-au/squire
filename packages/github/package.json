@@ -1,4 +1,7 @@
 {
 	"name": "squire-github",
-	"type": "module"
+	"type": "module",
+	"scripts": {
+		"test": "vitest --run"
+	}
 }

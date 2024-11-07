@@ -22,14 +22,14 @@ export interface Node<T> {
 	node: T;
 }
 
-export interface ModelRepository {
+export interface Repository {
 	url: string;
 	name: string;
 	owner: {
 		login: string;
 	};
-	vulnerabilityAlerts: RootNode<ModelVulnerabilityAlerts>;
-	pullRequests: RootNode<ModelPullRequest>;
+	vulnerabilityAlerts: RootNode<VulnerabilityAlerts>;
+	pullRequests: RootNode<PullRequest>;
 }
 
 export type VulnerabilityAlertState =
@@ -38,17 +38,17 @@ export type VulnerabilityAlertState =
 	| "DISMISSED"
 	| "AUTO_DISMISSED";
 
-export interface ModelVulnerabilityAlerts {
+export interface VulnerabilityAlerts {
 	state: VulnerabilityAlertState;
 	id: string;
 	number: number;
-	securityVulnerability: ModelSecurityVulnerability;
+	securityVulnerability: SecurityVulnerability;
 	createdAt: Date;
 }
 
 export type AdvisorySeverity = "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
 
-export interface ModelSecurityVulnerability {
+export interface SecurityVulnerability {
 	package: {
 		name: string;
 	};
@@ -61,7 +61,7 @@ export interface ModelSecurityVulnerability {
 	updatedAt: Date;
 }
 
-export interface ModelPullRequest {
+export interface PullRequest {
 	id: string;
 	title: string;
 	state: "OPEN" | "CLOSED" | "MERGED";
@@ -92,5 +92,5 @@ export interface SearchParameters {
 }
 
 export interface Client {
-	searchRepos(options?: SearchOptions): Promise<QuerySearch<ModelRepository>>;
+	searchRepos(options?: SearchOptions): Promise<QuerySearch<Repository>>;
 }

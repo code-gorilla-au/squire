@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import type {
-	ModelPullRequest as GHModelPullRequest,
-	ModelRepository as GhModelRepo,
-	ModelVulnerabilityAlerts,
+	PullRequest,
+	Repository,
+	VulnerabilityAlerts,
 } from "squire-github";
 import type {
 	ModelPullRequest,
@@ -11,7 +11,7 @@ import type {
 } from "./models";
 
 export function generateRepoFromGhModel(
-	ghRepo: GhModelRepo,
+	ghRepo: Repository,
 	owner: string,
 	topic: string,
 ): ModelRepository {
@@ -27,7 +27,7 @@ export function generateRepoFromGhModel(
 }
 
 export function generateSecurityFromGhModel(
-	ghRepo: GhModelRepo,
+	ghRepo: Repository,
 	repositoryId: string,
 ): ModelSecurity[] {
 	return ghRepo.vulnerabilityAlerts.nodes.map((edge) => {
@@ -36,7 +36,7 @@ export function generateSecurityFromGhModel(
 }
 
 function transformToSecurityModel(
-	edge: ModelVulnerabilityAlerts,
+	edge: VulnerabilityAlerts,
 	repositoryId: string,
 ): ModelSecurity {
 	return {
@@ -54,7 +54,7 @@ function transformToSecurityModel(
 }
 
 export function generatePullRequestFromGhModel(
-	nodes: GhModelRepo,
+	nodes: Repository,
 	repositoryId: string,
 	owner: string,
 	repoName: string,
@@ -70,7 +70,7 @@ export function generatePullRequestFromGhModel(
 }
 
 function transformToPullRequestFromGhModel(
-	node: GHModelPullRequest,
+	node: PullRequest,
 	repositoryId: string,
 	owner: string,
 	repoName: string,
