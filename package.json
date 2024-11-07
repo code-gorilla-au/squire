@@ -3,9 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"lint:fix": "bunx biome check --write .",
-		"test:watch": "vitest",
-		"test:client": "bun run --filter client test",
-		"test": "bun run test:client && vitest --run",
+		"test": "bun run --filter='*' test",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"dev:worker": "bun apps/workers/index.ts",
 		"dev:app": "bun run --filter client dev",
