@@ -130,7 +130,7 @@ function generateModels(
 		);
 		repos.push(repo);
 
-		const security = generateSecurityFromGhModel(node.node, repo.id);
+		const security = generateSecurityFromGhModel(node.node, repo.name);
 		securities.push(...security);
 
 		const pr = generatePullRequestFromGhModel(

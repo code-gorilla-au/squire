@@ -211,7 +211,7 @@ const queryInsertPullRequest = `
 		$1,
 		$2,
 		$3,
-		(select id from repositories where name = $4 limit 1),
+		$4,
 		$5,
 		$6,
 		$7,
@@ -340,7 +340,6 @@ export function initRepository(db: Database): Store {
 				const stmt = await db.prepare(queryInsertPullRequest);
 
 				for (const pr of pullRequests) {
-					logger.debug({ pr }, "Inserting pull request");
 					await stmt.run(
 						pr.id,
 						pr.externalId,
