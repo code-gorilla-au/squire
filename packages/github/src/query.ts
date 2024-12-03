@@ -32,6 +32,9 @@ function queryReposWithSec(query: string, first = 100): string {
               closedAt
               mergedAt
               permalink
+              author {
+                login
+              }
             }
             totalCount
           }            

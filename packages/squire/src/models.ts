@@ -53,6 +53,7 @@ export interface ModelPullRequest {
 	repoName: string;
 	url: string;
 	state: string;
+	author: string;
 	mergedAt: Date;
 	createdAt: Date;
 	updatedAt: Date;
@@ -67,6 +68,7 @@ export interface PullRequestDto {
 	repoName: string;
 	url: string;
 	state: string;
+	author: string;
 	mergedAt: Date;
 	createdAt: Date;
 	updatedAt: Date;

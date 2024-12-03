@@ -23,6 +23,18 @@ export function initWorker(client: Client, store: Store) {
 			return result.error;
 		},
 
+		async addProducts(topics: string[]): Promise<Error[]> {
+			const errors: Error[] = [];
+			for (const topic of topics) {
+				const result = await store.insertProduct(topic, [topic]);
+				if (result.error) {
+					errors.push(result.error);
+				}
+			}
+
+			return errors;
+		},
+
 		async syncProducts(): Promise<Error[]> {
 			const bulkInsertErrors: Error[] = [];
 

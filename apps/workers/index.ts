@@ -22,6 +22,12 @@ if (err) {
 	process.exit(1);
 }
 
+const errProducts = await worker.addProducts(config.ghRepoTopics);
+if (errProducts.length) {
+	logger.error({ error: errProducts }, "Error adding products");
+	process.exit(1);
+}
+
 logger.info("syncing repos");
 const syncErrors: Error[] = [];
 

@@ -84,6 +84,7 @@ function transformToPullRequestFromGhModel(
 		repoName,
 		url: node.permalink,
 		state: node.state,
+		author: node.author.login,
 		mergedAt: node.mergedAt,
 		createdAt: node.createdAt,
 		updatedAt: new Date(),
