@@ -55,6 +55,7 @@ export const queryCreateTablePullRequests = `
 		repositoryName string,
 		url VARCHAR,
 		state VARCHAR,
+		author VARCHAR,
 		mergedAt TIMESTAMP WITH TIME ZONE,
 		createdAt TIMESTAMP WITH TIME ZONE,
 		updatedAt TIMESTAMP WITH TIME ZONE
@@ -204,6 +205,7 @@ const queryInsertPullRequest = `
 		repositoryName,
 		url,
 		state,
+		author,
 		mergedAt,
 		createdAt,
 		updatedAt
@@ -216,6 +218,7 @@ const queryInsertPullRequest = `
 		$6,
 		$7,
 		$8,
+		$9,
 		now()
 	) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state,
 	 		mergedAt = EXCLUDED.mergedAt,
@@ -347,6 +350,7 @@ export function initRepository(db: Database): Store {
 						pr.repositoryName,
 						pr.url,
 						pr.state,
+						pr.author,
 						pr.mergedAt,
 						pr.createdAt,
 					);

@@ -68,6 +68,9 @@ export interface PullRequest {
 	createdAt: Date;
 	mergedAt: Date;
 	permalink: string;
+	author: {
+		login: string;
+	};
 }
 
 export interface PrFilter {
