@@ -18,11 +18,15 @@ function truncateString(str: string, num = 20): string {
     <Card class="p-2">
         <h3 class="text-sm font-semibold underline capitalize mb-2">{truncateString(pullRequest.title)}</h3>
         <div>
-            <span class="font-semibold text-xs">Status:</span>
+            <span class="font-semibold text-xs text-primary/50">Author:</span>
+            <span class="text-xs">{pullRequest.author}</span>
+        </div>
+        <div>
+            <span class="font-semibold text-xs text-primary/50">Status:</span>
             <span class="lowercase text-xs">{pullRequest.state}</span>
         </div>
         <div>
-            <span class="font-semibold text-xs">Created:</span>
+            <span class="font-semibold text-xs text-primary/50">Created:</span>
             <span class="lowercase text-xs">{formatDistanceToNow(pullRequest.createdAt)}</span>
         </div>
         <Tag>{pullRequest.repoOwner}</Tag>

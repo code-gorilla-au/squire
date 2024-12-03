@@ -27,15 +27,15 @@ function styleTagBySeverity(severity: string) {
         <h3 class="font-semibold underline capitalize mb-2">{security.packageName}</h3>
         <div class="text-sm">
             <div>
-                <span class="font-semibold">Severity:</span>
+                <span class="font-semibold text-xs text-primary/50">Severity:</span>
                 <Tag class={cn("lowercase", styleTagBySeverity(security.severity))}>{security.severity}</Tag>
             </div>
             <div>
-                <span class="font-semibold">Status:</span>
-                <span class=" lowercase">{security.state}</span>
+                <span class="font-semibold text-xs text-primary/50">Status:</span>
+                <span class="lowercase">{security.state}</span>
             </div>
             <div>
-                <span class="font-semibold">Last update:</span>
+                <span class="font-semibold text-xs text-primary/50">Last update:</span>
                 <span class=" lowercase">{formatDistanceToNow(security.createdAt)}</span>
             </div>
         </div>
