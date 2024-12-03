@@ -121,7 +121,7 @@ const queryGetAllSecurityAdvisoryByProduct = `
 		repo.name as repoName,
 		repo.url as repoUrl
 	FROM securities sec
-	JOIN repositories repo ON sec.repositoryName = repo.id
+	JOIN repositories repo ON sec.repositoryName = repo.name
 	JOIN products prod ON repo.topic IN prod.tags
 	WHERE sec.state = 'OPEN'
 	AND prod.id = $1
