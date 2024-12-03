@@ -28,21 +28,21 @@ export function generateRepoFromGhModel(
 
 export function generateSecurityFromGhModel(
 	ghRepo: Repository,
-	repositoryId: string,
+	repositoryName: string,
 ): ModelSecurity[] {
 	return ghRepo.vulnerabilityAlerts.nodes.map((edge) => {
-		return transformToSecurityModel(edge, repositoryId);
+		return transformToSecurityModel(edge, repositoryName);
 	});
 }
 
 function transformToSecurityModel(
 	edge: VulnerabilityAlerts,
-	repositoryId: string,
+	repositoryName: string,
 ): ModelSecurity {
 	return {
 		id: randomUUID(),
 		externalId: edge.id,
-		repositoryId,
+		repositoryName,
 		state: edge.state,
 		packageName: edge.securityVulnerability.package.name,
 		severity: edge.securityVulnerability.advisory.severity,
@@ -55,14 +55,14 @@ function transformToSecurityModel(
 
 export function generatePullRequestFromGhModel(
 	nodes: Repository,
-	repositoryId: string,
+	repositoryName: string,
 	owner: string,
 	repoName: string,
 ): ModelPullRequest[] {
 	return nodes.pullRequests.nodes.map((node) => {
 		return transformToPullRequestFromGhModel(
 			node,
-			repositoryId,
+			repositoryName,
 			owner,
 			repoName,
 		);
@@ -71,7 +71,7 @@ export function generatePullRequestFromGhModel(
 
 function transformToPullRequestFromGhModel(
 	node: PullRequest,
-	repositoryId: string,
+	repositoryName: string,
 	owner: string,
 	repoName: string,
 ): ModelPullRequest {
@@ -79,7 +79,7 @@ function transformToPullRequestFromGhModel(
 		id: randomUUID(),
 		externalId: node.id,
 		title: node.title,
-		repositoryId: repositoryId,
+		repositoryName,
 		repoOwner: owner,
 		repoName,
 		url: node.permalink,

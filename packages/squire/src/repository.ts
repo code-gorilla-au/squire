@@ -27,7 +27,7 @@ export const queryCreateSecurityTable = `
     CREATE TABLE IF NOT EXISTS securities (
         id uuid PRIMARY KEY,
 		externalId VARCHAR UNIQUE,
-        repositoryId uuid,
+        repositoryName string,
         packageName VARCHAR,
         state VARCHAR,
         severity VARCHAR,
@@ -52,7 +52,7 @@ export const queryCreateTablePullRequests = `
 		id uuid PRIMARY KEY,
 		externalId VARCHAR UNIQUE,
 		title VARCHAR,
-		repositoryId uuid,
+		repositoryName string,
 		url VARCHAR,
 		state VARCHAR,
 		mergedAt TIMESTAMP WITH TIME ZONE,
@@ -85,7 +85,7 @@ export const queryInsertSecurity = `
     INSERT INTO securities (
         id,
 		externalId,
-        repositoryId,
+        repositoryName,
         packageName,
         state,
         severity,
@@ -121,7 +121,7 @@ const queryGetAllSecurityAdvisoryByProduct = `
 		repo.name as repoName,
 		repo.url as repoUrl
 	FROM securities sec
-	JOIN repositories repo ON sec.repositoryId = repo.id
+	JOIN repositories repo ON sec.repositoryName = repo.name
 	JOIN products prod ON repo.topic IN prod.tags
 	WHERE sec.state = 'OPEN'
 	AND prod.id = $1
@@ -142,7 +142,7 @@ const queryGetAllSecurityAdvisory = `
 		repo.name as repoName,
 		repo.url as repoUrl
 	FROM securities sec
-	JOIN repositories repo ON sec.repositoryId = repo.id
+	JOIN repositories repo ON sec.repositoryName = repo.name
 	JOIN products prod ON repo.topic IN prod.tags
 	WHERE sec.state = 'OPEN'
 	ORDER BY sec.updatedAt DESC
@@ -201,7 +201,7 @@ const queryInsertPullRequest = `
 		id,
 		externalId,
 		title,
-		repositoryId,
+		repositoryName,
 		url,
 		state,
 		mergedAt,
@@ -228,7 +228,7 @@ const queryGetOpenPullRequestsByProductId = `
 		r.owner as repoOwner,
 		r.name as repoName
 	FROM pull_requests pr
-	JOIN repositories r ON pr.repositoryId = r.id
+	JOIN repositories r ON pr.repositoryName = r.name
 	JOIN products p ON r.topic IN p.tags
 	WHERE p.id = $1
 	AND pr.state = 'OPEN';
@@ -240,7 +240,7 @@ const queryGetOpenPullRequests = `
 		r.owner as repoOwner,
 		r.name as repoName
 	FROM pull_requests pr
-	JOIN repositories r ON pr.repositoryId = r.id
+	JOIN repositories r ON pr.repositoryName = r.name
 	JOIN products p ON r.topic IN p.tags
 	WHERE pr.state = 'OPEN';
 `;
@@ -306,7 +306,7 @@ export function initRepository(db: Database): Store {
 					await stmt.run(
 						security.id,
 						security.externalId,
-						security.repositoryId,
+						security.repositoryName,
 						security.packageName,
 						security.state,
 						security.severity,
@@ -344,7 +344,7 @@ export function initRepository(db: Database): Store {
 						pr.id,
 						pr.externalId,
 						pr.title,
-						pr.repositoryId,
+						pr.repositoryName,
 						pr.url,
 						pr.state,
 						pr.mergedAt,
@@ -361,7 +361,7 @@ export function initRepository(db: Database): Store {
 				return Promise.resolve({ data: null });
 			} catch (error) {
 				const err = error as Error;
-				logger.error({ error: err.message });
+				logger.error({ error: err.message }, "error inserting pull request");
 
 				return {
 					error: err,
