@@ -80,7 +80,7 @@ async function bulkInsert(
 ): Promise<Error[]> {
 	const insertErrors: Error[] = [];
 
-	logger.debug({ totalRepos: repos.length }, "Inserting repos");
+	logger.info({ totalRepos: repos.length }, "Inserting repos");
 	const repoResult = await store.bulkInsertRepos(repos);
 	if (repoResult.error) {
 		logger.error({ error: repoResult.error }, "error inserting into store");
@@ -135,7 +135,7 @@ function generateModels(
 
 		const pr = generatePullRequestFromGhModel(
 			node.node,
-			repo.id,
+			repo.name,
 			repo.owner,
 			repo.name,
 		);

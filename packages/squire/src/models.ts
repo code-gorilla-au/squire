@@ -21,7 +21,7 @@ export interface RepositoryDto {
 export interface ModelSecurity {
 	id: string;
 	externalId: string;
-	repositoryId: string;
+	repositoryName: string;
 	packageName: string;
 	state: string;
 	severity: string;
@@ -48,7 +48,7 @@ export interface ModelPullRequest {
 	id: string;
 	externalId: string;
 	title: string;
-	repositoryId: string;
+	repositoryName: string;
 	repoOwner: string;
 	repoName: string;
 	url: string;
@@ -62,7 +62,7 @@ export interface PullRequestDto {
 	id: string;
 	externalId: string;
 	title: string;
-	repositoryId: string;
+	repositoryName: string;
 	repoOwner: string;
 	repoName: string;
 	url: string;
