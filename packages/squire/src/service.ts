@@ -6,6 +6,7 @@ import type {
 	RepositoryDto,
 	SecurityAdvisoryDto,
 } from "./models";
+import { severityWeighting } from "./transforms";
 
 export function initService(store: Store) {
 	return {
@@ -105,6 +106,8 @@ export function initService(store: Store) {
 				...(results.data as SecurityAdvisoryDto[]),
 			];
 
+			advisories.sort(orderBySeverityWeight);
+
 			return advisories;
 		},
 		async getReposByProductId(productId: string): Promise<RepositoryDto[]> {
@@ -160,4 +163,23 @@ export function initService(store: Store) {
 			return prs;
 		},
 	};
+}
+
+/**
+ * order security advisories by severity
+ * @param prev previous security advisory
+ * @param next next security advisory
+ */
+function orderBySeverityWeight(
+	prev: SecurityAdvisoryDto,
+	next: SecurityAdvisoryDto,
+) {
+	const prevSec = severityWeighting(prev.severity);
+	const nextSec = severityWeighting(next.severity);
+
+	if (prevSec < nextSec) {
+		return -1;
+	}
+
+	return 1;
 }

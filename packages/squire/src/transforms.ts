@@ -5,6 +5,7 @@ import type {
 	VulnerabilityAlerts,
 } from "squire-github";
 import type {
+	AdvisorySeverity,
 	ModelPullRequest,
 	ModelRepository,
 	ModelSecurity,
@@ -89,4 +90,23 @@ function transformToPullRequestFromGhModel(
 		createdAt: node.createdAt,
 		updatedAt: new Date(),
 	};
+}
+
+/**
+ * Returns a weighting for the severity of an advisory
+ * @param severity advisory severity weighting
+ */
+export function severityWeighting(severity: AdvisorySeverity): number {
+	switch (severity) {
+		case "LOW":
+			return 1;
+		case "MODERATE":
+			return 2;
+		case "HIGH":
+			return 3;
+		case "CRITICAL":
+			return 4;
+		default:
+			return 0;
+	}
 }
