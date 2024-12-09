@@ -74,12 +74,14 @@ export interface PullRequestDto {
 	updatedAt: Date;
 }
 
+export type AdvisorySeverity = "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
+
 export interface SecurityAdvisoryDto {
 	id: string;
 	externalId: string;
 	packageName: string;
 	patchedVersion: string;
-	severity: string;
+	severity: AdvisorySeverity;
 	state: string;
 	repoOwner: string;
 	repoName: string;
