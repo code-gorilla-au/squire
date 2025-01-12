@@ -1,9 +1,9 @@
 <script lang="ts">
 import { BarChart, DoughnutChart } from "$components/charts";
 import { Card } from "$components/ui/card";
-import type { OrganisationInsightsDto } from "squire";
+import type { InsightsDto } from "squire";
 
-let { insights }: { insights: OrganisationInsightsDto } = $props();
+let { insights }: { insights: InsightsDto } = $props();
 
 let pullRequests = $derived(insights.pullRequests);
 let securityAdvisories = $derived(insights.securityAdvisories);
