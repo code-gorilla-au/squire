@@ -2,7 +2,6 @@ const queryGetLastNMergedPullRequests = `
 SELECT pr.* FROM pull_requests pr
 LEFT JOIN repositories r ON pr.repositoryName = r.name
 LEFT JOIN products p ON r.topic IN p.tags
-LEFT JOIN org_products op ON p.id = op.productId
 WHERE state = 'MERGED'
 AND pr.createdAt >= (now() - interval '90' day)
 `;
@@ -21,7 +20,7 @@ FROM merged_prs
 
 const queryGetPullRequestInsightsByProductId = `
 ${queryGetLastNMergedPullRequests}
-AND op.productId = $2
+AND p.id = $1
 `;
 
 export const queryGetPullRequestInsightsByProduct = `
@@ -40,13 +39,12 @@ const queryGetLastNSecurityAdvisory = `
 SELECT sa.* FROM securities sa
 LEFT JOIN repositories r ON sa.repositoryName = r.name
 LEFT JOIN products p ON r.topic IN p.tags
-LEFT JOIN org_products op ON p.id = op.productId
 WHERE sa.createdAt >= (now() - interval '90' day)
 `;
 
 const queryGetSecurityAdvisoryByProductId = `
 ${queryGetLastNSecurityAdvisory}
-AND op.productId = $2
+AND p.id = $1
 `;
 
 export const queryGetSecurityAdvisoryInsights = `
