@@ -1,9 +1,11 @@
 import type {
 	ModelProduct,
 	ModelPullRequest,
+	ModelPullRequestInsights,
 	ModelRepository,
 	ModelSecurity,
 	ModelSecurityAdvisory,
+	ModelSecurityAdvisoryInsights,
 	StoreActionResult,
 } from "./models";
 
@@ -44,4 +46,16 @@ export interface Store {
 		id: string,
 	): Promise<StoreActionResult<ModelPullRequest[]>>;
 	getOpenPullRequests(): Promise<StoreActionResult<ModelPullRequest[]>>;
+	getPullRequestInsights(): Promise<
+		StoreActionResult<ModelPullRequestInsights>
+	>;
+	getPullRequestInsightsByProduct(
+		productId: string,
+	): Promise<StoreActionResult<ModelPullRequestInsights>>;
+	getSecurityAdvisoryInsights(): Promise<
+		StoreActionResult<ModelSecurityAdvisoryInsights>
+	>;
+	getSecurityAdvisoryInsightsByProduct(
+		productId: string,
+	): Promise<StoreActionResult<ModelSecurityAdvisoryInsights>>;
 }

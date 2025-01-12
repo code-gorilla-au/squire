@@ -1,7 +1,16 @@
-import pino from "pino";
-import pinoCaller from "pino-caller";
+import pino, { type Level } from "pino";
 
-// const base = pino({ level: import.meta.env.LOG_LEVEL ?? "info" });
-const base = pino({ level: "debug" });
+export const logger = pino({ level: "debug" });
 
-export const logger = pinoCaller(base);
+export function serverLogger(level: Level) {
+	const l = pino({ level });
+	return l;
+}
+
+export function omitSecretProperties<T>(obj: T, ...props: string[]): T {
+	const copy = { ...obj };
+	for (const prop of props) {
+		delete copy[prop as keyof T];
+	}
+	return copy;
+}

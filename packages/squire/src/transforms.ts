@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { TableData } from "duckdb-async";
 import type {
 	PullRequest,
 	Repository,
@@ -9,6 +10,7 @@ import type {
 	ModelPullRequest,
 	ModelRepository,
 	ModelSecurity,
+	ModelSecurityAdvisoryInsights,
 } from "./models";
 
 export function generateRepoFromGhModel(
@@ -109,4 +111,42 @@ export function severityWeighting(severity: AdvisorySeverity): number {
 		default:
 			return 0;
 	}
+}
+
+export function transformToSecurityAdvisoryInsights(
+	data: TableData,
+): ModelSecurityAdvisoryInsights {
+	if (data.length === 0) {
+		throw new Error("No security advisory insights found");
+	}
+
+	return {
+		total: Number(data[0].total),
+		resolved: Number(data[0].resolved),
+		open: Number(data[0].open),
+		daysToMerge: Number.parseFloat(Number(data[0].daysToMerge).toFixed(2)),
+		maxDaysToMerge: Number.parseFloat(
+			Number(data[0].maxDaysToMerge).toFixed(2),
+		),
+		minDaysToMerge: Number.parseFloat(
+			Number(data[0].minDaysToMerge).toFixed(2),
+		),
+	};
+}
+
+export function transformToPullRequestInsights(data: TableData) {
+	if (data.length === 0) {
+		throw new Error("No pull request insights found");
+	}
+
+	return {
+		daysToMerge: Number.parseFloat(Number(data[0].daysToMerge).toFixed(2)),
+		maxDaysToMerge: Number.parseFloat(
+			Number(data[0].maxDaysToMerge).toFixed(2),
+		),
+		minDaysToMerge: Number.parseFloat(
+			Number(data[0].minDaysToMerge).toFixed(2),
+		),
+		totalMerged: Number.parseFloat(Number(data[0].totalMerged).toFixed(2)),
+	};
 }

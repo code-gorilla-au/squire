@@ -1,15 +1,30 @@
 import type { Database } from "duckdb-async";
 import { logger } from "toolbox";
-import type { Store } from "./interfaces";
-import type {
-	ModelProduct,
-	ModelPullRequest,
-	ModelRepository,
-	ModelSecurity,
-	ModelSecurityAdvisory,
-	RepositoryDto,
-	StoreActionResult,
-} from "./models";
+import type { Store } from "../interfaces";
+import {
+	modelPullRequestInsights,
+	modelSecurityAdvisoryInsights,
+	type ModelProduct,
+	type ModelPullRequest,
+	type ModelPullRequestInsights,
+	type ModelRepository,
+	type ModelSecurity,
+	type ModelSecurityAdvisory,
+	type ModelSecurityAdvisoryInsights,
+	type RepositoryDto,
+	type StoreActionResult,
+} from "../models";
+
+import {
+	queryGetPullRequestInsights,
+	queryGetPullRequestInsightsByProduct,
+	queryGetSecurityAdvisoryInsights,
+	queryGetSecurityAdvisoryInsightsByProduct,
+} from "./insights";
+import {
+	transformToPullRequestInsights,
+	transformToSecurityAdvisoryInsights,
+} from "../transforms";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
@@ -564,6 +579,88 @@ export function initRepository(db: Database): Store {
 				return Promise.resolve({
 					error: err,
 				});
+			}
+		},
+
+		async getPullRequestInsights(): Promise<
+			StoreActionResult<ModelPullRequestInsights>
+		> {
+			try {
+				const result = await db.all(queryGetPullRequestInsights);
+
+				const transformed = transformToPullRequestInsights(result);
+
+				const data = modelPullRequestInsights.parse(transformed);
+
+				return { data };
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+				return {
+					error: err,
+				};
+			}
+		},
+
+		async getPullRequestInsightsByProduct(
+			productId: string,
+		): Promise<StoreActionResult<ModelPullRequestInsights>> {
+			try {
+				const result = await db.all(
+					queryGetPullRequestInsightsByProduct,
+					productId,
+				);
+
+				const transformed = transformToPullRequestInsights(result);
+
+				const data = modelPullRequestInsights.parse(transformed);
+
+				return { data };
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+				return {
+					error: err,
+				};
+			}
+		},
+		async getSecurityAdvisoryInsights(): Promise<
+			StoreActionResult<ModelSecurityAdvisoryInsights>
+		> {
+			try {
+				const result = await db.all(queryGetSecurityAdvisoryInsights);
+				const transformed = transformToSecurityAdvisoryInsights(result);
+
+				const data = modelSecurityAdvisoryInsights.parse(transformed);
+
+				return { data };
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+				return {
+					error: err,
+				};
+			}
+		},
+		async getSecurityAdvisoryInsightsByProduct(
+			productId: string,
+		): Promise<StoreActionResult<ModelSecurityAdvisoryInsights>> {
+			try {
+				const result = await db.all(
+					queryGetSecurityAdvisoryInsightsByProduct,
+					productId,
+				);
+				const transformed = transformToSecurityAdvisoryInsights(result);
+
+				const data = modelSecurityAdvisoryInsights.parse(transformed);
+
+				return { data };
+			} catch (error) {
+				const err = error as Error;
+				logger.error({ error: err.message });
+				return {
+					error: err,
+				};
 			}
 		},
 	};
