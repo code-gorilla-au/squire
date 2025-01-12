@@ -1,26 +1,19 @@
 import { randomUUID } from "node:crypto";
 import { initDB } from "database";
 import { yesterday } from "time";
-import { serverLogger } from "toolbox";
 import { describe, expect, it } from "vitest";
 import { initRepository } from "./repository";
 
 describe("Repository insights", async () => {
 	const db = await initDB(":memory:");
-	const repo = initRepository(db, serverLogger("debug"));
+	const repo = initRepository(db);
 	await repo.initTables();
 
-	const orgId = randomUUID();
 	const owner = "owner";
 	const repoName = "test1";
 	const tag = "test";
 
-	await repo.insertProduct({
-		orgId,
-		owner: owner,
-		name: repoName,
-		tags: [tag],
-	});
+	await repo.insertProduct(repoName, [tag]);
 
 	await repo.bulkInsertRepos([
 		{
@@ -41,6 +34,7 @@ describe("Repository insights", async () => {
 			title: "test",
 			repositoryName: repoName,
 			repoOwner: owner,
+			repoName: repoName,
 			url: "url",
 			state: "MERGED",
 			author: "author",
@@ -77,7 +71,7 @@ describe("Repository insights", async () => {
 
 	describe("pullRequests by organisation", () => {
 		it("should return organisation pull requests", async () => {
-			const resp = await repo.getOrganisationPullRequestInsights(orgId);
+			const resp = await repo.getPullRequestInsights();
 			expect(resp.data).toEqual(
 				expect.objectContaining({
 					daysToMerge: 0,
@@ -89,16 +83,13 @@ describe("Repository insights", async () => {
 		});
 	});
 	describe("pullRequests by organisation and product", async () => {
-		const { error, data } = await repo.getOrgProducts(orgId);
+		const { error, data } = await repo.getAllProducts();
 		expect(error).toBeFalsy();
 
 		it("should return pull requests by organisation and product", async () => {
 			const productId = (data ?? [{ id: "" }])[0].id;
 
-			const resp = await repo.getOrganisationPullRequestInsightsByProduct(
-				orgId,
-				productId,
-			);
+			const resp = await repo.getPullRequestInsightsByProduct(productId);
 			expect(resp.data).toEqual(
 				expect.objectContaining({
 					daysToMerge: 0,
@@ -111,7 +102,7 @@ describe("Repository insights", async () => {
 	});
 	describe("securityAdvisories by organisation", () => {
 		it("should return security advisories by organisation", async () => {
-			const resp = await repo.getOrganisationSecurityAdvisoryInsights(orgId);
+			const resp = await repo.getSecurityAdvisoryInsights();
 			expect(resp.error).toBeFalsy();
 			expect(resp.data).toEqual(
 				expect.objectContaining({

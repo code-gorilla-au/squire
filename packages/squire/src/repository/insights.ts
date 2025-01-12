@@ -24,7 +24,7 @@ ${queryGetLastNMergedPullRequests}
 AND op.productId = $2
 `;
 
-export const queryGetOrgPullRequestInsightsByProduct = `
+export const queryGetPullRequestInsightsByProduct = `
 with merged_prs as (
     ${queryGetPullRequestInsightsByProductId}
 )
@@ -49,7 +49,7 @@ ${queryGetLastNSecurityAdvisory}
 AND op.productId = $2
 `;
 
-export const queryGetOrgSecurityAdvisoryInsights = `
+export const queryGetSecurityAdvisoryInsights = `
 with security_advisories_insights as (
     ${queryGetLastNSecurityAdvisory}
 )
