@@ -1,10 +1,13 @@
 import { logger } from "toolbox";
 import type { Store } from "./interfaces";
-import type {
-	ProductDto,
-	PullRequestDto,
-	RepositoryDto,
-	SecurityAdvisoryDto,
+import {
+	pullRequestInsightsDto,
+	securityAdvisoryInsightsDto,
+	type InsightsDto,
+	type ProductDto,
+	type PullRequestDto,
+	type RepositoryDto,
+	type SecurityAdvisoryDto,
 } from "./models";
 import { severityWeighting } from "./transforms";
 
@@ -161,6 +164,65 @@ export function initService(store: Store) {
 			const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
 
 			return prs;
+		},
+		async getInsights(): Promise<InsightsDto> {
+			const pullRequestResults = await store.getPullRequestInsights();
+
+			if (pullRequestResults.error) {
+				logger.error(
+					{ error: pullRequestResults.error },
+					"Error fetching PR insights",
+				);
+				throw new Error("error fetching PR insights");
+			}
+
+			const pullRequests = pullRequestInsightsDto.parse(
+				pullRequestResults.data,
+			);
+
+			const securityResults = await store.getSecurityAdvisoryInsights();
+
+			if (securityResults.error) {
+				logger.error(
+					{ error: securityResults.error },
+					"Error fetching security insights",
+				);
+				throw new Error("error fetching security insights");
+			}
+
+			const securityAdvisories = securityAdvisoryInsightsDto.parse(
+				securityResults.data,
+			);
+
+			return { pullRequests, securityAdvisories };
+		},
+
+		async getInsightsByProduct(productId: string): Promise<InsightsDto> {
+			const results = await store.getPullRequestInsightsByProduct(productId);
+
+			if (results.error) {
+				logger.error({ error: results.error }, "Error fetching PR insights");
+				throw new Error("error fetching PR insights");
+			}
+
+			const pullRequests = pullRequestInsightsDto.parse(results.data);
+
+			const securityResults =
+				await store.getSecurityAdvisoryInsightsByProduct(productId);
+
+			if (securityResults.error) {
+				logger.error(
+					{ error: securityResults.error },
+					"Error fetching security insights",
+				);
+				throw new Error("error fetching security insights");
+			}
+
+			const securityAdvisories = securityAdvisoryInsightsDto.parse(
+				securityResults.data,
+			);
+
+			return { pullRequests, securityAdvisories };
 		},
 	};
 }
