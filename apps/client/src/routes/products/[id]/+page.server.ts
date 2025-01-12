@@ -8,13 +8,13 @@ export const load: PageServerLoad = async ({ params }) => {
 	const repos = await service.getReposByProductId(id);
 	const product = await service.getProductById(id);
 	const pullRequests = await service.getPullRequestsByProductId(id);
+	const insights = await service.getInsightsByProduct(id);
 
 	return {
-		props: {
-			securityAdvisory: advisory,
-			repositories: repos,
-			product,
-			pullRequests,
-		},
+		securityAdvisory: advisory,
+		repositories: repos,
+		product,
+		pullRequests,
+		insights,
 	};
 };

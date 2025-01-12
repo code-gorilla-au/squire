@@ -2,6 +2,7 @@
 import EmptySlate from "$components/empty-slate.svelte";
 import Grid from "$components/grid.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
+import InsightsCard from "$components/insights-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 import { Tag } from "$components/tag";
 import { Title } from "$components/title";
@@ -9,17 +10,20 @@ import Card from "$components/ui/card/card.svelte";
 
 let { data } = $props();
 
-const product = data.props.product;
-const repos = data.props.repositories;
-const secAdvisory = data.props.securityAdvisory;
-const pullRequests = data.props.pullRequests;
+const product = $derived(data.product);
+const repos = $derived(data.repositories);
+const secAdvisory = $derived(data.securityAdvisory);
+const pullRequests = $derived(data.pullRequests);
+
+const insights = $derived(data.insights);
 </script>
 
 <Title>
-    Product: {data.props.product.name}
+    Product: {product.name}
 </Title>
 
-
+<h3 class="font-bold my-4">Insights (last 90 days)</h3>
+<InsightsCard insights={insights} />
 <div class="my-10">
     <h3 class="font-semibold my-3">Open security issues ({secAdvisory.length})</h3>
     {#if secAdvisory.length > 0 }

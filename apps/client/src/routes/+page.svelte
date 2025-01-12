@@ -2,19 +2,27 @@
 import Dashboard from "$components/dashboard-summary.svelte";
 import { summaryStore } from "$lib/dashboard/store";
 import { ShieldEllipsis } from "lucide-svelte";
-import { derived } from "svelte/store";
+import InsightsCard from "$components/insights-card.svelte";
+import { derived as storeDerived } from "svelte/store";
 
-const pullRequests = derived(
+const pullRequests = storeDerived(
 	summaryStore,
 	($summary?) => $summary?.pullRequests ?? [],
 );
 
-const securityAdvisories = derived(
+const securityAdvisories = storeDerived(
 	summaryStore,
 	($summary?) => $summary?.securityAdvisories ?? [],
 );
 
-const products = derived(summaryStore, ($summary?) => $summary?.products ?? []);
+const products = storeDerived(
+	summaryStore,
+	($summary?) => $summary?.products ?? [],
+);
+
+const { data } = $props();
+
+const insights = $derived(data.insights);
 </script>
 
 <h1 class="heading-1">Dashboard</h1>
@@ -22,6 +30,9 @@ const products = derived(summaryStore, ($summary?) => $summary?.products ?? []);
 <div>
     <a class="text-xs text-link" href="/products/create">Add additional products</a>
 </div>
+
+<h3 class="font-bold my-4">Insights (last 90 days)</h3>
+<InsightsCard insights={insights} />
 
 {#if $summaryStore === null}
     <div class="w-full my-44 flex flex-col items-center justify-center">
