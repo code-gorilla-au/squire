@@ -36,6 +36,6 @@
 		"install": "^0.13.0",
 		"lucide-svelte": "^0.453.0",
 		"squire": "workspace:*",
-		"zod": "^3.23.8"
+		"zod": "^3.24.1"
 	}
 }

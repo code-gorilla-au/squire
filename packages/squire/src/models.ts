@@ -1,3 +1,4 @@
+import { z } from "zod";
 export interface ModelRepository {
 	id: string;
 	name: string;
@@ -118,4 +119,53 @@ export type StoreActionSuccess<T = null> = {
 export type StoreActionFailure = {
 	data?: never;
 	error: Error;
+};
+
+export const modelPullRequestInsights = z.object({
+	totalMerged: z.number(),
+	daysToMerge: z.number(),
+	maxDaysToMerge: z.number(),
+	minDaysToMerge: z.number(),
+});
+
+export type ModelPullRequestInsights = z.infer<typeof modelPullRequestInsights>;
+
+export const pullRequestInsightsDto = z.object({
+	totalMerged: z.number(),
+	daysToMerge: z.number(),
+	maxDaysToMerge: z.number(),
+	minDaysToMerge: z.number(),
+});
+
+export type PullRequestInsightsDto = z.infer<typeof pullRequestInsightsDto>;
+
+export const modelSecurityAdvisoryInsights = z.object({
+	total: z.number(),
+	resolved: z.number(),
+	open: z.number(),
+	daysToMerge: z.number(),
+	maxDaysToMerge: z.number(),
+	minDaysToMerge: z.number(),
+});
+
+export type ModelSecurityAdvisoryInsights = z.infer<
+	typeof modelSecurityAdvisoryInsights
+>;
+
+export const securityAdvisoryInsightsDto = z.object({
+	total: z.number(),
+	resolved: z.number(),
+	open: z.number(),
+	daysToMerge: z.number(),
+	maxDaysToMerge: z.number(),
+	minDaysToMerge: z.number(),
+});
+
+export type SecurityAdvisoryInsightsDto = z.infer<
+	typeof securityAdvisoryInsightsDto
+>;
+
+export type InsightsDto = {
+	pullRequests: PullRequestInsightsDto;
+	securityAdvisories: SecurityAdvisoryInsightsDto;
 };
