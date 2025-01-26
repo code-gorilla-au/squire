@@ -3,10 +3,11 @@ import { initDB } from "database";
 import { yesterday } from "time";
 import { describe, expect, it } from "vitest";
 import { ProductRepository } from "./repository";
+import { logger } from "toolbox";
 
 describe("Repository insights", async () => {
 	const db = await initDB(":memory:");
-	const repo = new ProductRepository(db);
+	const repo = new ProductRepository(db, logger);
 	await repo.initTables();
 
 	const owner = "owner";

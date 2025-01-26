@@ -1,7 +1,7 @@
 import type { Database } from "duckdb-async";
-import { logger } from "toolbox";
 import {
 	modelPullRequestInsights,
+	modelRepository,
 	modelSecurityAdvisoryInsights,
 	type ModelProduct,
 	type ModelPullRequest,
@@ -24,6 +24,7 @@ import {
 	transformToPullRequestInsights,
 	transformToSecurityAdvisoryInsights,
 } from "../transforms";
+import type { Logger } from "pino";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
@@ -271,18 +272,23 @@ const migrations = [
 
 export class ProductRepository {
 	private db: Database;
-	constructor(db: Database) {
+	private log: Logger;
+	constructor(db: Database, logger: Logger) {
 		this.db = db;
+		this.log = logger.child({
+			package: "products",
+			class: "ProductRepository",
+		});
 	}
 
 	async initTables(): Promise<StoreActionResult> {
 		try {
-			logger.debug("Creating tables");
+			this.log.debug("Creating tables");
 			await this.db.run(migrations.join(";"));
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return {
 				error: err,
@@ -292,20 +298,26 @@ export class ProductRepository {
 
 	async bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult> {
 		try {
-			logger.debug("Inserting repos into database");
+			this.log.debug("Inserting repos into database");
 			const stmt = await this.db.prepare(queryInsertRepo);
 
 			for (const repo of repos) {
-				await stmt.run(repo.id, repo.name, repo.url, repo.topic, repo.owner);
+				const { error, data } = modelRepository.safeParse(repo);
+				if (error) {
+					this.log.error({ error }, "error parsing repo");
+					return { error };
+				}
+
+				await stmt.run(data.id, data.name, data.url, data.topic, data.owner);
 			}
 
 			await stmt.finalize();
 
-			logger.debug("Inserted repos into database");
+			this.log.debug("Inserted repos into database");
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return {
 				error: err,
@@ -317,7 +329,7 @@ export class ProductRepository {
 		securities: ModelSecurity[],
 	): Promise<StoreActionResult> {
 		try {
-			logger.debug(
+			this.log.debug(
 				{ totalSecurities: securities.length },
 				"Inserting securities into database",
 			);
@@ -338,11 +350,11 @@ export class ProductRepository {
 
 			await stmt.finalize();
 
-			logger.debug("Inserted securities into database");
+			this.log.debug("Inserted securities into database");
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return {
 				error: err,
@@ -354,7 +366,7 @@ export class ProductRepository {
 		pullRequests: ModelPullRequest[],
 	): Promise<StoreActionResult> {
 		try {
-			logger.debug(
+			this.log.debug(
 				{ totalPullRequests: pullRequests.length },
 				"Inserting pull requests into database",
 			);
@@ -377,14 +389,14 @@ export class ProductRepository {
 
 			await stmt.finalize();
 
-			logger.debug(
+			this.log.debug(
 				{ totalPullRequests: pullRequests.length },
 				"Inserted pull requests into database",
 			);
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message }, "error inserting pull request");
+			this.log.error({ error: err.message }, "error inserting pull request");
 
 			return {
 				error: err,
@@ -400,7 +412,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result as ModelSecurityAdvisory[] });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -424,7 +436,7 @@ export class ProductRepository {
 			});
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -440,7 +452,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result as RepositoryDto[] });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -464,7 +476,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -479,7 +491,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result[0] as ModelProduct });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -513,7 +525,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -527,7 +539,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: null });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -543,7 +555,7 @@ export class ProductRepository {
 			});
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message }, "could not get all product tags");
+			this.log.error({ error: err.message }, "could not get all product tags");
 
 			return Promise.resolve({
 				error: err,
@@ -557,7 +569,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result as ModelProduct[] });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -573,7 +585,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result as ModelPullRequest[] });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -587,7 +599,7 @@ export class ProductRepository {
 			return Promise.resolve({ data: result as ModelPullRequest[] });
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 
 			return Promise.resolve({
 				error: err,
@@ -608,7 +620,7 @@ export class ProductRepository {
 			return { data };
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 			return {
 				error: err,
 			};
@@ -631,7 +643,7 @@ export class ProductRepository {
 			return { data };
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 			return {
 				error: err,
 			};
@@ -650,7 +662,7 @@ export class ProductRepository {
 			return { data };
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 			return {
 				error: err,
 			};
@@ -672,7 +684,7 @@ export class ProductRepository {
 			return { data };
 		} catch (error) {
 			const err = error as Error;
-			logger.error({ error: err.message });
+			this.log.error({ error: err.message });
 			return {
 				error: err,
 			};

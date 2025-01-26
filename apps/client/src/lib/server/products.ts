@@ -11,7 +11,7 @@ import { logger } from "toolbox";
 
 const config = loadConfig();
 
-const repo = new ProductRepository(db);
+const repo = new ProductRepository(db, logger);
 export const service = initService(repo);
 
 const client = initClient({

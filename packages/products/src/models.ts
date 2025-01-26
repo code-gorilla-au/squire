@@ -95,7 +95,7 @@ export const securityAdvisoryDto = z.object({
 	externalId: z.string(),
 	packageName: z.string(),
 	patchedVersion: z.string(),
-	severity: z.string(),
+	severity: z.custom<AdvisorySeverity>(),
 	state: z.string(),
 	repoOwner: z.string(),
 	repoName: z.string(),

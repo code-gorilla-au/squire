@@ -4,10 +4,11 @@ import { yesterday } from "time";
 import { describe, expect, it } from "vitest";
 import { initService } from "./service";
 import { ProductRepository } from "./repository";
+import { logger } from "toolbox";
 
 describe("service", async () => {
 	const db = await initDB(":memory:");
-	const repo = new ProductRepository(db);
+	const repo = new ProductRepository(db, logger);
 	await repo.initTables();
 
 	const service = initService(repo);
