@@ -27,7 +27,7 @@ export const POST = () => {
 
 async function getSummary() {
 	const products = await service.getAllProducts();
-	const securityAdvisories = await service.getAllSecurityAdvisories();
+	const securityAdvisories = await service.getAllOpenSecurityAdvisories();
 	const pullRequests = await service.getAllOpenPullRequests();
 
 	return {

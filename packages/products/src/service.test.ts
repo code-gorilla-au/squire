@@ -40,7 +40,7 @@ describe("service", async () => {
 			repoOwner: owner,
 			repoName: repoName,
 			url: "url",
-			state: "MERGED",
+			state: "OPEN",
 			author: "author",
 			mergedAt: yesterday(),
 			createdAt: yesterday(),
@@ -55,12 +55,69 @@ describe("service", async () => {
 			packageName: "test",
 			patchedVersion: "1.0.0",
 			severity: "CRITICAL",
-			state: "FIXED",
+			state: "OPEN",
 			repositoryName: repoName,
 			createdAt: yesterday(),
 			updatedAt: yesterday(),
 		},
 	]);
+
+	describe("getAllOpenPullRequests()", () => {
+		it("should return all open pull requests", async () => {
+			const pullRequests = await service.getAllOpenPullRequests();
+
+			expect(pullRequests).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						title: "test",
+						state: "OPEN",
+					}),
+				]),
+			);
+		});
+	});
+
+	describe("getAllSecurityAdvisories()", () => {
+		it("should return all security advisories", async () => {
+			const advisories = await service.getAllOpenSecurityAdvisories();
+
+			expect(advisories).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						packageName: "test",
+						severity: "CRITICAL",
+						state: "OPEN",
+					}),
+				]),
+			);
+		});
+	});
+
+	describe("getOpenSecurityAdvisoryByProductId()", async () => {
+		const products = await service.getAllProducts();
+		const productId = products[0].id;
+
+		it("should return security advisories", async () => {
+			const advisories =
+				await service.getOpenSecurityAdvisoryByProductId(productId);
+
+			expect(advisories).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						packageName: "test",
+						severity: "CRITICAL",
+						state: "OPEN",
+					}),
+				]),
+			);
+		});
+		it("should return empty if product id does not exist", async () => {
+			await expect(
+				service.getOpenSecurityAdvisoryByProductId("non"),
+			).rejects.toThrowError();
+		});
+	});
+
 	describe("createProduct()", () => {
 		it("should create product", async () => {
 			await expect(
@@ -68,6 +125,7 @@ describe("service", async () => {
 			).resolves.not.toThrow();
 		});
 	});
+
 	describe("getInsights()", () => {
 		it("should return pull requests insights", async () => {
 			const insights = await service.getInsights();
@@ -95,6 +153,7 @@ describe("service", async () => {
 			);
 		});
 	});
+
 	describe("getInsightsByProduct()", async () => {
 		const products = await service.getAllProducts();
 		const productId = products[0].id;
@@ -124,6 +183,7 @@ describe("service", async () => {
 			await expect(service.getInsightsByProduct("non")).rejects.toThrowError();
 		});
 	});
+
 	describe("getProductById()", async () => {
 		const products = await service.getAllProducts();
 
@@ -139,6 +199,7 @@ describe("service", async () => {
 			);
 		});
 	});
+
 	describe("createProduct()", () => {
 		it("should create product", async () => {
 			await expect(
@@ -149,6 +210,7 @@ describe("service", async () => {
 			await expect(service.createProduct("test3", ["test"])).rejects.toThrow();
 		});
 	});
+
 	describe("getAllProducts()", () => {
 		it("should return all products", async () => {
 			const products = await service.getAllProducts();
@@ -161,6 +223,82 @@ describe("service", async () => {
 					}),
 				]),
 			);
+		});
+	});
+
+	describe("getProductById()", () => {
+		it("should return product", async () => {
+			const products = await service.getAllProducts();
+			const product = await service.getProductById(products[0].id);
+
+			expect(product).toEqual(
+				expect.objectContaining({
+					name: repoName,
+					tags: [tag],
+				}),
+			);
+		});
+	});
+
+	describe("updateProduct()", () => {
+		it("should update product", async () => {
+			const products = await service.getAllProducts();
+
+			await expect(
+				service.updateProduct(products[0].id, "test99", ["test"]),
+			).resolves.not.toThrow();
+		});
+		it("should throw error if product does not exist", async () => {
+			const products = await service.getAllProducts();
+
+			await expect(
+				service.updateProduct(products[0].id, "test99", ["test"]),
+			).rejects.toThrow();
+		});
+	});
+
+	describe("getReposByProductId()", () => {
+		it("should return repos by product id", async () => {
+			const products = await service.getAllProducts();
+
+			const repos = await service.getReposByProductId(products[0].id);
+
+			expect(repos).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						name: repoName,
+						owner: owner,
+						topic: tag,
+					}),
+				]),
+			);
+		});
+		it("should return empty if product id does not exist", async () => {
+			await expect(service.getReposByProductId("non")).rejects.toThrowError();
+		});
+	});
+
+	describe("getPullRequestsByProductId()", () => {
+		it("should return pull requests by product id", async () => {
+			const products = await service.getAllProducts();
+
+			const pullRequests = await service.getPullRequestsByProductId(
+				products[0].id,
+			);
+
+			expect(pullRequests).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						title: "test",
+						state: "OPEN",
+					}),
+				]),
+			);
+		});
+		it("should return empty if product id does not exist", async () => {
+			await expect(
+				service.getPullRequestsByProductId("non"),
+			).rejects.toThrowError();
 		});
 	});
 });

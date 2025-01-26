@@ -3,6 +3,7 @@ import {
 	modelProduct,
 	productDto,
 	pullRequestInsightsDto,
+	securityAdvisoryDto,
 	securityAdvisoryInsightsDto,
 	type InsightsDto,
 	type ProductDto,
@@ -94,11 +95,12 @@ export class ProductService {
 
 		if (result.error) {
 			this.log.error({ error: result.error }, "Error updating product");
-			throw new Error("error updating product");
+			throw result.error;
 		}
 		this.log.info({ productId, name, tags }, "Product updated");
 	}
-	async getAllSecurityAdvisories(): Promise<SecurityAdvisoryDto[]> {
+
+	async getAllOpenSecurityAdvisories(): Promise<SecurityAdvisoryDto[]> {
 		const results = await this.store.getAllSecurityAdvisory();
 
 		if (results.error) {
@@ -114,13 +116,20 @@ export class ProductService {
 			"Fetched security advisories",
 		);
 
-		const advisories: SecurityAdvisoryDto[] = [
-			...(results.data as SecurityAdvisoryDto[]),
-		];
+		const advisories: SecurityAdvisoryDto[] = [];
+		for (const adv of results?.data ?? []) {
+			const { error, data } = securityAdvisoryDto.safeParse(adv);
+			if (error) {
+				this.log.error({ error: error.message }, "Error parsing advisory");
+				throw error;
+			}
+
+			advisories.push(data);
+		}
 
 		return advisories;
 	}
-	async getSecurityAdvisoryByProductId(
+	async getOpenSecurityAdvisoryByProductId(
 		productId: string,
 	): Promise<SecurityAdvisoryDto[]> {
 		const results = await this.store.getSecurityAdvisoryByProductId(

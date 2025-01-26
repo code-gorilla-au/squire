@@ -563,10 +563,6 @@ export class ProductRepository {
 		try {
 			const existingProduct = await this.getProductByName(name);
 
-			if (existingProduct.error) {
-				return Promise.resolve({ error: existingProduct.error });
-			}
-
 			if (existingProduct.data && existingProduct.data.id !== id) {
 				return Promise.resolve({
 					error: new ProductExistsError(name),
