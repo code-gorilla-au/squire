@@ -282,7 +282,7 @@ export class ProductRepository {
 		this.db = db;
 		this.log = logger.child({
 			package: "products",
-			class: "ProductRepository",
+			service: "ProductRepository",
 		});
 	}
 

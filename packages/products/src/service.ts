@@ -1,4 +1,3 @@
-import { logger } from "toolbox";
 import type { Store } from "./interfaces";
 import {
 	pullRequestInsightsDto,
@@ -10,221 +9,232 @@ import {
 	type SecurityAdvisoryDto,
 } from "./models";
 import { severityWeighting } from "./transforms";
+import type { Logger } from "pino";
 
-export function initService(store: Store) {
-	return {
-		async createProduct(name: string, tags: string[]): Promise<void> {
-			const result = await store.insertProduct(name, tags);
+export class ProductService {
+	private store: Store;
+	private log: Logger;
 
-			if (result.error) {
-				logger.error({ error: result.error }, "Error creating product");
-				throw new Error("error creating product");
-			}
-		},
-		async getAllProducts(): Promise<ProductDto[]> {
-			const results = await store.getAllProducts();
+	constructor(store: Store, log: Logger) {
+		this.store = store;
+		this.log = log.child({
+			package: "products",
+			service: "ProductService",
+		});
+	}
 
-			if (results.error) {
-				logger.error({ error: results.error }, "Error fetching products");
-				throw new Error("error fetching products");
-			}
+	async createProduct(name: string, tags: string[]): Promise<void> {
+		const result = await this.store.insertProduct(name, tags);
 
-			logger.info({ totalProducts: results.data?.length }, "Fetched products");
+		if (result.error) {
+			this.log.error({ error: result.error }, "Error creating product");
+			throw new Error("error creating product");
+		}
+	}
+	async getAllProducts(): Promise<ProductDto[]> {
+		const results = await this.store.getAllProducts();
 
-			const products: ProductDto[] = [...(results.data as ProductDto[])];
+		if (results.error) {
+			this.log.error({ error: results.error }, "Error fetching products");
+			throw new Error("error fetching products");
+		}
 
-			return products;
-		},
-		async getProductById(productId: string): Promise<ProductDto> {
-			const result = await store.getProductById(productId);
+		this.log.info({ totalProducts: results.data?.length }, "Fetched products");
 
-			if (result.error) {
-				logger.error({ error: result.error.message }, "Error fetching product");
-				throw new Error("error fetching product");
-			}
+		const products: ProductDto[] = [...(results.data as ProductDto[])];
 
-			const product = result.data as ProductDto;
+		return products;
+	}
+	async getProductById(productId: string): Promise<ProductDto> {
+		const result = await this.store.getProductById(productId);
 
-			return product;
-		},
-		async updateProduct(
-			productId: string,
-			name: string,
-			tags: string[],
-		): Promise<void> {
-			logger.info({ productId, name, tags }, "Updating product");
-			const result = await store.updateProduct({
-				id: productId,
-				name,
-				tags,
-			});
+		if (result.error) {
+			this.log.error({ error: result.error.message }, "Error fetching product");
+			throw new Error("error fetching product");
+		}
 
-			if (result.error) {
-				logger.error({ error: result.error }, "Error updating product");
-				throw new Error("error updating product");
-			}
-			logger.info({ productId, name, tags }, "Product updated");
-		},
-		async getAllSecurityAdvisories(): Promise<SecurityAdvisoryDto[]> {
-			const results = await store.getAllSecurityAdvisory();
+		const product = result.data as ProductDto;
 
-			if (results.error) {
-				logger.error(
-					{ error: results.error },
-					"Error fetching security advisories",
-				);
-				throw new Error("error fetching security advisories");
-			}
+		return product;
+	}
+	async updateProduct(
+		productId: string,
+		name: string,
+		tags: string[],
+	): Promise<void> {
+		this.log.info({ productId, name, tags }, "Updating product");
+		const result = await this.store.updateProduct({
+			id: productId,
+			name,
+			tags,
+		});
 
-			logger.info(
-				{ totalAdvisories: results.data?.length },
-				"Fetched security advisories",
+		if (result.error) {
+			this.log.error({ error: result.error }, "Error updating product");
+			throw new Error("error updating product");
+		}
+		this.log.info({ productId, name, tags }, "Product updated");
+	}
+	async getAllSecurityAdvisories(): Promise<SecurityAdvisoryDto[]> {
+		const results = await this.store.getAllSecurityAdvisory();
+
+		if (results.error) {
+			this.log.error(
+				{ error: results.error },
+				"Error fetching security advisories",
 			);
+			throw new Error("error fetching security advisories");
+		}
 
-			const advisories: SecurityAdvisoryDto[] = [
-				...(results.data as SecurityAdvisoryDto[]),
-			];
+		this.log.info(
+			{ totalAdvisories: results.data?.length },
+			"Fetched security advisories",
+		);
 
-			return advisories;
-		},
-		async getSecurityAdvisoryByProductId(
-			productId: string,
-		): Promise<SecurityAdvisoryDto[]> {
-			const results = await store.getSecurityAdvisoryByProductId(productId, 10);
+		const advisories: SecurityAdvisoryDto[] = [
+			...(results.data as SecurityAdvisoryDto[]),
+		];
 
-			if (results.error) {
-				logger.error(
-					{ error: results.error },
-					"Error fetching security advisories",
-				);
-				throw new Error("error fetching security advisories");
-			}
+		return advisories;
+	}
+	async getSecurityAdvisoryByProductId(
+		productId: string,
+	): Promise<SecurityAdvisoryDto[]> {
+		const results = await this.store.getSecurityAdvisoryByProductId(
+			productId,
+			10,
+		);
 
-			logger.info(
-				{ totalAdvisories: results.data?.length },
-				"Fetched security advisories",
+		if (results.error) {
+			this.log.error(
+				{ error: results.error },
+				"Error fetching security advisories",
 			);
+			throw new Error("error fetching security advisories");
+		}
 
-			const advisories: SecurityAdvisoryDto[] = [
-				...(results.data as SecurityAdvisoryDto[]),
-			];
+		this.log.info(
+			{ totalAdvisories: results.data?.length },
+			"Fetched security advisories",
+		);
 
-			advisories.sort(orderBySeverityWeight);
+		const advisories: SecurityAdvisoryDto[] = [
+			...(results.data as SecurityAdvisoryDto[]),
+		];
 
-			return advisories;
-		},
-		async getReposByProductId(productId: string): Promise<RepositoryDto[]> {
-			const results = await store.getReposByProductId(productId);
+		advisories.sort(orderBySeverityWeight);
 
-			if (results.error) {
-				logger.error({ error: results.error }, "Error fetching repos");
-				throw new Error("error fetching repos");
-			}
+		return advisories;
+	}
+	async getReposByProductId(productId: string): Promise<RepositoryDto[]> {
+		const results = await this.store.getReposByProductId(productId);
 
-			logger.info({ totalRepos: results.data?.length }, "Fetched repos");
+		if (results.error) {
+			this.log.error({ error: results.error }, "Error fetching repos");
+			throw new Error("error fetching repos");
+		}
 
-			const repos: RepositoryDto[] = [...(results.data as RepositoryDto[])];
+		this.log.info({ totalRepos: results.data?.length }, "Fetched repos");
 
-			return repos;
-		},
-		async removeProduct(productId: string): Promise<void> {
-			const result = await store.deleteProduct(productId);
+		const repos: RepositoryDto[] = [...(results.data as RepositoryDto[])];
 
-			if (result.error) {
-				logger.error({ error: result.error }, "Error deleting product");
-				throw new Error("error deleting product");
-			}
+		return repos;
+	}
+	async removeProduct(productId: string): Promise<void> {
+		const result = await this.store.deleteProduct(productId);
 
-			logger.info({ productId }, "Product deleted");
-		},
-		async getAllOpenPullRequests(): Promise<PullRequestDto[]> {
-			const results = await store.getOpenPullRequests();
-			if (results.error) {
-				logger.error({ error: results.error }, "Error fetching PRs");
-				throw new Error("error fetching PRs");
-			}
+		if (result.error) {
+			this.log.error({ error: result.error }, "Error deleting product");
+			throw new Error("error deleting product");
+		}
 
-			logger.info({ totalPRs: results.data?.length }, "Fetched PRs");
+		this.log.info({ productId }, "Product deleted");
+	}
+	async getAllOpenPullRequests(): Promise<PullRequestDto[]> {
+		const results = await this.store.getOpenPullRequests();
+		if (results.error) {
+			this.log.error({ error: results.error }, "Error fetching PRs");
+			throw new Error("error fetching PRs");
+		}
 
-			const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
-			return prs;
-		},
-		async getPullRequestsByProductId(
-			productId: string,
-		): Promise<PullRequestDto[]> {
-			const results = await store.getOpenPullRequestsByProductId(productId);
+		this.log.info({ totalPRs: results.data?.length }, "Fetched PRs");
 
-			if (results.error) {
-				logger.error({ error: results.error }, "Error fetching PRs");
-				throw new Error("error fetching PRs");
-			}
+		const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
+		return prs;
+	}
+	async getPullRequestsByProductId(
+		productId: string,
+	): Promise<PullRequestDto[]> {
+		const results = await this.store.getOpenPullRequestsByProductId(productId);
 
-			logger.info({ totalPRs: results.data?.length }, "Fetched PRs");
+		if (results.error) {
+			this.log.error({ error: results.error }, "Error fetching PRs");
+			throw new Error("error fetching PRs");
+		}
 
-			const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
+		this.log.info({ totalPRs: results.data?.length }, "Fetched PRs");
 
-			return prs;
-		},
-		async getInsights(): Promise<InsightsDto> {
-			const pullRequestResults = await store.getPullRequestInsights();
+		const prs: PullRequestDto[] = [...(results.data as PullRequestDto[])];
 
-			if (pullRequestResults.error) {
-				logger.error(
-					{ error: pullRequestResults.error },
-					"Error fetching PR insights",
-				);
-				throw new Error("error fetching PR insights");
-			}
+		return prs;
+	}
+	async getInsights(): Promise<InsightsDto> {
+		const pullRequestResults = await this.store.getPullRequestInsights();
 
-			const pullRequests = pullRequestInsightsDto.parse(
-				pullRequestResults.data,
+		if (pullRequestResults.error) {
+			this.log.error(
+				{ error: pullRequestResults.error },
+				"Error fetching PR insights",
 			);
+			throw new Error("error fetching PR insights");
+		}
 
-			const securityResults = await store.getSecurityAdvisoryInsights();
+		const pullRequests = pullRequestInsightsDto.parse(pullRequestResults.data);
 
-			if (securityResults.error) {
-				logger.error(
-					{ error: securityResults.error },
-					"Error fetching security insights",
-				);
-				throw new Error("error fetching security insights");
-			}
+		const securityResults = await this.store.getSecurityAdvisoryInsights();
 
-			const securityAdvisories = securityAdvisoryInsightsDto.parse(
-				securityResults.data,
+		if (securityResults.error) {
+			this.log.error(
+				{ error: securityResults.error },
+				"Error fetching security insights",
 			);
+			throw new Error("error fetching security insights");
+		}
 
-			return { pullRequests, securityAdvisories };
-		},
+		const securityAdvisories = securityAdvisoryInsightsDto.parse(
+			securityResults.data,
+		);
 
-		async getInsightsByProduct(productId: string): Promise<InsightsDto> {
-			const results = await store.getPullRequestInsightsByProduct(productId);
+		return { pullRequests, securityAdvisories };
+	}
 
-			if (results.error) {
-				logger.error({ error: results.error }, "Error fetching PR insights");
-				throw new Error("error fetching PR insights");
-			}
+	async getInsightsByProduct(productId: string): Promise<InsightsDto> {
+		const results = await this.store.getPullRequestInsightsByProduct(productId);
 
-			const pullRequests = pullRequestInsightsDto.parse(results.data);
+		if (results.error) {
+			this.log.error({ error: results.error }, "Error fetching PR insights");
+			throw new Error("error fetching PR insights");
+		}
 
-			const securityResults =
-				await store.getSecurityAdvisoryInsightsByProduct(productId);
+		const pullRequests = pullRequestInsightsDto.parse(results.data);
 
-			if (securityResults.error) {
-				logger.error(
-					{ error: securityResults.error },
-					"Error fetching security insights",
-				);
-				throw new Error("error fetching security insights");
-			}
+		const securityResults =
+			await this.store.getSecurityAdvisoryInsightsByProduct(productId);
 
-			const securityAdvisories = securityAdvisoryInsightsDto.parse(
-				securityResults.data,
+		if (securityResults.error) {
+			this.log.error(
+				{ error: securityResults.error },
+				"Error fetching security insights",
 			);
+			throw new Error("error fetching security insights");
+		}
 
-			return { pullRequests, securityAdvisories };
-		},
-	};
+		const securityAdvisories = securityAdvisoryInsightsDto.parse(
+			securityResults.data,
+		);
+
+		return { pullRequests, securityAdvisories };
+	}
 }
 
 /**

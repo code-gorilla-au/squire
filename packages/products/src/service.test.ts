@@ -2,16 +2,16 @@ import { randomUUID } from "node:crypto";
 import { initDB } from "database";
 import { yesterday } from "time";
 import { describe, expect, it } from "vitest";
-import { initService } from "./service";
 import { ProductRepository } from "./repository";
 import { logger } from "toolbox";
+import { ProductService } from "./service";
 
 describe("service", async () => {
 	const db = await initDB(":memory:");
 	const repo = new ProductRepository(db, logger);
 	await repo.initTables();
 
-	const service = initService(repo);
+	const service = new ProductService(repo, logger);
 
 	const owner = "owner";
 	const repoName = "test1";
