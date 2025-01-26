@@ -1,18 +1,14 @@
 import { db } from "$lib/server/database";
 import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
-import {
-	ProductRepository,
-	initService,
-	initWorker,
-} from "../../../../../packages/products";
+import { ProductRepository, ProductService, initWorker } from "products";
 import { initClient } from "squire-github";
 import { logger } from "toolbox";
 
 const config = loadConfig();
 
 const repo = new ProductRepository(db, logger);
-export const service = initService(repo);
+export const service = new ProductService(repo, logger);
 
 const client = initClient({
 	ghToken: config.ghToken,

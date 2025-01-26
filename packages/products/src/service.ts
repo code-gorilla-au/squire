@@ -27,7 +27,7 @@ export class ProductService {
 		const result = await this.store.insertProduct(name, tags);
 
 		if (result.error) {
-			this.log.error({ error: result.error }, "Error creating product");
+			this.log.error({ error: result.error.message }, "Error creating product");
 			throw new Error("error creating product");
 		}
 	}
@@ -35,7 +35,10 @@ export class ProductService {
 		const results = await this.store.getAllProducts();
 
 		if (results.error) {
-			this.log.error({ error: results.error }, "Error fetching products");
+			this.log.error(
+				{ error: results.error.message },
+				"Error fetching products",
+			);
 			throw new Error("error fetching products");
 		}
 
