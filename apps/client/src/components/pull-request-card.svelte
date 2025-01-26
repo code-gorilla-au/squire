@@ -2,7 +2,7 @@
 import { Tag } from "$components/tag";
 import Card from "$components/ui/card/card.svelte";
 import { formatDistanceToNow } from "date-fns";
-import type { PullRequestDto } from "squire";
+import type { PullRequestDto } from "products";
 
 export let pullRequest: PullRequestDto;
 

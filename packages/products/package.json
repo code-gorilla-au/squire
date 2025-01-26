@@ -1,5 +1,5 @@
 {
-	"name": "squire",
+	"name": "products",
 	"type": "module",
 	"dependencies": {
 		"duckdb-async": "^1.1.1",

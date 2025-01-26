@@ -1,7 +1,11 @@
 import { db } from "$lib/server/database";
 import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
-import { initRepository, initService, initWorker } from "squire";
+import {
+	initRepository,
+	initService,
+	initWorker,
+} from "../../../../../packages/products";
 import { initClient } from "squire-github";
 import { logger } from "toolbox";
 

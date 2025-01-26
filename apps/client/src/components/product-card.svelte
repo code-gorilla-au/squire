@@ -3,7 +3,7 @@ import { Tag } from "$components/tag";
 import Card from "$components/ui/card/card.svelte";
 import { formatDistanceToNow } from "date-fns";
 import PencilIcon from "lucide-svelte/icons/pencil";
-import type { ProductDto } from "squire";
+import type { ProductDto } from "products";
 
 export let product: ProductDto;
 </script>

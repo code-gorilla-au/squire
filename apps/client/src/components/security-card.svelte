@@ -3,7 +3,7 @@ import { Tag } from "$components/tag";
 import Card from "$components/ui/card/card.svelte";
 import { cn } from "$lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import type { SecurityAdvisoryDto } from "squire";
+import type { SecurityAdvisoryDto } from "products";
 
 export let security: SecurityAdvisoryDto;
 

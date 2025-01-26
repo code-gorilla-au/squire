@@ -1,5 +1,5 @@
 import { Database, OPEN_READWRITE } from "duckdb-async";
-import { initRepository, initWorker } from "squire";
+import { initRepository, initWorker } from "../../packages/products";
 import { initClient } from "squire-github";
 import { logger } from "toolbox";
 import { loadConfig } from "./src/env";
