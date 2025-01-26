@@ -1,6 +1,5 @@
 import type { Database } from "duckdb-async";
 import { logger } from "toolbox";
-import type { Store } from "../interfaces";
 import {
 	modelPullRequestInsights,
 	modelSecurityAdvisoryInsights,
@@ -270,398 +269,412 @@ const migrations = [
 	queryCreateTablePullRequests,
 ];
 
-export function initRepository(db: Database): Store {
-	return {
-		async initTables(): Promise<StoreActionResult> {
-			try {
-				logger.debug("Creating tables");
-				await db.run(migrations.join(";"));
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+export class ProductRepository {
+	private db: Database;
+	constructor(db: Database) {
+		this.db = db;
+	}
 
-				return {
-					error: err,
-				};
+	async initTables(): Promise<StoreActionResult> {
+		try {
+			logger.debug("Creating tables");
+			await this.db.run(migrations.join(";"));
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return {
+				error: err,
+			};
+		}
+	}
+
+	async bulkInsertRepos(repos: ModelRepository[]): Promise<StoreActionResult> {
+		try {
+			logger.debug("Inserting repos into database");
+			const stmt = await this.db.prepare(queryInsertRepo);
+
+			for (const repo of repos) {
+				await stmt.run(repo.id, repo.name, repo.url, repo.topic, repo.owner);
 			}
-		},
-		async bulkInsertRepos(
-			repos: ModelRepository[],
-		): Promise<StoreActionResult> {
-			try {
-				logger.debug("Inserting repos into database");
-				const stmt = await db.prepare(queryInsertRepo);
 
-				for (const repo of repos) {
-					await stmt.run(repo.id, repo.name, repo.url, repo.topic, repo.owner);
-				}
+			await stmt.finalize();
 
-				await stmt.finalize();
+			logger.debug("Inserted repos into database");
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				logger.debug("Inserted repos into database");
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+			return {
+				error: err,
+			};
+		}
+	}
 
-				return {
-					error: err,
-				};
-			}
-		},
-		async bulkInsertSecVulnerabilities(
-			securities: ModelSecurity[],
-		): Promise<StoreActionResult> {
-			try {
-				logger.debug(
-					{ totalSecurities: securities.length },
-					"Inserting securities into database",
+	async bulkInsertSecVulnerabilities(
+		securities: ModelSecurity[],
+	): Promise<StoreActionResult> {
+		try {
+			logger.debug(
+				{ totalSecurities: securities.length },
+				"Inserting securities into database",
+			);
+			const stmt = await this.db.prepare(queryInsertSecurity);
+
+			for (const security of securities) {
+				await stmt.run(
+					security.id,
+					security.externalId,
+					security.repositoryName,
+					security.packageName,
+					security.state,
+					security.severity,
+					security.patchedVersion,
+					security.createdAt,
 				);
-				const stmt = await db.prepare(queryInsertSecurity);
-
-				for (const security of securities) {
-					await stmt.run(
-						security.id,
-						security.externalId,
-						security.repositoryName,
-						security.packageName,
-						security.state,
-						security.severity,
-						security.patchedVersion,
-						security.createdAt,
-					);
-				}
-
-				await stmt.finalize();
-
-				logger.debug("Inserted securities into database");
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return {
-					error: err,
-				};
 			}
-		},
-		async bulkInsertPullRequests(
-			pullRequests: ModelPullRequest[],
-		): Promise<StoreActionResult> {
-			try {
-				logger.debug(
-					{ totalPullRequests: pullRequests.length },
-					"Inserting pull requests into database",
+
+			await stmt.finalize();
+
+			logger.debug("Inserted securities into database");
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return {
+				error: err,
+			};
+		}
+	}
+
+	async bulkInsertPullRequests(
+		pullRequests: ModelPullRequest[],
+	): Promise<StoreActionResult> {
+		try {
+			logger.debug(
+				{ totalPullRequests: pullRequests.length },
+				"Inserting pull requests into database",
+			);
+
+			const stmt = await this.db.prepare(queryInsertPullRequest);
+
+			for (const pr of pullRequests) {
+				await stmt.run(
+					pr.id,
+					pr.externalId,
+					pr.title,
+					pr.repositoryName,
+					pr.url,
+					pr.state,
+					pr.author,
+					pr.mergedAt,
+					pr.createdAt,
 				);
-
-				const stmt = await db.prepare(queryInsertPullRequest);
-
-				for (const pr of pullRequests) {
-					await stmt.run(
-						pr.id,
-						pr.externalId,
-						pr.title,
-						pr.repositoryName,
-						pr.url,
-						pr.state,
-						pr.author,
-						pr.mergedAt,
-						pr.createdAt,
-					);
-				}
-
-				await stmt.finalize();
-
-				logger.debug(
-					{ totalPullRequests: pullRequests.length },
-					"Inserted pull requests into database",
-				);
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message }, "error inserting pull request");
-
-				return {
-					error: err,
-				};
 			}
-		},
-		async getAllSecurityAdvisory(
-			limit = 100,
-		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
-			try {
-				const result = await db.all(queryGetAllSecurityAdvisory, limit);
-				return Promise.resolve({ data: result as ModelSecurityAdvisory[] });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
 
+			await stmt.finalize();
+
+			logger.debug(
+				{ totalPullRequests: pullRequests.length },
+				"Inserted pull requests into database",
+			);
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message }, "error inserting pull request");
+
+			return {
+				error: err,
+			};
+		}
+	}
+
+	async getAllSecurityAdvisory(
+		limit = 100,
+	): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
+		try {
+			const result = await this.db.all(queryGetAllSecurityAdvisory, limit);
+			return Promise.resolve({ data: result as ModelSecurityAdvisory[] });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
+
+	async getSecurityAdvisoryByProductId(
+		productId: string,
+		limit: number,
+	): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
+		try {
+			const result = await this.db.all(
+				queryGetAllSecurityAdvisoryByProduct,
+				productId,
+				limit,
+			);
+
+			return Promise.resolve({
+				data: result as ModelSecurityAdvisory[],
+			});
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
+
+	async getReposByProductId(
+		productId: string,
+	): Promise<StoreActionResult<ModelRepository[]>> {
+		try {
+			const result = await this.db.all(queryGetReposByProductId, productId);
+			return Promise.resolve({ data: result as RepositoryDto[] });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
+
+	async insertProduct(
+		name: string,
+		tags: string[],
+	): Promise<StoreActionResult> {
+		try {
+			const results = await this.db.all(queryGetProductByName, name);
+			if (results.length > 0) {
 				return Promise.resolve({
-					error: err,
+					error: new Error("Product already exists"),
 				});
 			}
-		},
-		async getSecurityAdvisoryByProductId(
-			productId: string,
-			limit: number,
-		): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
-			try {
-				const result = await db.all(
-					queryGetAllSecurityAdvisoryByProduct,
-					productId,
-					limit,
-				);
 
+			await this.db.run(queryInsertIntoProducts, name, tags);
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
+
+	async getProductById(id: string): Promise<StoreActionResult<ModelProduct>> {
+		try {
+			const result = await this.db.all(queryGetProductById, id);
+			return Promise.resolve({ data: result[0] as ModelProduct });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
+
+	async updateProduct({
+		id,
+		name,
+		tags,
+	}: {
+		id: string;
+		name: string;
+		tags: string[];
+	}): Promise<StoreActionResult> {
+		try {
+			const existingProducts = (await this.db.all(
+				queryGetProductByName,
+				id,
+			)) as ModelProduct[];
+
+			const matched = existingProducts.find((p) => p.name === name);
+			if (matched && matched.id !== id) {
 				return Promise.resolve({
-					data: result as ModelSecurityAdvisory[],
-				});
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async getReposByProductId(
-			productId: string,
-		): Promise<StoreActionResult<ModelRepository[]>> {
-			try {
-				const result = await db.all(queryGetReposByProductId, productId);
-				return Promise.resolve({ data: result as RepositoryDto[] });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async insertProduct(
-			name: string,
-			tags: string[],
-		): Promise<StoreActionResult> {
-			try {
-				const results = await db.all(queryGetProductByName, name);
-				if (results.length > 0) {
-					return Promise.resolve({
-						error: new Error("Product already exists"),
-					});
-				}
-
-				await db.run(queryInsertIntoProducts, name, tags);
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-
-				return Promise.resolve({
-					error: err,
+					error: new Error("Product name already exists"),
 				});
 			}
-		},
-		async getProductById(id: string): Promise<StoreActionResult<ModelProduct>> {
-			try {
-				const result = await db.all(queryGetProductById, id);
-				return Promise.resolve({ data: result[0] as ModelProduct });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async updateProduct({
-			id,
-			name,
-			tags,
-		}: {
-			id: string;
-			name: string;
-			tags: string[];
-		}): Promise<StoreActionResult> {
-			try {
-				const existingProducts = (await db.all(
-					queryGetProductByName,
-					id,
-				)) as ModelProduct[];
+			await this.db.run(queryUpdateProductById, id, name, tags);
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				const matched = existingProducts.find((p) => p.name === name);
-				if (matched && matched.id !== id) {
-					return Promise.resolve({
-						error: new Error("Product name already exists"),
-					});
-				}
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-				await db.run(queryUpdateProductById, id, name, tags);
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+	async deleteProduct(id: string): Promise<StoreActionResult> {
+		try {
+			await this.db.run(queryDeleteProductById, id);
+			return Promise.resolve({ data: null });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async deleteProduct(id: string): Promise<StoreActionResult> {
-			try {
-				await db.run(queryDeleteProductById, id);
-				return Promise.resolve({ data: null });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async getAllProductTags(): Promise<StoreActionResult<string[]>> {
-			try {
-				const result = await db.all(queryGetAllProductTags);
-				return Promise.resolve({
-					data: result.map((r) => r.tag) as string[],
-				});
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message }, "could not get all product tags");
+	async getAllProductTags(): Promise<StoreActionResult<string[]>> {
+		try {
+			const result = await this.db.all(queryGetAllProductTags);
+			return Promise.resolve({
+				data: result.map((r) => r.tag) as string[],
+			});
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message }, "could not get all product tags");
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async getAllProducts(): Promise<StoreActionResult<ModelProduct[]>> {
-			try {
-				const result = await db.all(queryGetAllProducts);
-				return Promise.resolve({ data: result as ModelProduct[] });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
-		async getOpenPullRequestsByProductId(
-			id: string,
-		): Promise<StoreActionResult<ModelPullRequest[]>> {
-			try {
-				const result = await db.all(queryGetOpenPullRequestsByProductId, id);
-				return Promise.resolve({ data: result as ModelPullRequest[] });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+	async getAllProducts(): Promise<StoreActionResult<ModelProduct[]>> {
+		try {
+			const result = await this.db.all(queryGetAllProducts);
+			return Promise.resolve({ data: result as ModelProduct[] });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-		async getOpenPullRequests(): Promise<
-			StoreActionResult<ModelPullRequest[]>
-		> {
-			try {
-				const result = await db.all(queryGetOpenPullRequests);
-				return Promise.resolve({ data: result as ModelPullRequest[] });
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
+	async getOpenPullRequestsByProductId(
+		id: string,
+	): Promise<StoreActionResult<ModelPullRequest[]>> {
+		try {
+			const result = await this.db.all(queryGetOpenPullRequestsByProductId, id);
+			return Promise.resolve({ data: result as ModelPullRequest[] });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				return Promise.resolve({
-					error: err,
-				});
-			}
-		},
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-		async getPullRequestInsights(): Promise<
-			StoreActionResult<ModelPullRequestInsights>
-		> {
-			try {
-				const result = await db.all(queryGetPullRequestInsights);
+	async getOpenPullRequests(): Promise<StoreActionResult<ModelPullRequest[]>> {
+		try {
+			const result = await this.db.all(queryGetOpenPullRequests);
+			return Promise.resolve({ data: result as ModelPullRequest[] });
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
 
-				const transformed = transformToPullRequestInsights(result);
+			return Promise.resolve({
+				error: err,
+			});
+		}
+	}
 
-				const data = modelPullRequestInsights.parse(transformed);
+	async getPullRequestInsights(): Promise<
+		StoreActionResult<ModelPullRequestInsights>
+	> {
+		try {
+			const result = await this.db.all(queryGetPullRequestInsights);
 
-				return { data };
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-				return {
-					error: err,
-				};
-			}
-		},
+			const transformed = transformToPullRequestInsights(result);
 
-		async getPullRequestInsightsByProduct(
-			productId: string,
-		): Promise<StoreActionResult<ModelPullRequestInsights>> {
-			try {
-				const result = await db.all(
-					queryGetPullRequestInsightsByProduct,
-					productId,
-				);
+			const data = modelPullRequestInsights.parse(transformed);
 
-				const transformed = transformToPullRequestInsights(result);
+			return { data };
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+			return {
+				error: err,
+			};
+		}
+	}
 
-				const data = modelPullRequestInsights.parse(transformed);
+	async getPullRequestInsightsByProduct(
+		productId: string,
+	): Promise<StoreActionResult<ModelPullRequestInsights>> {
+		try {
+			const result = await this.db.all(
+				queryGetPullRequestInsightsByProduct,
+				productId,
+			);
 
-				return { data };
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-				return {
-					error: err,
-				};
-			}
-		},
-		async getSecurityAdvisoryInsights(): Promise<
-			StoreActionResult<ModelSecurityAdvisoryInsights>
-		> {
-			try {
-				const result = await db.all(queryGetSecurityAdvisoryInsights);
-				const transformed = transformToSecurityAdvisoryInsights(result);
+			const transformed = transformToPullRequestInsights(result);
 
-				const data = modelSecurityAdvisoryInsights.parse(transformed);
+			const data = modelPullRequestInsights.parse(transformed);
 
-				return { data };
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-				return {
-					error: err,
-				};
-			}
-		},
-		async getSecurityAdvisoryInsightsByProduct(
-			productId: string,
-		): Promise<StoreActionResult<ModelSecurityAdvisoryInsights>> {
-			try {
-				const result = await db.all(
-					queryGetSecurityAdvisoryInsightsByProduct,
-					productId,
-				);
-				const transformed = transformToSecurityAdvisoryInsights(result);
+			return { data };
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+			return {
+				error: err,
+			};
+		}
+	}
 
-				const data = modelSecurityAdvisoryInsights.parse(transformed);
+	async getSecurityAdvisoryInsights(): Promise<
+		StoreActionResult<ModelSecurityAdvisoryInsights>
+	> {
+		try {
+			const result = await this.db.all(queryGetSecurityAdvisoryInsights);
+			const transformed = transformToSecurityAdvisoryInsights(result);
 
-				return { data };
-			} catch (error) {
-				const err = error as Error;
-				logger.error({ error: err.message });
-				return {
-					error: err,
-				};
-			}
-		},
-	};
+			const data = modelSecurityAdvisoryInsights.parse(transformed);
+
+			return { data };
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+			return {
+				error: err,
+			};
+		}
+	}
+
+	async getSecurityAdvisoryInsightsByProduct(
+		productId: string,
+	): Promise<StoreActionResult<ModelSecurityAdvisoryInsights>> {
+		try {
+			const result = await this.db.all(
+				queryGetSecurityAdvisoryInsightsByProduct,
+				productId,
+			);
+			const transformed = transformToSecurityAdvisoryInsights(result);
+
+			const data = modelSecurityAdvisoryInsights.parse(transformed);
+
+			return { data };
+		} catch (error) {
+			const err = error as Error;
+			logger.error({ error: err.message });
+			return {
+				error: err,
+			};
+		}
+	}
 }

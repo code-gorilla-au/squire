@@ -2,7 +2,7 @@ import { db } from "$lib/server/database";
 import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
 import {
-	initRepository,
+	ProductRepository,
 	initService,
 	initWorker,
 } from "../../../../../packages/products";
@@ -11,7 +11,7 @@ import { logger } from "toolbox";
 
 const config = loadConfig();
 
-const repo = initRepository(db);
+const repo = new ProductRepository(db);
 export const service = initService(repo);
 
 const client = initClient({

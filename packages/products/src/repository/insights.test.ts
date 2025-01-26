@@ -2,11 +2,11 @@ import { randomUUID } from "node:crypto";
 import { initDB } from "database";
 import { yesterday } from "time";
 import { describe, expect, it } from "vitest";
-import { initRepository } from "./repository";
+import { ProductRepository } from "./repository";
 
 describe("Repository insights", async () => {
 	const db = await initDB(":memory:");
-	const repo = initRepository(db);
+	const repo = new ProductRepository(db);
 	await repo.initTables();
 
 	const owner = "owner";
