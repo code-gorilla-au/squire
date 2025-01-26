@@ -1,111 +1,130 @@
 import { z } from "zod";
-export interface ModelRepository {
-	id: string;
-	name: string;
-	url: string;
-	topic: string;
-	owner: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
 
-export interface RepositoryDto {
-	id: string;
-	name: string;
-	url: string;
-	topic: string;
-	owner: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const modelRepository = z.object({
+	id: z.string(),
+	name: z.string(),
+	url: z.string(),
+	topic: z.string(),
+	owner: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
 
-export interface ModelSecurity {
-	id: string;
-	externalId: string;
-	repositoryName: string;
-	packageName: string;
-	state: string;
-	severity: string;
-	patchedVersion: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type ModelRepository = z.infer<typeof modelRepository>;
 
-export interface ModelSecurityAdvisory {
-	id: string;
-	externalId: string;
-	packageName: string;
-	patchedVersion: string;
-	severity: string;
-	state: string;
-	repoOwner: string;
-	repoName: string;
-	repoUrl: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const repositoryDto = z.object({
+	id: z.string(),
+	name: z.string(),
+	url: z.string(),
+	topic: z.string(),
+	owner: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
 
-export interface ModelPullRequest {
-	id: string;
-	externalId: string;
-	title: string;
-	repositoryName: string;
-	repoOwner: string;
-	repoName: string;
-	url: string;
-	state: string;
-	author: string;
-	mergedAt: Date;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type RepositoryDto = z.infer<typeof repositoryDto>;
 
-export interface PullRequestDto {
-	id: string;
-	externalId: string;
-	title: string;
-	repositoryName: string;
-	repoOwner: string;
-	repoName: string;
-	url: string;
-	state: string;
-	author: string;
-	mergedAt: Date;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const modelSecurity = z.object({
+	id: z.string(),
+	externalId: z.string(),
+	repositoryName: z.string(),
+	packageName: z.string(),
+	state: z.string(),
+	severity: z.string(),
+	patchedVersion: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type ModelSecurity = z.infer<typeof modelSecurity>;
+
+export const modelSecurityAdvisory = z.object({
+	id: z.string(),
+	externalId: z.string(),
+	packageName: z.string(),
+	patchedVersion: z.string(),
+	severity: z.string(),
+	state: z.string(),
+	repoOwner: z.string(),
+	repoName: z.string(),
+	repoUrl: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type ModelSecurityAdvisory = z.infer<typeof modelSecurityAdvisory>;
+
+export const modelPullRequest = z.object({
+	id: z.string(),
+	externalId: z.string(),
+	title: z.string(),
+	repositoryName: z.string(),
+	repoOwner: z.string(),
+	repoName: z.string(),
+	url: z.string(),
+	state: z.string(),
+	author: z.string(),
+	mergedAt: z.date(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type ModelPullRequest = z.infer<typeof modelPullRequest>;
+
+export const pullRequestDto = z.object({
+	id: z.string(),
+	externalId: z.string(),
+	title: z.string(),
+	repositoryName: z.string(),
+	repoOwner: z.string(),
+	repoName: z.string(),
+	url: z.string(),
+	state: z.string(),
+	author: z.string(),
+	mergedAt: z.date(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type PullRequestDto = z.infer<typeof pullRequestDto>;
 
 export type AdvisorySeverity = "LOW" | "MODERATE" | "HIGH" | "CRITICAL";
 
-export interface SecurityAdvisoryDto {
-	id: string;
-	externalId: string;
-	packageName: string;
-	patchedVersion: string;
-	severity: AdvisorySeverity;
-	state: string;
-	repoOwner: string;
-	repoName: string;
-	repoUrl: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const securityAdvisoryDto = z.object({
+	id: z.string(),
+	externalId: z.string(),
+	packageName: z.string(),
+	patchedVersion: z.string(),
+	severity: z.string(),
+	state: z.string(),
+	repoOwner: z.string(),
+	repoName: z.string(),
+	repoUrl: z.string(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
 
-export interface ModelProduct {
-	id: string;
-	name: string;
-	tags: string[];
-	createdAt: Date;
-	updatedAt: Date;
-}
+export type SecurityAdvisoryDto = z.infer<typeof securityAdvisoryDto>;
 
-export interface ProductDto {
-	id: string;
-	name: string;
-	tags: string[];
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const modelProduct = z.object({
+	id: z.string(),
+	name: z.string(),
+	tags: z.array(z.string()),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type ModelProduct = z.infer<typeof modelProduct>;
+
+export const productDto = z.object({
+	id: z.string(),
+	name: z.string(),
+	tags: z.array(z.string()),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+});
+
+export type ProductDto = z.infer<typeof productDto>;
 
 export type StoreActionResult<T = null> =
 	| StoreActionSuccess<T>

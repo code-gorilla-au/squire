@@ -475,6 +475,7 @@ export class ProductRepository {
 	async getProductById(id: string): Promise<StoreActionResult<ModelProduct>> {
 		try {
 			const result = await this.db.all(queryGetProductById, id);
+
 			return Promise.resolve({ data: result[0] as ModelProduct });
 		} catch (error) {
 			const err = error as Error;
