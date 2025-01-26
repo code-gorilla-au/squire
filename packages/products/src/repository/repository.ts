@@ -309,7 +309,7 @@ export class ProductRepository {
 			for (const repo of repos) {
 				const { error, data } = modelRepository.safeParse(repo);
 				if (error) {
-					this.log.error({ error }, "error parsing repo");
+					this.log.error({ error: error.message }, "error parsing repo");
 					return { error };
 				}
 
@@ -343,7 +343,7 @@ export class ProductRepository {
 			for (const security of securities) {
 				const { error, data } = modelSecurity.safeParse(security);
 				if (error) {
-					this.log.error({ error }, "error parsing security");
+					this.log.error({ error: error.message }, "error parsing security");
 					return { error };
 				}
 
@@ -387,7 +387,10 @@ export class ProductRepository {
 			for (const pr of pullRequests) {
 				const { error, data } = modelPullRequest.safeParse(pr);
 				if (error) {
-					this.log.error({ error }, "error parsing pull request");
+					this.log.error(
+						{ error: error.message },
+						"error parsing pull request",
+					);
 					return { error };
 				}
 
@@ -615,7 +618,7 @@ export class ProductRepository {
 
 		const { error, data } = modelProduct.safeParse(results[0]);
 		if (error) {
-			this.log.error({ error }, "error parsing product");
+			this.log.error({ error: error.message }, "error parsing product");
 			return { error };
 		}
 
@@ -640,8 +643,20 @@ export class ProductRepository {
 
 	async getAllProducts(): Promise<StoreActionResult<ModelProduct[]>> {
 		try {
-			const result = await this.db.all(queryGetAllProducts);
-			return Promise.resolve({ data: result as ModelProduct[] });
+			const results = await this.db.all(queryGetAllProducts);
+
+			const products: ModelProduct[] = [];
+			for (const result of results) {
+				const { error, data } = modelProduct.safeParse(result);
+				if (error) {
+					this.log.error({ error: error.message }, "error parsing product");
+					return { error };
+				}
+
+				products.push(data);
+			}
+
+			return Promise.resolve({ data: products });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -656,8 +671,18 @@ export class ProductRepository {
 		id: string,
 	): Promise<StoreActionResult<ModelPullRequest[]>> {
 		try {
-			const result = await this.db.all(queryGetOpenPullRequestsByProductId, id);
-			return Promise.resolve({ data: result as ModelPullRequest[] });
+			const results = await this.db.all(
+				queryGetOpenPullRequestsByProductId,
+				id,
+			);
+
+			const { error, data } = parseModelPullRequests(results);
+			if (error) {
+				this.log.error({ error: error }, "error parsing pull requests");
+				return { error };
+			}
+
+			return Promise.resolve({ data });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -670,8 +695,14 @@ export class ProductRepository {
 
 	async getOpenPullRequests(): Promise<StoreActionResult<ModelPullRequest[]>> {
 		try {
-			const result = await this.db.all(queryGetOpenPullRequests);
-			return Promise.resolve({ data: result as ModelPullRequest[] });
+			const results = await this.db.all(queryGetOpenPullRequests);
+			const { error, data } = parseModelPullRequests(results);
+			if (error) {
+				this.log.error({ error: error }, "error parsing pull requests");
+				return { error };
+			}
+
+			return Promise.resolve({ data });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -781,4 +812,20 @@ function parseModelSecurityAdvisory(
 	}
 
 	return { data: advisories };
+}
+
+function parseModelPullRequests(
+	tableData: TableData,
+): StoreActionResult<ModelPullRequest[]> {
+	const pullRequests: ModelPullRequest[] = [];
+	for (const pr of tableData) {
+		const { error, data } = modelPullRequest.safeParse(pr);
+		if (error) {
+			return { error };
+		}
+
+		pullRequests.push(data);
+	}
+
+	return { data: pullRequests };
 }
