@@ -1,32 +1,27 @@
 import { db } from "$lib/server/database";
 import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
-import { ProductRepository, ProductService, initWorker } from "products";
+import { ProductRepository, ProductService } from "products";
 import { initClient } from "squire-github";
 import { logger } from "toolbox";
 
 const config = loadConfig();
-
-const repo = new ProductRepository(db, logger);
-export const service = new ProductService(repo, logger);
-
 const client = initClient({
 	ghToken: config.ghToken,
 	defaultOwner: config.ghOwner,
 });
 
-export const worker = initWorker(client, repo);
-
-await worker.init();
+const repo = new ProductRepository(db, logger);
+export const service = new ProductService(repo, logger, client);
 
 process.on("sveltekit:shutdown", async () => {
 	logger.debug("shutting down");
 	await db.close();
 });
 
-cron.schedule("*/1 * * * *", async () => {
+cron.schedule("*/3 * * * *", async () => {
 	logger.info("fetching dashboard data");
-	const errors = await worker.syncProducts();
+	const errors = await service.syncProducts();
 	if (errors.length) {
 		logger.error({ errors }, "errors fetching dashboard data");
 	}

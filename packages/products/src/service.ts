@@ -6,6 +6,9 @@ import {
 	securityAdvisoryDto,
 	securityAdvisoryInsightsDto,
 	type InsightsDto,
+	type ModelPullRequest,
+	type ModelRepository,
+	type ModelSecurity,
 	type ProductDto,
 	type PullRequestDto,
 	type RepositoryDto,
@@ -13,17 +16,29 @@ import {
 } from "./models";
 import { severityWeighting } from "./transforms";
 import type { Logger } from "pino";
+import {
+	generatePullRequestFromGhModel,
+	generateRepoFromGhModel,
+	generateSecurityFromGhModel,
+} from "./transforms";
+import type {
+	Client,
+	Repository as GhModelRepository,
+	QuerySearch,
+} from "squire-github";
 
 export class ProductService {
 	private store: Store;
 	private log: Logger;
+	private ghClient: Client;
 
-	constructor(store: Store, log: Logger) {
+	constructor(store: Store, log: Logger, ghClient: Client) {
 		this.store = store;
 		this.log = log.child({
 			package: "products",
 			service: "ProductService",
 		});
+		this.ghClient = ghClient;
 	}
 
 	async createProduct(name: string, tags: string[]): Promise<void> {
@@ -267,6 +282,95 @@ export class ProductService {
 
 		return { pullRequests, securityAdvisories };
 	}
+
+	async syncProducts(): Promise<Error[]> {
+		const bulkInsertErrors: Error[] = [];
+
+		const topics = await this.store.getAllProductTags();
+		if (topics.error) {
+			this.log.error({ error: topics.error }, "error getting product tags");
+			bulkInsertErrors.push(topics.error);
+
+			return bulkInsertErrors;
+		}
+
+		if (!topics.data) {
+			this.log.warn("no topics found, finishing sync");
+			return bulkInsertErrors;
+		}
+
+		for (const topic of topics.data) {
+			const insertErrors: Error[] = await this.ingestDataByTopic(topic);
+
+			bulkInsertErrors.push(...insertErrors);
+		}
+
+		return bulkInsertErrors;
+	}
+
+	private async ingestDataByTopic(topic: string): Promise<Error[]> {
+		this.log.debug({ topic }, "ingesting data by topic");
+		const resp = await this.ghClient.searchRepos({ topics: [topic] });
+
+		const { repos, security, pullRequests } = generateModels(resp, topic);
+
+		this.log.debug(
+			{ totalRepos: repos.length },
+			"Inserting repos, pull requests, and security vulnerabilities",
+		);
+		const insertErrors: Error[] = await this.bulkInsert({
+			repos,
+			security,
+			pullRequests,
+		});
+
+		return insertErrors;
+	}
+
+	private async bulkInsert({
+		repos,
+		security,
+		pullRequests,
+	}: BulkInsertParams): Promise<Error[]> {
+		const insertErrors: Error[] = [];
+
+		this.log.info({ totalRepos: repos.length }, "Inserting repos");
+		const repoResult = await this.store.bulkInsertRepos(repos);
+		if (repoResult.error) {
+			this.log.error({ error: repoResult.error }, "error inserting into store");
+			insertErrors.push(repoResult.error);
+
+			return insertErrors;
+		}
+
+		this.log.debug(
+			{ totalSecurityVulnerabilities: security.length },
+			"Inserting security vulnerabilities",
+		);
+		const securityResult =
+			await this.store.bulkInsertSecVulnerabilities(security);
+
+		if (securityResult.error) {
+			this.log.error(
+				{ error: securityResult.error },
+				"error inserting into store",
+			);
+			insertErrors.push(securityResult.error);
+		}
+
+		this.log.debug(
+			{ totalPullRequests: pullRequests.length },
+			"Inserting pull requests",
+		);
+
+		const prResult = await this.store.bulkInsertPullRequests(pullRequests);
+		if (prResult.error) {
+			this.log.error({ error: prResult.error }, "error inserting into store");
+			insertErrors.push(prResult.error);
+		}
+
+		return insertErrors;
+	}
 }
 
 /**
@@ -286,4 +390,45 @@ function orderBySeverityWeight(
 	}
 
 	return 1;
+}
+
+interface BulkInsertParams {
+	repos: ModelRepository[];
+	security: ModelSecurity[];
+	pullRequests: ModelPullRequest[];
+}
+
+function generateModels(
+	query: QuerySearch<GhModelRepository>,
+	topic: string,
+): BulkInsertParams {
+	const repos: ModelRepository[] = [];
+	const securities: ModelSecurity[] = [];
+	const pullRequests: ModelPullRequest[] = [];
+
+	for (const node of query.data.search.edges) {
+		const repo = generateRepoFromGhModel(
+			node.node,
+			node.node.owner.login,
+			topic,
+		);
+		repos.push(repo);
+
+		const security = generateSecurityFromGhModel(node.node, repo.name);
+		securities.push(...security);
+
+		const pr = generatePullRequestFromGhModel(
+			node.node,
+			repo.name,
+			repo.owner,
+			repo.name,
+		);
+		pullRequests.push(...pr);
+	}
+
+	return {
+		repos,
+		security: securities,
+		pullRequests,
+	};
 }

@@ -1,17 +1,21 @@
 import { randomUUID } from "node:crypto";
 import { initDB } from "database";
 import { yesterday } from "time";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi, type Mocked } from "vitest";
 import { ProductRepository } from "./repository";
 import { logger } from "toolbox";
 import { ProductService } from "./service";
+import type { Client } from "squire-github";
 
 describe("service", async () => {
+	const ghClient = {
+		searchRepos: vi.fn(),
+	} as Mocked<Client>;
 	const db = await initDB(":memory:");
 	const repo = new ProductRepository(db, logger);
 	await repo.initTables();
 
-	const service = new ProductService(repo, logger);
+	const service = new ProductService(repo, logger, ghClient);
 
 	const owner = "owner";
 	const repoName = "test1";
@@ -299,6 +303,73 @@ describe("service", async () => {
 			await expect(
 				service.getPullRequestsByProductId("non"),
 			).rejects.toThrowError();
+		});
+	});
+
+	describe("syncProducts()", () => {
+		beforeEach(() => {
+			ghClient.searchRepos.mockResolvedValue({
+				data: {
+					search: {
+						pageInfo: {
+							endCursor: null,
+							hasNextPage: false,
+						},
+						edges: [
+							{
+								node: {
+									name: repoName,
+									owner: {
+										login: owner,
+									},
+									url: "url",
+									vulnerabilityAlerts: {
+										pageInfo: {
+											endCursor: null,
+											hasNextPage: false,
+										},
+										nodes: [
+											{
+												state: "OPEN",
+												id: randomUUID(),
+												number: 1,
+												securityVulnerability: {
+													package: {
+														name: "test",
+													},
+													advisory: {
+														severity: "CRITICAL",
+													},
+													firstPatchedVersion: {
+														identifier: "1.0.0",
+													},
+													updatedAt: yesterday(),
+												},
+												createdAt: yesterday(),
+											},
+										],
+									},
+									pullRequests: {
+										pageInfo: {
+											endCursor: null,
+											hasNextPage: false,
+										},
+										nodes: [],
+									},
+								},
+							},
+						],
+					},
+				},
+			});
+		});
+		it("should sync products", async () => {
+			await expect(service.syncProducts()).resolves.not.toThrow();
+		});
+		it("should throw error if sync fails", async () => {
+			ghClient.searchRepos.mockRejectedValue(new Error("error"));
+
+			await expect(service.syncProducts()).rejects.toThrow();
 		});
 	});
 });

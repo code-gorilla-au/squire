@@ -1,42 +1,41 @@
-import { Database, OPEN_READWRITE } from "duckdb-async";
-import { initRepository, initWorker } from "../../packages/products";
+import { ProductRepository, ProductService } from "../../packages/products";
 import { initClient } from "squire-github";
 import { logger } from "toolbox";
 import { loadConfig } from "./src/env";
+import { initDB } from "database";
 
 const config = loadConfig();
 
-const db = await Database.create(config.dbFilePath, OPEN_READWRITE);
+const db = await initDB(config.dbFilePath);
 
 const client = initClient({
 	ghToken: config.ghToken,
 	defaultOwner: config.ghOwner,
 });
 
-const repo = initRepository(db);
-const worker = initWorker(client, repo);
+const repo = new ProductRepository(db, logger);
+const service = new ProductService(repo, logger, client);
 
-const err = await worker.init();
-if (err) {
-	logger.error({ error: err }, "Error initialising service");
-	process.exit(1);
-}
-
-const errProducts = await worker.addProducts(config.ghRepoTopics);
-if (errProducts.length) {
-	logger.error({ error: errProducts }, "Error adding products");
-	process.exit(1);
+for (const topic of config.ghRepoTopics) {
+	try {
+		logger.info({ topic }, "Adding topic");
+		await service.createProduct(topic, [topic]);
+	} catch (error) {
+		const err = error as Error;
+		logger.error({ error: err.message }, "Error adding topic");
+		process.exit(1);
+	}
 }
 
 logger.info("syncing repos");
 const syncErrors: Error[] = [];
 
-for (const topic of config.ghRepoTopics) {
-	logger.info({ topic }, "Syncing repos by topic");
-	const err = await worker.ingestRepoByTopic(topic);
-	if (err.length) {
-		syncErrors.push(...err);
-	}
+try {
+	await service.syncProducts();
+} catch (error) {
+	const err = error as Error;
+	logger.error({ error: err.message }, "Error syncing repos");
+	syncErrors.push(err);
 }
 
 db.close();
