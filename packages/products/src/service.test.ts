@@ -139,4 +139,28 @@ describe("service", async () => {
 			);
 		});
 	});
+	describe("createProduct()", () => {
+		it("should create product", async () => {
+			await expect(
+				service.createProduct("test3", ["test"]),
+			).resolves.not.toThrow();
+		});
+		it("should throw error on creating existing product", async () => {
+			await expect(service.createProduct("test3", ["test"])).rejects.toThrow();
+		});
+	});
+	describe("getAllProducts()", () => {
+		it("should return all products", async () => {
+			const products = await service.getAllProducts();
+
+			expect(products).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining({
+						name: repoName,
+						tags: [tag],
+					}),
+				]),
+			);
+		});
+	});
 });

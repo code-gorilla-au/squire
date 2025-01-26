@@ -1,5 +1,7 @@
 import type { Store } from "./interfaces";
 import {
+	modelProduct,
+	productDto,
 	pullRequestInsightsDto,
 	securityAdvisoryInsightsDto,
 	type InsightsDto,
@@ -28,9 +30,10 @@ export class ProductService {
 
 		if (result.error) {
 			this.log.error({ error: result.error.message }, "Error creating product");
-			throw new Error("error creating product");
+			throw result.error;
 		}
 	}
+
 	async getAllProducts(): Promise<ProductDto[]> {
 		const results = await this.store.getAllProducts();
 
@@ -39,15 +42,28 @@ export class ProductService {
 				{ error: results.error.message },
 				"Error fetching products",
 			);
-			throw new Error("error fetching products");
+			throw results.error;
 		}
 
 		this.log.info({ totalProducts: results.data?.length }, "Fetched products");
+		if (!results.data) {
+			return [];
+		}
 
-		const products: ProductDto[] = [...(results.data as ProductDto[])];
+		const products: ProductDto[] = [];
+		for (const product of results.data) {
+			const { error, data } = productDto.safeParse(product);
+			if (error) {
+				this.log.error({ error: error.message }, "Error parsing product");
+				throw error;
+			}
+
+			products.push(data);
+		}
 
 		return products;
 	}
+
 	async getProductById(productId: string): Promise<ProductDto> {
 		const result = await this.store.getProductById(productId);
 
@@ -56,9 +72,13 @@ export class ProductService {
 			throw new Error("error fetching product");
 		}
 
-		const product = result.data as ProductDto;
+		const { error, data } = modelProduct.safeParse(result.data);
+		if (error) {
+			this.log.error({ error: error.message }, "Error parsing product");
+			throw error;
+		}
 
-		return product;
+		return data;
 	}
 	async updateProduct(
 		productId: string,
