@@ -1,7 +1,11 @@
-import type { Database } from "duckdb-async";
+import type { Database, TableData } from "duckdb-async";
 import {
+	modelProduct,
+	modelPullRequest,
 	modelPullRequestInsights,
 	modelRepository,
+	modelSecurity,
+	modelSecurityAdvisory,
 	modelSecurityAdvisoryInsights,
 	type ModelProduct,
 	type ModelPullRequest,
@@ -25,6 +29,7 @@ import {
 	transformToSecurityAdvisoryInsights,
 } from "../transforms";
 import type { Logger } from "pino";
+import { ProductExistsError, ProductNotFoundError } from "../errors";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
@@ -336,15 +341,21 @@ export class ProductRepository {
 			const stmt = await this.db.prepare(queryInsertSecurity);
 
 			for (const security of securities) {
+				const { error, data } = modelSecurity.safeParse(security);
+				if (error) {
+					this.log.error({ error }, "error parsing security");
+					return { error };
+				}
+
 				await stmt.run(
-					security.id,
-					security.externalId,
-					security.repositoryName,
-					security.packageName,
-					security.state,
-					security.severity,
-					security.patchedVersion,
-					security.createdAt,
+					data.id,
+					data.externalId,
+					data.repositoryName,
+					data.packageName,
+					data.state,
+					data.severity,
+					data.patchedVersion,
+					data.createdAt,
 				);
 			}
 
@@ -374,16 +385,22 @@ export class ProductRepository {
 			const stmt = await this.db.prepare(queryInsertPullRequest);
 
 			for (const pr of pullRequests) {
+				const { error, data } = modelPullRequest.safeParse(pr);
+				if (error) {
+					this.log.error({ error }, "error parsing pull request");
+					return { error };
+				}
+
 				await stmt.run(
-					pr.id,
-					pr.externalId,
-					pr.title,
-					pr.repositoryName,
-					pr.url,
-					pr.state,
-					pr.author,
-					pr.mergedAt,
-					pr.createdAt,
+					data.id,
+					data.externalId,
+					data.title,
+					data.repositoryName,
+					data.url,
+					data.state,
+					data.author,
+					data.mergedAt,
+					data.createdAt,
 				);
 			}
 
@@ -408,8 +425,16 @@ export class ProductRepository {
 		limit = 100,
 	): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
 		try {
-			const result = await this.db.all(queryGetAllSecurityAdvisory, limit);
-			return Promise.resolve({ data: result as ModelSecurityAdvisory[] });
+			const results = await this.db.all(queryGetAllSecurityAdvisory, limit);
+
+			const { error, data } = parseModelSecurityAdvisory(results);
+
+			if (error) {
+				this.log.error({ error: error }, "error parsing security advisory");
+				return { error: error };
+			}
+
+			return Promise.resolve({ data: data });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -425,15 +450,20 @@ export class ProductRepository {
 		limit: number,
 	): Promise<StoreActionResult<ModelSecurityAdvisory[]>> {
 		try {
-			const result = await this.db.all(
+			const results = await this.db.all(
 				queryGetAllSecurityAdvisoryByProduct,
 				productId,
 				limit,
 			);
 
-			return Promise.resolve({
-				data: result as ModelSecurityAdvisory[],
-			});
+			const { error, data } = parseModelSecurityAdvisory(results);
+
+			if (error) {
+				this.log.error({ error: error }, "error parsing security advisory");
+				return { error: error };
+			}
+
+			return Promise.resolve({ data: data });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -465,10 +495,10 @@ export class ProductRepository {
 		tags: string[],
 	): Promise<StoreActionResult> {
 		try {
-			const results = await this.db.all(queryGetProductByName, name);
-			if (results.length > 0) {
+			const exists = await this.getProductByName(name);
+			if (exists.data) {
 				return Promise.resolve({
-					error: new Error("Product already exists"),
+					error: new ProductExistsError(name),
 				});
 			}
 
@@ -486,9 +516,28 @@ export class ProductRepository {
 
 	async getProductById(id: string): Promise<StoreActionResult<ModelProduct>> {
 		try {
-			const result = await this.db.all(queryGetProductById, id);
+			const results = await this.db.all(queryGetProductById, id);
 
-			return Promise.resolve({ data: result[0] as ModelProduct });
+			if (results.length > 1) {
+				return Promise.resolve({
+					error: new Error("Multiple products exists with the same id"),
+				});
+			}
+
+			if (results.length === 0) {
+				return Promise.resolve({
+					error: new ProductNotFoundError(id),
+				});
+			}
+
+			const { error, data } = modelProduct.safeParse(results[0]);
+			if (error) {
+				const err = error as Error;
+				this.log.error({ error: err.message }, "error parsing product");
+				return { error };
+			}
+
+			return Promise.resolve({ data });
 		} catch (error) {
 			const err = error as Error;
 			this.log.error({ error: err.message });
@@ -509,15 +558,15 @@ export class ProductRepository {
 		tags: string[];
 	}): Promise<StoreActionResult> {
 		try {
-			const existingProducts = (await this.db.all(
-				queryGetProductByName,
-				id,
-			)) as ModelProduct[];
+			const existingProduct = await this.getProductByName(name);
 
-			const matched = existingProducts.find((p) => p.name === name);
-			if (matched && matched.id !== id) {
+			if (existingProduct.error) {
+				return Promise.resolve({ error: existingProduct.error });
+			}
+
+			if (existingProduct.data && existingProduct.data.id !== id) {
 				return Promise.resolve({
-					error: new Error("Product name already exists"),
+					error: new ProductExistsError(name),
 				});
 			}
 
@@ -545,6 +594,32 @@ export class ProductRepository {
 				error: err,
 			});
 		}
+	}
+
+	private async getProductByName(
+		name: string,
+	): Promise<StoreActionResult<ModelProduct>> {
+		const results = await this.db.all(queryGetProductByName, name);
+
+		if (results.length === 0) {
+			return Promise.resolve({
+				error: new ProductNotFoundError(name),
+			});
+		}
+
+		if (results.length > 1) {
+			return Promise.resolve({
+				error: new Error("Multiple products exists with the same name"),
+			});
+		}
+
+		const { error, data } = modelProduct.safeParse(results[0]);
+		if (error) {
+			this.log.error({ error }, "error parsing product");
+			return { error };
+		}
+
+		return Promise.resolve({ data });
 	}
 
 	async getAllProductTags(): Promise<StoreActionResult<string[]>> {
@@ -690,4 +765,20 @@ export class ProductRepository {
 			};
 		}
 	}
+}
+
+function parseModelSecurityAdvisory(
+	tableData: TableData,
+): StoreActionResult<ModelSecurityAdvisory[]> {
+	const advisories: ModelSecurityAdvisory[] = [];
+	for (const advisory of tableData) {
+		const { error, data } = modelSecurityAdvisory.safeParse(advisory);
+		if (error) {
+			return { error };
+		}
+
+		advisories.push(data);
+	}
+
+	return { data: advisories };
 }

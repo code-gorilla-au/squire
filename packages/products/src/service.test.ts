@@ -128,6 +128,7 @@ describe("service", async () => {
 		const products = await service.getAllProducts();
 
 		it("should return product", async () => {
+			console.log(products[0].id);
 			const product = await service.getProductById(products[0].id);
 
 			expect(product).toEqual(

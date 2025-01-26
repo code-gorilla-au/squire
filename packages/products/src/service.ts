@@ -39,7 +39,7 @@ export function initService(store: Store) {
 			const result = await store.getProductById(productId);
 
 			if (result.error) {
-				logger.error({ error: result.error }, "Error fetching product");
+				logger.error({ error: result.error.message }, "Error fetching product");
 				throw new Error("error fetching product");
 			}
 
