@@ -596,7 +596,7 @@ export class ProductRepository {
 		}
 	}
 
-	private async getProductByName(
+	async getProductByName(
 		name: string,
 	): Promise<StoreActionResult<ModelProduct>> {
 		const results = await this.db.all(queryGetProductByName, name);

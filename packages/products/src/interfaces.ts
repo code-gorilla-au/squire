@@ -39,6 +39,7 @@ export interface Store {
 		tags: string[];
 	}): Promise<StoreActionResult>;
 	getProductById(id: string): Promise<StoreActionResult<ModelProduct>>;
+	getProductByName(name: string): Promise<StoreActionResult<ModelProduct>>;
 	deleteProduct(id: string): Promise<StoreActionResult>;
 	getAllProductTags(): Promise<StoreActionResult<string[]>>;
 	getAllProducts(): Promise<StoreActionResult<ModelProduct[]>>;

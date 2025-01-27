@@ -15,7 +15,15 @@ export const actions = {
 			};
 		}
 
-		await service.createProduct(data.name, [data.tags]);
-		redirect(303, "/");
+		try {
+			await service.createProduct(data.name, [data.tags]);
+			redirect(303, "/");
+		} catch (error) {
+			const err = error as Error;
+			return {
+				success: false,
+				errors: [{ field: "product", message: err.message }],
+			};
+		}
 	},
 } satisfies Actions;

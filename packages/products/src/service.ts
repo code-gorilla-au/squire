@@ -41,13 +41,30 @@ export class ProductService {
 		this.ghClient = ghClient;
 	}
 
-	async createProduct(name: string, tags: string[]): Promise<void> {
+	async createProduct(name: string, tags: string[]): Promise<ProductDto> {
 		const result = await this.store.insertProduct(name, tags);
 
 		if (result.error) {
 			this.log.error({ error: result.error.message }, "Error creating product");
 			throw result.error;
 		}
+
+		const productResult = await this.store.getProductByName(name);
+		if (productResult.error) {
+			this.log.error(
+				{ error: productResult.error.message },
+				"Error fetching product",
+			);
+			throw productResult.error;
+		}
+
+		const { error, data } = productDto.safeParse(productResult.data);
+		if (error) {
+			this.log.error({ error: error.message }, "Error parsing product");
+			throw error;
+		}
+
+		return data;
 	}
 
 	async getAllProducts(): Promise<ProductDto[]> {
@@ -96,6 +113,7 @@ export class ProductService {
 
 		return data;
 	}
+
 	async updateProduct(
 		productId: string,
 		name: string,
