@@ -4,10 +4,15 @@
     "": {
       "name": "squire-core",
       "dependencies": {
+        "database": "workspace:*",
         "duckdb-async": "^1.1.3",
         "node-cron": "^3.0.3",
         "pino": "^9.5.0",
         "pino-caller": "^3.4.0",
+        "products": "workspace:*",
+        "squire-github": "workspace:*",
+        "time": "workspace:*",
+        "toolbox": "workspace:*",
         "vitest": "^3.0.4",
         "zod": "^3.23.8",
       },

@@ -14,6 +14,7 @@ const client = initClient({
 const db = await initDB(config.dbFilePath);
 const repo = new ProductRepository(db, logger);
 await repo.initTables();
+
 export const service = new ProductService(repo, logger, client);
 
 process.on("sveltekit:shutdown", async () => {
