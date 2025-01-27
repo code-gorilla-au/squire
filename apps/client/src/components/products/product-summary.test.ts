@@ -12,8 +12,26 @@ describe("DashboardSummary component", () => {
 		tags: ["tag1"],
 	} as ProductDto;
 
+	const insights = {
+		pullRequests: {
+			totalMerged: 0,
+			daysToMerge: 0,
+			maxDaysToMerge: 0,
+			minDaysToMerge: 0,
+		},
+		securityAdvisories: {
+			daysToMerge: 0,
+			maxDaysToMerge: 0,
+			minDaysToMerge: 0,
+			total: 0,
+			resolved: 0,
+			open: 0,
+		},
+	};
+
 	it("should render sec advisory", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [],
 			secAdvisory: [
 				{
@@ -41,6 +59,7 @@ describe("DashboardSummary component", () => {
 	});
 	it("should render security advisory card", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [],
 			secAdvisory: [],
 			product,
@@ -51,6 +70,7 @@ describe("DashboardSummary component", () => {
 	});
 	it("should render security empty slate", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [],
 			secAdvisory: [],
 			product,
@@ -63,6 +83,7 @@ describe("DashboardSummary component", () => {
 	});
 	it("should return open pull request card", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [],
 			secAdvisory: [],
 			product,
@@ -73,6 +94,7 @@ describe("DashboardSummary component", () => {
 	});
 	it("should render pull request card", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [
 				{
 					id: "id-1",
@@ -101,6 +123,7 @@ describe("DashboardSummary component", () => {
 	});
 	it("should render pull request empty slate", () => {
 		render(ProductSummary, {
+			insights,
 			pullRequests: [],
 			secAdvisory: [],
 			product,
