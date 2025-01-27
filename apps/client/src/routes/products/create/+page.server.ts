@@ -5,7 +5,7 @@ import { formSchema } from "./form-schema";
 
 export const actions = {
 	default: async ({ request }) => {
-		const formData = formFromRequest(request);
+		const formData = await formFromRequest(request);
 
 		const { error, data } = formSchema.safeParse(formData);
 		if (error) {
