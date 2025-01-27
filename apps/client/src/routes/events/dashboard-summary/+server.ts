@@ -1,7 +1,7 @@
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events";
 import { service } from "$lib/server/products";
-import { SECOND, sleep } from "$lib/time";
 import { produce } from "sveltekit-sse";
+import { SECOND, sleep } from "time";
 import { logger } from "toolbox";
 
 export const POST = () => {
@@ -27,7 +27,7 @@ export const POST = () => {
 
 async function getSummary() {
 	const products = await service.getAllProducts();
-	const securityAdvisories = await service.getAllSecurityAdvisories();
+	const securityAdvisories = await service.getAllOpenSecurityAdvisories();
 	const pullRequests = await service.getAllOpenPullRequests();
 
 	return {

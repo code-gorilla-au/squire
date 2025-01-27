@@ -1,0 +1,12 @@
+{
+	"name": "products",
+	"type": "module",
+	"dependencies": {
+		"duckdb-async": "^1.1.1",
+		"toolbox": "workspace:*"
+	},
+	"scripts": {
+		"test": "vitest --run",
+		"test:watch": "vitest"
+	}
+}

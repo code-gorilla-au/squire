@@ -5,7 +5,7 @@ import { Input } from "$components/ui/input";
 import { Label } from "$components/ui/label";
 import type { ActionData } from "./$types";
 
-export let form: ActionData;
+let form: ActionData = $props();
 </script>
 
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { BarChart, DoughnutChart } from "$components/charts";
 import { Card } from "$components/ui/card";
-import type { InsightsDto } from "squire";
+import type { InsightsDto } from "products";
 
 let { insights }: { insights: InsightsDto } = $props();
 

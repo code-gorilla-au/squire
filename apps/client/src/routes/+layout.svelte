@@ -1,6 +1,6 @@
 <script lang="ts">
 import "../app.css";
-import { navigating } from "$app/stores";
+import { navigating } from "$app/state";
 import Theme from "$components/theme.svelte";
 import { Shield } from "lucide-svelte";
 let { children } = $props();
@@ -23,7 +23,7 @@ let { children } = $props();
 		
 		</div>
 	</nav>
-	{#if $navigating}
+	{#if navigating.to}
 		<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
 			<div class="bg-white p-4 rounded-lg">
 				Loading...
@@ -31,7 +31,7 @@ let { children } = $props();
 		</div>
 
 	{:else}
-		<div class="p-2 w-full h-screen overflow-auto max-w-screen-lg mx-auto">
+		<div class="p-2 w-full h-full overflow-auto max-w-screen-lg mx-auto mb-10">
 			{@render children()}
 		</div>
 	{/if}

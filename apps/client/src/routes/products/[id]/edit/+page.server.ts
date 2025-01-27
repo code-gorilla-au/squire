@@ -1,7 +1,10 @@
 import { service } from "$lib/server/products.js";
-import { type Actions, fail, redirect } from "@sveltejs/kit";
+import { type Actions, redirect } from "@sveltejs/kit";
+import { formFromRequest } from "forms";
+import { transformZodErrors } from "forms";
 import { logger } from "toolbox";
 import type { PageServerLoad } from "./$types.js";
+import { formSchema } from "./form-schema.js";
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
@@ -9,39 +12,30 @@ export const load: PageServerLoad = async ({ params }) => {
 	const product = await service.getProductById(id);
 
 	return {
-		props: {
-			id,
-			product,
-		},
+		id,
+		product,
 	};
 };
 
 export const actions = {
 	update: async ({ request, params }) => {
-		const data = await request.formData();
+		const formData = await formFromRequest(request);
 
-		const name = data.get("name");
-		const tags = data.get("tags");
-
-		if (!name) {
-			return fail(400, {
+		const { error, data } = formSchema.safeParse(formData);
+		if (error) {
+			return {
 				success: false,
-				errors: ["Name is required"],
-			});
+				errors: transformZodErrors(error),
+			};
 		}
 
-		if (!tags) {
-			return fail(400, {
-				success: false,
-				errors: ["Tags is required"],
-			});
-		}
+		await service.updateProduct(params.id ?? "", data.name, [data.tags]);
 
-		await service.updateProduct(params.id ?? "", name.toString(), [
-			tags.toString(),
-		]);
-
-		logger.info("Product updated", { id: params.id, name, tags });
+		logger.info("Product updated", {
+			id: params.id,
+			name: data.name,
+			tags: data.tags,
+		});
 
 		redirect(303, "/");
 	},

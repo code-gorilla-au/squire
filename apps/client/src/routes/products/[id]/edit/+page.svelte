@@ -5,10 +5,9 @@ import { Input } from "$components/ui/input";
 import { Label } from "$components/ui/label";
 import type { ActionData, PageData } from "./$types";
 
-export let data: PageData;
-export let form: ActionData;
+let { data, form }: { data: PageData; form: ActionData } = $props();
 
-const product = data.props.product;
+const product = $derived(data.product);
 </script>
 
 <Title>

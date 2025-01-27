@@ -1,20 +1,19 @@
 <script lang="ts">
-import { cn } from "$lib/utils.js";
-// biome-ignore lint/style/useImportType: LabelPrimitive is actually being used
-import { Label as LabelPrimitive } from "bits-ui";
+	import { Label as LabelPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils.js";
 
-type $$Props = LabelPrimitive.Props;
-
-let className: $$Props["class"] = undefined;
-export { className as class };
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: LabelPrimitive.RootProps = $props();
 </script>
 
 <LabelPrimitive.Root
+	bind:ref
 	class={cn(
 		"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
 		className
 	)}
-	{...$$restProps}
->
-	<slot />
-</LabelPrimitive.Root>
+	{...restProps}
+/>
