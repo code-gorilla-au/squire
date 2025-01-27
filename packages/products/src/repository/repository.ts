@@ -122,11 +122,11 @@ export const queryInsertSecurity = `
         $6,
 		$7,
         $8,
-        now()
+		$9
     ) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state, 
 	 	severity = EXCLUDED.severity, 
 		patchedVersion = EXCLUDED.patchedVersion, 
-		updatedAt = now();
+		updatedAt = EXCLUDED.updatedAt;
 `;
 
 const queryGetAllSecurityAdvisoryByProduct = `
@@ -356,6 +356,7 @@ export class ProductRepository {
 					data.severity,
 					data.patchedVersion,
 					data.createdAt,
+					data.updatedAt,
 				);
 			}
 
