@@ -6,6 +6,7 @@
 		"test": "bun run --filter='*' test",
 		"test:cover": "vitest --coverage",
 		"db:clean": "rm -rf .db && mkdir .db",
+		"clean:all": "rimraf .db rimraf node_modules apps/**/node_modules",
 		"dev:worker": "bun apps/workers/index.ts",
 		"dev:app": "bun run --filter client dev",
 		"dev:build": "bun run --filter client build"
