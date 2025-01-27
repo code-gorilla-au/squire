@@ -48,3 +48,9 @@ bun run dev:app
 ```
 
 Access the webpage on http://localhost:5173/
+
+
+## Reset state
+
+Sometimes you want to clean up all your data and do a fresh ingestion, run `bun run db:clean` to remove the duck file and restart the app. 
+
