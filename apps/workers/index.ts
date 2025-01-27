@@ -18,6 +18,7 @@ const client = initClient({
 
 logger.debug("Initializing services");
 const repo = new ProductRepository(db, logger);
+await repo.initTables();
 const service = new ProductService(repo, logger, client);
 
 logger.info("Adding products");

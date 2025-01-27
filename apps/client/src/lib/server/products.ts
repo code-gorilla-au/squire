@@ -1,4 +1,4 @@
-import { db } from "$lib/server/database";
+import { initDB } from "database";
 import { loadConfig } from "$lib/server/env";
 import cron from "node-cron";
 import { ProductRepository, ProductService } from "products";
@@ -11,7 +11,9 @@ const client = initClient({
 	defaultOwner: config.ghOwner,
 });
 
+const db = await initDB(config.dbFilePath);
 const repo = new ProductRepository(db, logger);
+await repo.initTables();
 export const service = new ProductService(repo, logger, client);
 
 process.on("sveltekit:shutdown", async () => {
