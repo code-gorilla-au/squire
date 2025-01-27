@@ -2,6 +2,7 @@ import { service } from "$lib/server/products";
 import { error } from "@sveltejs/kit";
 import { ProductNotFoundError } from "products/src/errors";
 import type { PageServerLoad } from "./$types";
+import { STATUS_INTERNAL_SERVER_ERROR, STATUS_NOT_FOUND } from "$lib/apis";
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
@@ -14,9 +15,9 @@ export const load: PageServerLoad = async ({ params }) => {
 		};
 	} catch (err) {
 		if (err instanceof ProductNotFoundError) {
-			error(404, "Product not found");
+			error(STATUS_NOT_FOUND, "Product not found");
 			return;
 		}
-		error(500, "Internal server error");
+		error(STATUS_INTERNAL_SERVER_ERROR, "Internal server error");
 	}
 };
