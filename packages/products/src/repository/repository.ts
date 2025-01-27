@@ -239,10 +239,10 @@ const queryInsertPullRequest = `
 		$7,
 		$8,
 		$9,
-		now()
+		$10
 	) ON CONFLICT (externalId) DO UPDATE SET state = EXCLUDED.state,
 	 		mergedAt = EXCLUDED.mergedAt,
-			updatedAt = now();
+			updatedAt = EXCLUDED.updatedAt;
 `;
 
 const queryGetOpenPullRequestsByProductId = `
@@ -405,6 +405,7 @@ export class ProductRepository {
 					data.author,
 					data.mergedAt,
 					data.createdAt,
+					data.updatedAt,
 				);
 			}
 

@@ -51,8 +51,8 @@ function transformToSecurityModel(
 		severity: edge.securityVulnerability.advisory.severity,
 		patchedVersion:
 			edge.securityVulnerability?.firstPatchedVersion?.identifier ?? null,
-		createdAt: new Date(),
-		updatedAt: new Date(),
+		createdAt: edge.createdAt,
+		updatedAt: edge.securityVulnerability.updatedAt,
 	};
 }
 
