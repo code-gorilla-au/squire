@@ -1,11 +1,11 @@
 <script lang="ts">
 import { LoaderSquare } from "$components/loaders";
-import CircleCheckBig from "lucide-svelte/icons/circle-check-big";
 import { Title } from "$components/title";
+import { type ApiError, HTTP_METHOD_POST } from "$lib/apis";
+import { fetcher } from "$lib/apis/fetcher";
+import CircleCheckBig from "lucide-svelte/icons/circle-check-big";
 import { onMount } from "svelte";
 import type { PageProps } from "./$types";
-import { fetcher } from "$lib/apis/fetcher";
-import { type ApiError, HTTP_METHOD_POST } from "$lib/apis";
 
 let { data }: PageProps = $props();
 

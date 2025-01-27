@@ -1,10 +1,10 @@
 import { service } from "$lib/server/products.js";
 import { type Actions, redirect } from "@sveltejs/kit";
+import { formFromRequest } from "forms";
+import { transformZodErrors } from "forms";
 import { logger } from "toolbox";
 import type { PageServerLoad } from "./$types.js";
-import { formFromRequest } from "forms";
 import { formSchema } from "./form-schema.js";
-import { transformZodErrors } from "forms";
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;

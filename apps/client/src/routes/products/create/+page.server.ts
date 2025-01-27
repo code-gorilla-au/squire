@@ -1,8 +1,8 @@
 import { service } from "$lib/server/products";
-import { redirect, type Actions } from "@sveltejs/kit";
+import { type Actions, redirect } from "@sveltejs/kit";
 import { formFromRequest, transformZodErrors } from "forms";
-import { formSchema } from "./form-schema";
 import type { ProductDto } from "products";
+import { formSchema } from "./form-schema";
 
 export const actions = {
 	default: async ({ request }) => {

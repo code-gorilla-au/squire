@@ -1,7 +1,7 @@
 import { EVENT_DASHBOARD_SUMMARY_UPDATE } from "$lib/events";
 import { service } from "$lib/server/products";
-import { SECOND, sleep } from "time";
 import { produce } from "sveltekit-sse";
+import { SECOND, sleep } from "time";
 import { logger } from "toolbox";
 
 export const POST = () => {

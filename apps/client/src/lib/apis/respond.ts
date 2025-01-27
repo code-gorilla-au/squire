@@ -1,9 +1,9 @@
 import { json } from "@sveltejs/kit";
 import {
+	type ErrorResponseContext,
 	STATUS_INTERNAL_SERVER_ERROR,
 	STATUS_NOT_FOUND,
 	statusText,
-	type ErrorResponseContext,
 } from "./types";
 
 /**
