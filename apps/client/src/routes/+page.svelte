@@ -1,5 +1,5 @@
 <script lang="ts">
-import Dashboard from "$components/dashboard-summary.svelte";
+import { DashboardSummary } from "$components/dashboard";
 import InsightsCard from "$components/insights-card.svelte";
 import { summaryStore } from "$lib/dashboard/store";
 import { ShieldEllipsis } from "lucide-svelte";
@@ -40,7 +40,7 @@ const insights = $derived(data.insights);
         <h3 class="heading-3">Loading...</h3>
     </div>
 {:else} 
-    <Dashboard pullRequests={$pullRequests} securityAdvisories={$securityAdvisories} products={$products} />
+    <DashboardSummary pullRequests={$pullRequests} securityAdvisories={$securityAdvisories} products={$products} />
 {/if}
 
 

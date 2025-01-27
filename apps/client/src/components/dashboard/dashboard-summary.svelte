@@ -5,9 +5,9 @@ import SecurityCard from "$components/security-card.svelte";
 import Button from "$components/ui/button/button.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
 import { ShieldAlert } from "lucide-svelte";
-import EmptySlate from "./empty-slate.svelte";
-import Grid from "./grid.svelte";
-import ProductCard from "./product-card.svelte";
+import EmptySlate from "../empty-slate.svelte";
+import Grid from "../grid.svelte";
+import ProductCard from "../product-card.svelte";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 
