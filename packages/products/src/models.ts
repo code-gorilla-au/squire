@@ -6,8 +6,8 @@ export const modelRepository = z.object({
 	url: z.string(),
 	topic: z.string(),
 	owner: z.string(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ModelRepository = z.infer<typeof modelRepository>;
@@ -18,8 +18,8 @@ export const repositoryDto = z.object({
 	url: z.string(),
 	topic: z.string(),
 	owner: z.string(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type RepositoryDto = z.infer<typeof repositoryDto>;
@@ -32,8 +32,8 @@ export const modelSecurity = z.object({
 	state: z.string(),
 	severity: z.string(),
 	patchedVersion: z.string(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ModelSecurity = z.infer<typeof modelSecurity>;
@@ -48,8 +48,8 @@ export const modelSecurityAdvisory = z.object({
 	repoOwner: z.string(),
 	repoName: z.string(),
 	repoUrl: z.string(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ModelSecurityAdvisory = z.infer<typeof modelSecurityAdvisory>;
@@ -64,9 +64,9 @@ export const modelPullRequest = z.object({
 	url: z.string(),
 	state: z.string(),
 	author: z.string(),
-	mergedAt: z.date().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	mergedAt: z.coerce.date().nullable(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ModelPullRequest = z.infer<typeof modelPullRequest>;
@@ -81,9 +81,9 @@ export const pullRequestDto = z.object({
 	url: z.string(),
 	state: z.string(),
 	author: z.string(),
-	mergedAt: z.date().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	mergedAt: z.coerce.date().nullable(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type PullRequestDto = z.infer<typeof pullRequestDto>;
@@ -100,8 +100,8 @@ export const securityAdvisoryDto = z.object({
 	repoOwner: z.string(),
 	repoName: z.string(),
 	repoUrl: z.string(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type SecurityAdvisoryDto = z.infer<typeof securityAdvisoryDto>;
@@ -110,8 +110,8 @@ export const modelProduct = z.object({
 	id: z.string(),
 	name: z.string(),
 	tags: z.array(z.string()),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ModelProduct = z.infer<typeof modelProduct>;
@@ -120,8 +120,8 @@ export const productDto = z.object({
 	id: z.string(),
 	name: z.string(),
 	tags: z.array(z.string()),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: z.coerce.date(),
+	updatedAt: z.coerce.date(),
 });
 
 export type ProductDto = z.infer<typeof productDto>;

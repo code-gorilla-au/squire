@@ -1,7 +1,8 @@
 import { service } from "$lib/server/products";
-import { type Actions, redirect } from "@sveltejs/kit";
+import { redirect, type Actions } from "@sveltejs/kit";
 import { formFromRequest, transformZodErrors } from "forms";
 import { formSchema } from "./form-schema";
+import type { ProductDto } from "products";
 
 export const actions = {
 	default: async ({ request }) => {
@@ -15,9 +16,10 @@ export const actions = {
 			};
 		}
 
+		let product: ProductDto;
+
 		try {
-			const product = await service.createProduct(data.name, [data.tags]);
-			redirect(303, `/products/${product.id}/sync`);
+			product = await service.createProduct(data.name, [data.tags]);
 		} catch (error) {
 			const err = error as Error;
 			return {
@@ -25,5 +27,7 @@ export const actions = {
 				errors: [{ field: "product", message: err.message }],
 			};
 		}
+
+		redirect(303, `/products/${product.id}/sync`);
 	},
 } satisfies Actions;
