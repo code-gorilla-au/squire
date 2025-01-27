@@ -1,8 +1,4 @@
-import type {
-	ProductDto,
-	PullRequestDto,
-	SecurityAdvisoryDto,
-} from "../../../../../packages/products";
+import type { ProductDto, PullRequestDto, SecurityAdvisoryDto } from "products";
 
 export type DashboardSummary = {
 	pullRequests: PullRequestDto[];
