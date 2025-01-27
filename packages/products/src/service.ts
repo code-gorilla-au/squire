@@ -326,6 +326,20 @@ export class ProductService {
 		return bulkInsertErrors;
 	}
 
+	async syncProductById(productId: string): Promise<Error[]> {
+		this.log.info({ productId }, "syncing product");
+
+		const errs: Error[] = [];
+
+		const product = await this.getProductById(productId);
+		for (const tag of product.tags) {
+			const errs = await this.ingestDataByTopic(tag);
+			errs.push(...errs);
+		}
+
+		return errs;
+	}
+
 	private async ingestDataByTopic(topic: string): Promise<Error[]> {
 		this.log.debug({ topic }, "ingesting data by topic");
 		const resp = await this.ghClient.searchRepos({ topics: [topic] });
