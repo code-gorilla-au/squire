@@ -1,0 +1,7 @@
+{
+    "name": "pre-load",
+    "type": "module",
+    "scripts": {
+        "dev": "bun run index.ts"
+    }
+}
