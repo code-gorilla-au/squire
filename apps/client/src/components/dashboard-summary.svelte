@@ -56,7 +56,7 @@ async function routeToCreateProduct() {
     <div class=" bg-muted rounded-md p-4 text-sm flex items-center flex-col justify-center">
         <ShieldAlert  size="32" /> 
         <h3 class="my-2">No products found, create your first product</h3>
-        <Button on:click={routeToCreateProduct}>Create</Button>
+        <Button onclick={routeToCreateProduct}>Create</Button>
     </div> 
    
 {/if}
