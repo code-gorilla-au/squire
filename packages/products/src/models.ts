@@ -64,7 +64,7 @@ export const modelPullRequest = z.object({
 	url: z.string(),
 	state: z.string(),
 	author: z.string(),
-	mergedAt: z.date(),
+	mergedAt: z.date().nullable(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });
@@ -81,7 +81,7 @@ export const pullRequestDto = z.object({
 	url: z.string(),
 	state: z.string(),
 	author: z.string(),
-	mergedAt: z.date(),
+	mergedAt: z.date().nullable(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });

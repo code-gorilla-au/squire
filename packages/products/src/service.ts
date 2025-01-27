@@ -201,7 +201,7 @@ export class ProductService {
 		const results = await this.store.getOpenPullRequests();
 		if (results.error) {
 			this.log.error({ error: results.error }, "Error fetching PRs");
-			throw new Error("error fetching PRs");
+			throw results.error;
 		}
 
 		this.log.info({ totalPRs: results.data?.length }, "Fetched PRs");
@@ -216,7 +216,7 @@ export class ProductService {
 
 		if (results.error) {
 			this.log.error({ error: results.error }, "Error fetching PRs");
-			throw new Error("error fetching PRs");
+			throw results.error;
 		}
 
 		this.log.info({ totalPRs: results.data?.length }, "Fetched PRs");
