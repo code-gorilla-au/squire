@@ -16,8 +16,8 @@ export const actions = {
 		}
 
 		try {
-			await service.createProduct(data.name, [data.tags]);
-			redirect(303, "/");
+			const product = await service.createProduct(data.name, [data.tags]);
+			redirect(303, `/products/${product.id}/sync`);
 		} catch (error) {
 			const err = error as Error;
 			return {
