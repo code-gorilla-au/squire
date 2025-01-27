@@ -12,10 +12,8 @@ export const load: PageServerLoad = async ({ params }) => {
 	const product = await service.getProductById(id);
 
 	return {
-		props: {
-			id,
-			product,
-		},
+		id,
+		product,
 	};
 };
 
