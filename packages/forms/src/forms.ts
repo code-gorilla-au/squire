@@ -12,3 +12,13 @@ export function transformZodErrors(error: z.ZodError) {
 		};
 	});
 }
+
+/**
+ * get form data from a request
+ * @param req HTTP request
+ */
+export async function formFromRequest(req: Request) {
+	const data = await req.formData();
+	const entries = data.entries();
+	return Object.fromEntries(entries);
+}

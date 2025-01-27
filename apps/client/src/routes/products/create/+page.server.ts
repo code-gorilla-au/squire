@@ -1,28 +1,21 @@
 import { service } from "$lib/server/products";
+import { formFromRequest, transformZodErrors } from "forms";
 import { type Actions, redirect } from "@sveltejs/kit";
+import { formSchema } from "./form-schema";
 
 export const actions = {
 	default: async ({ request }) => {
-		const data = await request.formData();
+		const formData = formFromRequest(request);
 
-		const name = data.get("name");
-		const tags = data.get("tags");
-
-		if (!name) {
+		const { error, data } = formSchema.safeParse(formData);
+		if (error) {
 			return {
 				success: false,
-				errors: ["Name is required"],
+				errors: transformZodErrors(error),
 			};
 		}
 
-		if (!tags) {
-			return {
-				success: false,
-				errors: ["Tags is required"],
-			};
-		}
-
-		await service.createProduct(name.toString(), [tags?.toString()]);
+		await service.createProduct(data.name, [data.tags]);
 		redirect(303, "/");
 	},
 } satisfies Actions;
