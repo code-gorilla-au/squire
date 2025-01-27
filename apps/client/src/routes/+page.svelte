@@ -1,8 +1,8 @@
 <script lang="ts">
 import Dashboard from "$components/dashboard-summary.svelte";
+import InsightsCard from "$components/insights-card.svelte";
 import { summaryStore } from "$lib/dashboard/store";
 import { ShieldEllipsis } from "lucide-svelte";
-import InsightsCard from "$components/insights-card.svelte";
 import { derived as storeDerived } from "svelte/store";
 
 const pullRequests = storeDerived(

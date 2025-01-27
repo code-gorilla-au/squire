@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
+import type { PullRequest, Repository } from "squire-github";
+import { describe, expect, it } from "vitest";
 import {
 	generatePullRequestFromGhModel,
 	severityWeighting,
 } from "./transforms";
-import type { PullRequest, Repository } from "squire-github";
 
 describe("transforms", () => {
 	describe("severityWeighting()", () => {

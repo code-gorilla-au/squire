@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { initDB } from "database";
 import { yesterday } from "time";
+import { logger } from "toolbox";
 import { describe, expect, it } from "vitest";
 import { ProductRepository } from "./repository";
-import { logger } from "toolbox";
 
 describe("Repository insights", async () => {
 	const db = await initDB(":memory:");

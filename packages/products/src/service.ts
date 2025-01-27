@@ -1,10 +1,11 @@
+import type { Logger } from "pino";
+import type {
+	Client,
+	Repository as GhModelRepository,
+	QuerySearch,
+} from "squire-github";
 import type { Store } from "./interfaces";
 import {
-	modelProduct,
-	productDto,
-	pullRequestInsightsDto,
-	securityAdvisoryDto,
-	securityAdvisoryInsightsDto,
 	type InsightsDto,
 	type ModelPullRequest,
 	type ModelRepository,
@@ -13,19 +14,18 @@ import {
 	type PullRequestDto,
 	type RepositoryDto,
 	type SecurityAdvisoryDto,
+	modelProduct,
+	productDto,
+	pullRequestInsightsDto,
+	securityAdvisoryDto,
+	securityAdvisoryInsightsDto,
 } from "./models";
 import { severityWeighting } from "./transforms";
-import type { Logger } from "pino";
 import {
 	generatePullRequestFromGhModel,
 	generateRepoFromGhModel,
 	generateSecurityFromGhModel,
 } from "./transforms";
-import type {
-	Client,
-	Repository as GhModelRepository,
-	QuerySearch,
-} from "squire-github";
 
 export class ProductService {
 	private store: Store;

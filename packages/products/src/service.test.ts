@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { initDB } from "database";
-import { yesterday } from "time";
-import { beforeEach, describe, expect, it, vi, type Mocked } from "vitest";
-import { ProductRepository } from "./repository";
-import { logger } from "toolbox";
-import { ProductService } from "./service";
 import type { Client } from "squire-github";
+import { yesterday } from "time";
+import { logger } from "toolbox";
+import { type Mocked, beforeEach, describe, expect, it, vi } from "vitest";
+import { ProductRepository } from "./repository";
+import { ProductService } from "./service";
 
 describe("service", async () => {
 	const ghClient = {

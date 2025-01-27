@@ -1,8 +1,8 @@
 <script lang="ts">
 import EmptySlate from "$components/empty-slate.svelte";
 import Grid from "$components/grid.svelte";
-import PullRequestCard from "$components/pull-request-card.svelte";
 import InsightsCard from "$components/insights-card.svelte";
+import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 import { Tag } from "$components/tag";
 import { Title } from "$components/title";

@@ -1,12 +1,5 @@
 import type { Database, TableData } from "duckdb-async";
 import {
-	modelProduct,
-	modelPullRequest,
-	modelPullRequestInsights,
-	modelRepository,
-	modelSecurity,
-	modelSecurityAdvisory,
-	modelSecurityAdvisoryInsights,
 	type ModelProduct,
 	type ModelPullRequest,
 	type ModelPullRequestInsights,
@@ -16,20 +9,27 @@ import {
 	type ModelSecurityAdvisoryInsights,
 	type RepositoryDto,
 	type StoreActionResult,
+	modelProduct,
+	modelPullRequest,
+	modelPullRequestInsights,
+	modelRepository,
+	modelSecurity,
+	modelSecurityAdvisory,
+	modelSecurityAdvisoryInsights,
 } from "../models";
 
+import type { Logger } from "pino";
+import { ProductExistsError, ProductNotFoundError } from "../errors";
+import {
+	transformToPullRequestInsights,
+	transformToSecurityAdvisoryInsights,
+} from "../transforms";
 import {
 	queryGetPullRequestInsights,
 	queryGetPullRequestInsightsByProduct,
 	queryGetSecurityAdvisoryInsights,
 	queryGetSecurityAdvisoryInsightsByProduct,
 } from "./insights";
-import {
-	transformToPullRequestInsights,
-	transformToSecurityAdvisoryInsights,
-} from "../transforms";
-import type { Logger } from "pino";
-import { ProductExistsError, ProductNotFoundError } from "../errors";
 
 export const queryCreateRepoTable = `
     CREATE TABLE IF NOT EXISTS repositories (
