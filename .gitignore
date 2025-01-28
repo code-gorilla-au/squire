@@ -175,4 +175,5 @@ dist
 .DS_Store
 
 # Ignore app data
-.db
+.db/*.duckdb
+.db/*.wal
