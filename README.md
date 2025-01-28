@@ -35,7 +35,7 @@ VITE_GH_OWNER=<your-org>
 
 
 ## Pre ingestion (Deprecated + removed)
-Was causing inconsistent behaviour with duckdb bindings do decided to remove from workflow. 
+Was causing inconsistent behaviour with duckdb bindings so decided to remove from workflow.
 
 First run you will need to create your products from the form provided.
 
