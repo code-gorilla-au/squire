@@ -9,6 +9,7 @@
 		"pino",
 		"tailwindcss",
 		"unnest",
-		"unstub"
+		"unstub",
+		"vitest"
 	]
 }
