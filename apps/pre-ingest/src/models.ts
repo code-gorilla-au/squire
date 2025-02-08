@@ -5,6 +5,7 @@ export const envSchema = z.object({
 	VITE_LOG_LEVEL: z.string(),
 	VITE_GH_OWNER: z.string(),
 	VITE_GH_TOKEN: z.string(),
+	TOPICS_TO_INGEST: z.array(z.string()),
 });
 
 export type EnvSchema = z.infer<typeof envSchema>;
