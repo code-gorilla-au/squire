@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import { cn } from "$lib/utils.js";
+import { cn } from "$lib/utils.js";
+import { Menubar as MenubarPrimitive } from "bits-ui";
 
-	let {
-		ref = $bindable(null),
-		class: className,
-		sideOffset = 8,
-		alignOffset = -4,
-		align = "start",
-		side = "bottom",
-		portalProps,
-		...restProps
-	}: MenubarPrimitive.ContentProps & {
-		portalProps?: MenubarPrimitive.PortalProps;
-	} = $props();
+let {
+	ref = $bindable(null),
+	class: className,
+	sideOffset = 8,
+	alignOffset = -4,
+	align = "start",
+	side = "bottom",
+	portalProps,
+	...restProps
+}: MenubarPrimitive.ContentProps & {
+	portalProps?: MenubarPrimitive.PortalProps;
+} = $props();
 </script>
 
 <MenubarPrimitive.Portal {...portalProps}>

@@ -2,7 +2,6 @@
 	"name": "squire-core",
 	"type": "module",
 	"scripts": {
-		"lint:fix": "bunx biome check --write .",
 		"db:clean": "rm -rf .db && mkdir .db",
 		"clean:all": "rimraf node_modules apps/**/node_modules",
 		"dev:preload": "bun apps/pre-load/index.ts",
@@ -22,10 +21,7 @@
 	"peerDependencies": {
 		"typescript": "^5.7.3"
 	},
-	"workspaces": [
-		"packages/*",
-		"apps/*"
-	],
+	"workspaces": ["packages/*", "apps/*"],
 	"dependencies": {
 		"database": "workspace:*",
 		"duckdb-async": "^1.1.3",

@@ -1,7 +1,7 @@
 {
-    "name": "pre-ingest",
-    "type": "module",
-    "private": true,
-    "description": "Pre-ingest service for Squire",
-    "main": "index.ts"
+	"name": "pre-ingest",
+	"type": "module",
+	"private": true,
+	"description": "Pre-ingest service for Squire",
+	"main": "index.ts"
 }

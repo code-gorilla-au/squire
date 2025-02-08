@@ -1,14 +1,14 @@
 <script lang="ts">
 import EmptySlate from "$components/empty-slate.svelte";
-import InsightsCard from "$components/insights-card.svelte";
-import { FileDown } from "lucide-svelte";
 import Grid from "$components/grid.svelte";
+import InsightsCard from "$components/insights-card.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
 import { Tag } from "$components/tag";
 import { Title } from "$components/title";
 import * as Accordion from "$components/ui/accordion";
 import Card from "$components/ui/card/card.svelte";
+import { FileDown } from "lucide-svelte";
 import type {
 	InsightsDto,
 	ProductDto,

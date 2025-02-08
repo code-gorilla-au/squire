@@ -17,21 +17,21 @@ ENV_CONTEXT_PATH:=$(PROJECT_ROOT)/$(ENV_CONTEXT)
 
 MAKE_LIB:=$(PROJECT_ROOT)/scripts
 -include $(MAKE_LIB)/tests.mk
+-include $(MAKE_LIB)/lints.mk
 -include $(MAKE_LIB)/logs.mk
-
-#####################
-##@ APP
-#####################
-
-dev-app: ## Run the app in dev mode
-	bun --env-file=$(ENV_CONTEXT_PATH) --filter=client run dev
 
 
 #####################
 ##@ DEV
 #####################
 
+dev-app: ## Run the app in dev mode
+	bun --env-file=$(ENV_CONTEXT_PATH) --filter=client run dev
+
+
 install: tools-dev tools-ci ## Install dependencies
 	bun install
 
 
+lint-fix: ## run lint and fix
+	bunx biome check --write .
