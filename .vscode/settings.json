@@ -12,6 +12,7 @@
 		"toplevel",
 		"unnest",
 		"unstub",
+		"VITE",
 		"vitest"
 	]
 }
