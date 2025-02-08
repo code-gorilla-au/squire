@@ -28,6 +28,8 @@ MAKE_LIB:=$(PROJECT_ROOT)/scripts
 dev-app: ## Run the app in dev mode
 	bun --env-file=$(ENV_CONTEXT_PATH) --filter=client run dev
 
+dev-pre-ingest: ## Run the ingest in dev mode
+	bun --env-file=$(ENV_CONTEXT_PATH) --filter=pre-ingest run ingest
 
 install: tools-dev tools-ci ## Install dependencies
 	bun install

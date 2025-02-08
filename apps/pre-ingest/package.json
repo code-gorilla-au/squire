@@ -3,5 +3,8 @@
 	"type": "module",
 	"private": true,
 	"description": "Pre-ingest service for Squire",
-	"main": "index.ts"
+	"main": "index.ts",
+	"scripts": {
+		"ingest": "bun --bun run ./index.ts"
+	}
 }
