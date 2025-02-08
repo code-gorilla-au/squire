@@ -5,7 +5,8 @@
 	"description": "Pre-ingest service for Squire",
 	"main": "index.ts",
 	"scripts": {
-		"ingest": "bun --bun run ./index.ts"
+		"ingest": "bun --bun run ./index.ts",
+		"test": "vitest --run"
 	},
 	"devDependencies": {}
 }
