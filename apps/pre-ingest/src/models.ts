@@ -9,3 +9,13 @@ export const envSchema = z.object({
 });
 
 export type EnvSchema = z.infer<typeof envSchema>;
+
+export class IngestErrors extends Error {
+	public readonly errors: Error[];
+
+	constructor(errors: Error[]) {
+		super("Ingest errors occurred");
+		this.errors = errors;
+		this.message = this.errors.map((e) => e.message).join("\n");
+	}
+}
