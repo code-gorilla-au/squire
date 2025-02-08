@@ -2,7 +2,6 @@
 	"name": "squire-core",
 	"type": "module",
 	"scripts": {
-		"dev:preload": "bun apps/pre-load/index.ts",
 		"dev:app": "bun run --filter client dev",
 		"dev:build": "bun run --filter client build"
 	},
@@ -19,10 +18,7 @@
 	"peerDependencies": {
 		"typescript": "^5.7.3"
 	},
-	"workspaces": [
-		"packages/*",
-		"apps/*"
-	],
+	"workspaces": ["packages/*", "apps/*"],
 	"dependencies": {
 		"database": "workspace:*",
 		"duckdb-async": "^1.1.3",

@@ -1,4 +1,4 @@
-import { envSchema, type EnvSchema } from "./models";
+import { type EnvSchema, envSchema } from "./models";
 
 /**
  * Load the environment variables and validate them.

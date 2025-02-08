@@ -20,6 +20,15 @@ MAKE_LIB:=$(PROJECT_ROOT)/scripts
 -include $(MAKE_LIB)/local.mk
 -include $(MAKE_LIB)/logs.mk
 
+#####################
+##@ CI
+#####################
+
+install-ci: ## Install immutable dependencies
+	bun install --frozen-lockfile
+
+build: ## Build the app
+	bun run --filter client build
 
 #####################
 ##@ DEV
@@ -28,7 +37,7 @@ MAKE_LIB:=$(PROJECT_ROOT)/scripts
 dev-app: ## Run the app in dev mode
 	bun --env-file=$(ENV_CONTEXT_PATH) --filter=client run dev
 
-dev-pre-ingest: ## Pre-ingest github data into app before starting
+dev-ingest: ## Pre-ingest github data into app before starting
 	PROJECT_ROOT=$(PROJECT_ROOT) \
 	bun --bun --env-file=$(ENV_CONTEXT_PATH) --filter=pre-ingest run ingest
 

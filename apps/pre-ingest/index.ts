@@ -1,10 +1,10 @@
 import { initDB } from "database";
-import { loadConfig } from "./src/env";
-import { ProductRepository, ProductService } from "products";
-import { serverLogger } from "toolbox";
-import { initClient } from "squire-github";
 import type { Level } from "pino";
+import { ProductRepository, ProductService } from "products";
 import { ProductExistsError } from "products/src/errors";
+import { initClient } from "squire-github";
+import { serverLogger } from "toolbox";
+import { loadConfig } from "./src/env";
 
 const config = loadConfig();
 const logger = serverLogger(config.VITE_LOG_LEVEL as Level);
