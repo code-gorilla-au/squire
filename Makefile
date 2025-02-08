@@ -44,6 +44,9 @@ dev-ingest: ## Pre-ingest github data into app before starting
 install: ## Install dependencies
 	bun install
 
-
 lint-fix: ## run lint and fix
 	bunx biome check --write .
+
+
+reset-state: local-clean-all install ## Reset the state of the app
+	

@@ -1,10 +1,7 @@
 {
 	"name": "squire-core",
 	"type": "module",
-	"scripts": {
-		"dev:app": "bun run --filter client dev",
-		"dev:build": "bun run --filter client build"
-	},
+	"scripts": {},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@testing-library/jest-dom": "^6.6.3",
@@ -18,7 +15,10 @@
 	"peerDependencies": {
 		"typescript": "^5.7.3"
 	},
-	"workspaces": ["packages/*", "apps/*"],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
 	"dependencies": {
 		"database": "workspace:*",
 		"duckdb-async": "^1.1.3",
