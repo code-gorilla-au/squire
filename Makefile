@@ -17,7 +17,7 @@ ENV_CONTEXT_PATH:=$(PROJECT_ROOT)/$(ENV_CONTEXT)
 
 MAKE_LIB:=$(PROJECT_ROOT)/scripts
 -include $(MAKE_LIB)/tests.mk
--include $(MAKE_LIB)/lints.mk
+-include $(MAKE_LIB)/local.mk
 -include $(MAKE_LIB)/logs.mk
 
 
