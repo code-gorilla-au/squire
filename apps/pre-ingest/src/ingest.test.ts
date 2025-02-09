@@ -1,14 +1,13 @@
 import { afterAll, beforeAll, describe, it, vi } from "vitest";
 
 import { initDB } from "database";
-import type { Level } from "pino";
 import { ProductRepository, ProductService } from "products";
 import { serverLogger } from "toolbox";
-import { loadConfig } from "./env";
 import { IngestService } from "./ingest";
+import { randomUUID } from "node:crypto";
+import { yesterday } from "time";
 
-const config = loadConfig();
-const logger = serverLogger(config.VITE_LOG_LEVEL as Level);
+const logger = serverLogger("debug");
 
 describe("IngestService", async () => {
 	const mockGhClient = {
@@ -20,6 +19,60 @@ describe("IngestService", async () => {
 
 	beforeAll(async () => {
 		await repo.initTables();
+		mockGhClient.searchRepos.mockResolvedValue({
+			data: {
+				search: {
+					pageInfo: {
+						endCursor: null,
+						hasNextPage: false,
+					},
+					edges: [
+						{
+							node: {
+								name: "repoName",
+								owner: {
+									login: "owner",
+								},
+								url: "url",
+								vulnerabilityAlerts: {
+									pageInfo: {
+										endCursor: null,
+										hasNextPage: false,
+									},
+									nodes: [
+										{
+											state: "OPEN",
+											id: randomUUID(),
+											number: 1,
+											securityVulnerability: {
+												package: {
+													name: "test",
+												},
+												advisory: {
+													severity: "CRITICAL",
+												},
+												firstPatchedVersion: {
+													identifier: "1.0.0",
+												},
+												updatedAt: yesterday(),
+											},
+											createdAt: yesterday(),
+										},
+									],
+								},
+								pullRequests: {
+									pageInfo: {
+										endCursor: null,
+										hasNextPage: false,
+									},
+									nodes: [],
+								},
+							},
+						},
+					],
+				},
+			},
+		});
 	});
 
 	afterAll(async () => {
