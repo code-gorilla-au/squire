@@ -14,7 +14,7 @@ describe("IngestService", async () => {
 	const mockGhClient = {
 		searchRepos: vi.fn(),
 	};
-	const db = await initDB(config.VITE_DB_FILE_PATH);
+	const db = await initDB(":memory:");
 	const repo = new ProductRepository(db, logger);
 	const service = new ProductService(repo, logger, mockGhClient);
 

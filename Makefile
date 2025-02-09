@@ -20,6 +20,10 @@ MAKE_LIB:=$(PROJECT_ROOT)/scripts
 -include $(MAKE_LIB)/local.mk
 -include $(MAKE_LIB)/logs.mk
 
+
+BUN_CMD ?= "run test"
+BUN_FILTER ?= "*"
+
 #####################
 ##@ CI
 #####################
@@ -35,11 +39,14 @@ build: ## Build the app
 #####################
 
 dev-app: ## Run the app in dev mode
-	bun --env-file=$(ENV_CONTEXT_PATH) --filter=client run dev
+	$(eval BUN_CMD := "run dev")
+	$(eval BUN_FILTER := "client")
+	@$(MAKE) bun-run-cmd --no-print-directory BUN_CMD=$(BUN_CMD) BUN_FILTER=$(BUN_FILTER)
 
 dev-ingest: ## Pre-ingest github data into app before starting
-	PROJECT_ROOT=$(PROJECT_ROOT) \
-	bun --bun --env-file=$(ENV_CONTEXT_PATH) --filter=pre-ingest run ingest
+	$(eval BUN_CMD := "run ingest")
+	$(eval BUN_FILTER := "pre-ingest")
+	@$(MAKE) bun-run-cmd --no-print-directory BUN_CMD=$(BUN_CMD) BUN_FILTER=$(BUN_FILTER)
 
 install: ## Install dependencies
 	bun install
@@ -50,3 +57,7 @@ lint-fix: ## run lint and fix
 
 reset-state: local-clean-all install ## Reset the state of the app
 	
+
+bun-run-cmd: # private task - common bun run command
+	PROJECT_ROOT=$(PROJECT_ROOT) \
+	bun --env-file=$(ENV_CONTEXT_PATH) --filter=$(BUN_FILTER) $(BUN_CMD)

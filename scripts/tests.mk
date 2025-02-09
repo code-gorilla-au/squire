@@ -3,7 +3,8 @@
 #####################
 
 test: ## Run tests
-	bun run --filter='*' test
+	$(eval BUN_CMD := "run test")
+	@$(MAKE) bun-run-cmd --no-print-directory BUN_CMD=$(BUN_CMD)
 
 test-cover: ## Run Package tests with coverage
 	bunx vitest --coverage
