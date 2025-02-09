@@ -1,7 +1,7 @@
 import type { Logger } from "pino";
 import type { ProductService } from "products";
-import { IngestErrors } from "./models";
 import { ProductExistsError } from "products/src/errors";
+import { IngestErrors } from "./models";
 
 export class IngestService {
 	private log: Logger;

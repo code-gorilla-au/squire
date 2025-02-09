@@ -10,10 +10,11 @@ Your most trusted local assistant. Squire's aim is to provide a focused, product
 | Basic reports | Download basic reports from your product's page in JSON format (other format's supporting coming soon) |
 
 ## Install 
+NOTE: we've added make 
 To install dependencies:
 
 ```bash
-bun install
+make install
 
 touch .env.local # your local env file
 ```
@@ -30,14 +31,16 @@ VITE_LOG_LEVEL="debug"
 VITE_GH_TOKEN=<your-token>
 VITE_GH_OWNER=<your-org>
 
+# ================================
+#  Pre-Ingest
+# ================================
+TOPICS_TO_INGEST=comma,delimited,list,to,ingest
 
 ```
 
 
-## Pre ingestion (Deprecated + removed)
-Was causing inconsistent behaviour with duckdb bindings so decided to remove from workflow.
-
-First run you will need to create your products from the form provided.
+## Pre ingestion 
+New pre-ingest app 
 
 
 ## Run app
