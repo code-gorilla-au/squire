@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, it, vi, expect } from "vitest";
 
 import { initDB } from "database";
 import { ProductRepository, ProductService } from "products";
@@ -83,6 +83,17 @@ describe("IngestService", async () => {
 		const ingest = new IngestService(logger, service);
 
 		const topics = ["topic1", "topic2"];
-		await ingest.ingest(topics);
+		await expect(ingest.ingest(topics)).resolves.not.toThrowError();
+	});
+	it("should throw error if gh returns error", async () => {
+		mockGhClient.searchRepos.mockRejectedValue({
+			status: 500,
+			message: "not ok",
+		});
+
+		const ingest = new IngestService(logger, service);
+
+		const topics = ["topic1", "topic2"];
+		await expect(ingest.ingest(topics)).rejects.toThrowError();
 	});
 });
