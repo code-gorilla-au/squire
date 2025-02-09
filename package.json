@@ -30,6 +30,7 @@
 		"tailwindcss-animate": "^1.0.7",
 		"time": "workspace:*",
 		"toolbox": "workspace:*",
+		"vite": "^6.1.0",
 		"vitest": "^3.0.5",
 		"zod": "^3.24.1"
 	}
