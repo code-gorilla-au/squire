@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/svelte";
+import type { ProductDto } from "products";
 import { describe, expect, it } from "vitest";
 import ProductSummary from "./product-summary.svelte";
-import type { ProductDto } from "products";
 
 describe("DashboardSummary component", () => {
 	const product = {

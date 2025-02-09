@@ -1,13 +1,9 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { svelteTesting } from "@testing-library/svelte/vite";
-import { type UserConfig, loadEnv } from "vite";
+import type { UserConfig } from "vite";
 import { defineConfig } from "vitest/config";
 
-export default function config({ mode }: UserConfig) {
-	process.env = {
-		...process.env,
-		...loadEnv(mode ?? "development", "../../"),
-	};
+export default function config(_: UserConfig) {
 	return defineConfig({
 		plugins: [sveltekit(), svelteTesting()],
 

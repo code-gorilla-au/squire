@@ -10,10 +10,12 @@ Your most trusted local assistant. Squire's aim is to provide a focused, product
 | Basic reports | Download basic reports from your product's page in JSON format (other format's supporting coming soon) |
 
 ## Install 
+NOTE: we've added a makefile to help with orchestrating.
+
 To install dependencies:
 
 ```bash
-bun install
+make install
 
 touch .env.local # your local env file
 ```
@@ -30,27 +32,35 @@ VITE_LOG_LEVEL="debug"
 VITE_GH_TOKEN=<your-token>
 VITE_GH_OWNER=<your-org>
 
+# ================================
+#  Pre-Ingest
+# ================================
+TOPICS_TO_INGEST=comma,delimited,list,to,ingest
 
 ```
 
+## Pre ingestion 
+New pre-ingest app has been re-written to be idempotent and use the same env variables as the app. Ensure you add the env var `TOPICS_TO_INGEST` to the config file, which is a comma delimited list.
 
-## Pre ingestion (Deprecated + removed)
-Was causing inconsistent behaviour with duckdb bindings so decided to remove from workflow.
-
-First run you will need to create your products from the form provided.
-
+```bash
+make dev-ingest
+```
 
 ## Run app
 run the client locally
 
 ```bash
-bun run dev:app
+make dev-app
 ```
 
 Access the webpage on http://localhost:5173/
 
 
 ## Reset state
+Common issue is to have a segmentation fault with the duck async library. It requires a full clean, you need to run the following command to reset the app to a clean slate
 
-Sometimes you want to clean up all your data and do a fresh ingestion, run `bun run db:clean` to remove the duck file and restart the app. 
+```bash
+make reset-state
+```
 
+After you can run the pre-ingest command `make dev-ingest` to hydrate all the data.

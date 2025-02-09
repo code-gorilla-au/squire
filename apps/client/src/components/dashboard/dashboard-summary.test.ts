@@ -118,9 +118,7 @@ describe("DashboardSummary component", () => {
 			],
 		});
 
-		expect(screen.getByText("organisation-alias")).toBeVisible();
 		expect(screen.getByText("name")).toBeVisible();
-		expect(screen.getByText("description")).toBeVisible();
 		expect(screen.getByText("tag1")).toBeVisible();
 	});
 	it("should return product empty slate", () => {

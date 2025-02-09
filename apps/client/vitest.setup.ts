@@ -1,6 +1,6 @@
 import "@testing-library/svelte/vitest";
 import "@testing-library/jest-dom/vitest";
-import { beforeAll, vi } from "vitest";
+import { afterAll, beforeAll, vi } from "vitest";
 
 beforeAll(() => {
 	/**
@@ -27,6 +27,7 @@ beforeAll(() => {
 	window.HTMLElement.prototype.scrollIntoView = vi.fn();
 	window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 	window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+	window.HTMLCanvasElement.prototype.getContext = vi.fn();
 
 	window.ResizeObserver =
 		window.ResizeObserver ||
@@ -48,4 +49,13 @@ beforeAll(() => {
 			dispatchEvent: vi.fn(),
 		};
 	});
+
+	vi.stubGlobal("URL", {
+		createObjectURL: vi.fn(),
+	});
+});
+
+afterAll(() => {
+	vi.unstubAllGlobals();
+	vi.resetAllMocks();
 });

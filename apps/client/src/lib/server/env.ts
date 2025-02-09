@@ -1,17 +1,7 @@
-import { join } from "node:path";
 import { logger } from "toolbox";
 import { z } from "zod";
 
-const dbFilePath =
-	join(
-		import.meta.dirname,
-		"..",
-		"..",
-		"..",
-		"..",
-		"..",
-		import.meta.env.VITE_DB_FILE_PATH,
-	) ?? ":memory:";
+const dbFilePath = import.meta.env.VITE_DB_FILE_PATH as string;
 const logLevel = import.meta.env.VITE_LOG_LEVEL ?? "debug";
 
 const serverSchema = z.object({

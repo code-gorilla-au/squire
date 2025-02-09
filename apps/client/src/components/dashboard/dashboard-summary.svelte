@@ -1,14 +1,14 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
+import Grid from "$components/grid.svelte";
+import ProductCard from "$components/product-card.svelte";
 import PullRequestCard from "$components/pull-request-card.svelte";
 import SecurityCard from "$components/security-card.svelte";
+import * as Accordion from "$components/ui/accordion";
 import Button from "$components/ui/button/button.svelte";
 import type { DashboardSummary } from "$lib/dashboard/types";
 import { ShieldAlert } from "lucide-svelte";
 import EmptySlate from "../empty-slate.svelte";
-import Grid from "$components/grid.svelte";
-import ProductCard from "$components/product-card.svelte";
-import * as Accordion from "$components/ui/accordion";
 
 let { pullRequests, securityAdvisories, products }: DashboardSummary = $props();
 

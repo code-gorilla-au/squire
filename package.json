@@ -1,33 +1,20 @@
 {
 	"name": "squire-core",
 	"type": "module",
-	"scripts": {
-		"lint:fix": "bunx biome check --write .",
-		"test": "bun run --filter='*' test",
-		"test:cover": "vitest --coverage",
-		"db:clean": "rm -rf .db && mkdir .db",
-		"clean:all": "rimraf node_modules apps/**/node_modules",
-		"dev:preload": "bun apps/pre-load/index.ts",
-		"dev:app": "bun run --filter client dev",
-		"dev:build": "bun run --filter client build"
-	},
+	"scripts": {},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/svelte": "^5.2.6",
-		"@types/bun": "latest",
+		"@types/bun": "^1.2.2",
 		"@types/node-cron": "^3.0.11",
-		"@vitest/coverage-v8": "^3.0.4",
-		"jsdom": "^25.0.1",
-		"sveltekit-sse": "^0.13.12"
+		"@vitest/coverage-v8": "^3.0.5",
+		"jsdom": "^25.0.1"
 	},
 	"peerDependencies": {
 		"typescript": "^5.7.3"
 	},
-	"workspaces": [
-		"packages/*",
-		"apps/*"
-	],
+	"workspaces": ["packages/*", "apps/*"],
 	"dependencies": {
 		"database": "workspace:*",
 		"duckdb-async": "^1.1.3",
@@ -39,7 +26,8 @@
 		"tailwindcss-animate": "^1.0.7",
 		"time": "workspace:*",
 		"toolbox": "workspace:*",
-		"vitest": "^3.0.4",
+		"vitest": "^3.0.5",
+		"vite": "^5.4.14",
 		"zod": "^3.24.1"
 	}
 }

@@ -7,8 +7,12 @@
 		"lucide",
 		"Nonoctal",
 		"pino",
+		"rimraf",
 		"tailwindcss",
+		"toplevel",
 		"unnest",
-		"unstub"
+		"unstub",
+		"VITE",
+		"vitest"
 	]
 }
