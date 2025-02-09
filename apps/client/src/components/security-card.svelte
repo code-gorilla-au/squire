@@ -39,6 +39,7 @@ function styleTagBySeverity(severity: string) {
                 <span class=" lowercase">{formatDistanceToNow(security.createdAt)}</span>
             </div>
         </div>
+        <Tag>{security.repoOwner}</Tag>
         <Tag>{security.repoName}</Tag>
     </Card>
 </a>

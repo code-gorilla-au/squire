@@ -21,7 +21,10 @@ export let product: ProductDto;
                 <span class="font-semibold">Last updated:</span>
                 <span class="">{formatDistanceToNow(product.updatedAt)}</span>
             </div>  
-            <Tag >{product.tags}</Tag>
+            
+            {#each product.tags as tag }
+                <Tag >{tag}</Tag>
+            {/each}
         </div>
     </Card>
 </a>
