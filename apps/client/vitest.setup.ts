@@ -27,6 +27,7 @@ beforeAll(() => {
 	window.HTMLElement.prototype.scrollIntoView = vi.fn();
 	window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 	window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+	window.HTMLCanvasElement.prototype.getContext = vi.fn();
 
 	window.ResizeObserver =
 		window.ResizeObserver ||
