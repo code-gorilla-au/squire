@@ -35,6 +35,7 @@ describe("fetcher()", () => {
 	it("should reject on non-2xx status code", async () => {
 		mockFetch.mockResolvedValue({
 			...fetchResp,
+			status: 400,
 			ok: false,
 			json: vi.fn().mockResolvedValue({
 				title: "error",

@@ -1,6 +1,6 @@
 import "@testing-library/svelte/vitest";
 import "@testing-library/jest-dom/vitest";
-import { beforeAll, vi } from "vitest";
+import { afterAll, beforeAll, vi } from "vitest";
 
 beforeAll(() => {
 	/**
@@ -48,4 +48,13 @@ beforeAll(() => {
 			dispatchEvent: vi.fn(),
 		};
 	});
+
+	vi.stubGlobal("URL", {
+		createObjectURL: vi.fn(),
+	});
+});
+
+afterAll(() => {
+	vi.unstubAllGlobals();
+	vi.resetAllMocks();
 });
