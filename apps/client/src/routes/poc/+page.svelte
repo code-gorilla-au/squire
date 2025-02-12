@@ -1,16 +1,17 @@
 <script lang="ts">
-import {
-	ComplexForm,
-	type ComplexFormSchema,
-} from "$lib/complex-forms/forms.svelte.ts";
-import { Input } from "$components/ui/input";
+import { ComplexForm } from "$lib/complex-forms/forms.svelte.ts";
 import { Label } from "$components/ui/label";
+import { Input } from "$components/ui/input";
 
 const form = new ComplexForm({
 	startDate: new Date(),
 	endDate: new Date(),
 	allowDependabot: true,
 	allowSecurity: true,
+	sprintAllocation: {
+		dependabot: 10,
+		security: 10,
+	},
 	chores: {
 		dependabot: [],
 		security: [],
@@ -39,16 +40,30 @@ const form = new ComplexForm({
     </div>
     <Label for="name">
         Start date
-        <Input id="startDate" type="date" placeholder="Start date"  onchange={((e) => {
+        <input  id="startDate" type="date" placeholder="Start date"  oninput={((e) => {
             form.data.startDate = new Date(e.currentTarget.value);
         } )} />
     </Label>
     <Label for="name">
         End date
-        <Input id="endDate" type="date" placeholder="End date"  onchange={((e) => {
+        <input id="endDate" type="date" placeholder="End date"  oninput={((e) => {
             form.data.endDate = new Date(e.currentTarget.value);
         } )} />
     </Label>
+    {#each form.data.chores.dependabot as dependabot, i}
+        <Label for="name">
+            Dependabot chore {i + 1}
+            <input type="checkbox" bind:checked={dependabot.completed} />
+            <Input type="text" readonly bind:value={dependabot.week} />
+        </Label>
+    {/each}
+    {#each form.data.chores.security as security, i}
+        <Label for="name">
+            Security chore {i + 1}
+            <input type="checkbox" bind:checked={security.completed} />
+            <Input type="text" readonly bind:value={security.week} />
+        </Label>
+    {/each}
 </form>
 
 <code>
