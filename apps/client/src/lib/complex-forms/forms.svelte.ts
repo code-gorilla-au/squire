@@ -1,4 +1,4 @@
-import { differenceInWeeks, isMonday, nextMonday } from "date-fns";
+import { addWeeks, differenceInWeeks, isMonday, nextMonday } from "date-fns";
 import { previousMonday } from "date-fns/fp";
 
 export type ComplexFormSchema = {
@@ -51,16 +51,18 @@ export class ComplexForm {
 	private watchDependabot() {
 		if (!this.data.allowDependabot) {
 			this.data.chores.dependabot = [];
-		} else {
-			this.data.chores.dependabot = this.buildWeeklyChores();
+			return;
 		}
+
+		this.data.chores.dependabot = this.buildWeeklyChores();
 	}
 	private watchSecurity() {
 		if (!this.data.allowSecurity) {
 			this.data.chores.security = [];
-		} else {
-			this.data.chores.security = this.buildWeeklyChores();
+			return;
 		}
+
+		this.data.chores.security = this.buildWeeklyChores();
 	}
 	private buildWeeklyChores() {
 		const iter = differenceInWeeks(this.data.endDate, this.data.startDate);
@@ -74,6 +76,32 @@ export class ComplexForm {
 
 		for (let i = 0; i < iter; i++) {
 			const next = nextMonday(current);
+			list.push({
+				completed: false,
+				week: next,
+			});
+
+			current = next;
+		}
+
+		return list;
+	}
+	private buildChoresByCadence(cadenceStep: number) {
+		const iter = differenceInWeeks(this.data.endDate, this.data.startDate);
+
+		let current = this.data.startDate;
+		if (!isMonday(current)) {
+			current = previousMonday(current);
+		}
+
+		const list: { completed: boolean; week: Date }[] = [];
+
+		if (cadenceStep > iter) {
+			return list;
+		}
+
+		for (let i = 0; i < iter; i + cadenceStep) {
+			const next = addWeeks(current, cadenceStep);
 			list.push({
 				completed: false,
 				week: next,

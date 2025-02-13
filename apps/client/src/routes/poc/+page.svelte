@@ -46,7 +46,7 @@ const form = new ComplexForm({
     </Label>
     <Label for="name">
         End date
-        <input id="endDate" type="date" placeholder="End date"  oninput={((e) => {
+        <input id="endDate" type="date" placeholder="End date" oninput={((e) => {
             form.data.endDate = new Date(e.currentTarget.value);
         } )} />
     </Label>
