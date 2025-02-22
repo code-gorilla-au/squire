@@ -1,4 +1,3 @@
-import { service } from "$lib/server/products.js";
 import { type Actions, redirect } from "@sveltejs/kit";
 import { formFromRequest } from "forms";
 import { transformZodErrors } from "forms";
@@ -6,10 +5,10 @@ import { logger } from "toolbox";
 import type { PageServerLoad } from "./$types.js";
 import { formSchema } from "./form-schema.js";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
 	const { id } = params;
 
-	const product = await service.getProductById(id);
+	const product = await locals.productService.getProductById(id);
 
 	return {
 		id,
@@ -18,7 +17,7 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-	update: async ({ request, params }) => {
+	update: async ({ request, params, locals }) => {
 		const formData = await formFromRequest(request);
 
 		const { error, data } = formSchema.safeParse(formData);
@@ -29,7 +28,9 @@ export const actions = {
 			};
 		}
 
-		await service.updateProduct(params.id ?? "", data.name, [data.tags]);
+		await locals.productService.updateProduct(params.id ?? "", data.name, [
+			data.tags,
+		]);
 
 		logger.info("Product updated", {
 			id: params.id,
@@ -39,8 +40,8 @@ export const actions = {
 
 		redirect(303, "/");
 	},
-	remove: ({ params }) => {
-		service.removeProduct(params.id ?? "");
+	remove: ({ params, locals }) => {
+		locals.productService.removeProduct(params.id ?? "");
 
 		logger.info("Product removed", { id: params.id });
 		redirect(303, "/");
