@@ -1,14 +1,13 @@
 import { respondNotFound, respondServerError } from "$lib/apis/respond.js";
 import { STATUS_OK } from "$lib/apis/types.js";
-import { service } from "$lib/server/products";
 import { json } from "@sveltejs/kit";
 import { ProductNotFoundError } from "products/src/errors.js";
 
-export const POST = async (request) => {
+export const POST = async ({ params, locals }) => {
 	try {
-		const { id } = request.params;
+		const { id } = params;
 
-		const errors = await service.syncProductById(id);
+		const errors = await locals.productService.syncProductById(id);
 
 		const resolveTitle =
 			errors.length > 0
@@ -23,9 +22,9 @@ export const POST = async (request) => {
 		});
 	} catch (err) {
 		if (err instanceof ProductNotFoundError) {
-			return respondNotFound({ productId: request.params.id });
+			return respondNotFound({ productId: params.id });
 		}
 
-		return respondServerError({ productId: request.params.id });
+		return respondServerError({ productId: params.id });
 	}
 };
