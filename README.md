@@ -27,7 +27,7 @@ touch .env.local # your local env file
 # ================================
 #  Client: Squire app
 # ================================
-VITE_DB_FILE_PATH=".db/squire.duckdb"
+VITE_DB_FILE_PATH="$PROJECT_ROOT/.db/squire.duckdb"
 VITE_LOG_LEVEL="debug"
 VITE_GH_TOKEN=<your-token>
 VITE_GH_OWNER=<your-org>
