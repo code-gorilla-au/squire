@@ -1,7 +1,8 @@
 import { ApiError, type ApiErrorResponse } from "./types";
 
 /**
- * lightweight wrapper around fetch with default headers which can be overwritten. Treats non 2xx status codes as errors
+ * lightweight wrapper around `fetcher` with default headers which can be overwritten.
+ * Treats non 2xx-3xx status codes as errors
  * @param url endpoint to fetch
  * @param options fetch option
  */
@@ -29,5 +30,5 @@ export async function fetcher<T>(
 		return Promise.resolve({} as T);
 	}
 
-	return resp.json() as Promise<T>;
+	return await resp.json() as Promise<T>;
 }
