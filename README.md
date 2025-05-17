@@ -1,13 +1,13 @@
 # squire
 Your most trusted local assistant. Squire's aim is to provide a focused, product view of your github organisation.
 
-| Feature | Description |
-| ------- | ----------- |
-| Group by product | Use github topics to group repositories by product |
-| See open PRs | Dashboard allows you to see all open PRs for all products as well as drill down to open PRs by product |
-| Sec vulnerability | See open security vulnerabilities for your product suite |  
-| Insights | Get insights on PRs and security metrics for all products, or per product basis. |
-| Basic reports | Download basic reports from your product's page in JSON format (other format's supporting coming soon) |
+| Feature           | Description                                                                                            |
+|-------------------|--------------------------------------------------------------------------------------------------------|
+| Group by product  | Use github topics to group repositories by product                                                     |
+| See open PRs      | Dashboard allows you to see all open PRs for all products as well as drill down to open PRs by product |
+| Sec vulnerability | See open security vulnerabilities for your product suite                                               |  
+| Insights          | Get insights on PRs and security metrics for all products, or per product basis.                       |
+| Basic reports     | Download basic reports from your product's page in JSON format (other format's supporting coming soon) |
 
 ## Install 
 NOTE: we've added a makefile to help with orchestrating.
