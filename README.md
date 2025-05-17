@@ -1,5 +1,5 @@
 # squire
-Your most trusted local assistant. Squire's aim is to provide a focused, product view of your github organisation.
+Your most trusted local assistant. Squire's aim is to provide a focused, product view of your GitHub organisation.
 
 | Feature           | Description                                                                                            |
 |-------------------|--------------------------------------------------------------------------------------------------------|
@@ -40,7 +40,9 @@ TOPICS_TO_INGEST=comma,delimited,list,to,ingest
 ```
 
 ## Pre ingestion 
-New pre-ingest app has been re-written to be idempotent and use the same env variables as the app. Ensure you add the env var `TOPICS_TO_INGEST` to the config file, which is a comma delimited list.
+A new `pre-ingest` app has been re-written to be idempotent
+and use the same env variables as the app. Ensure you add the env var `TOPICS_TO_INGEST` to the config file,
+which is a comma-delimited list.
 
 ```bash
 make dev-ingest
@@ -57,10 +59,11 @@ Access the webpage on http://localhost:5173/
 
 
 ## Reset state
-Common issue is to have a segmentation fault with the duck async library. It requires a full clean, you need to run the following command to reset the app to a clean slate
+The Common issue is to have a segmentation fault with the duck async library.
+It requires a full clean, you need to run the following command to reset the app to a clean slate
 
 ```bash
 make reset-state
 ```
 
-After you can run the pre-ingest command `make dev-ingest` to hydrate all the data.
+After you can run the `pre-ingest` command `make dev-ingest` to hydrate all the data.
