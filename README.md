@@ -1,4 +1,7 @@
 # squire
+
+NOTE: This is no longer in active development, [watchtowner](https://github.com/code-gorilla-au/watchtower) is the replacement.
+
 Your most trusted local assistant. Squire's aim is to provide a focused, product view of your GitHub organisation.
 
 | Feature           | Description                                                                                            |
